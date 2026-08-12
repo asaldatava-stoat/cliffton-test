@@ -1,0 +1,823 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strengths Profiler — CliftonStrengths-style assessment</title>
+<style>
+  :root{
+    --bg:#F6F5F1; --card:#FFFFFF; --ink:#232837; --ink2:#5A6072; --line:#E3E1D9;
+    --accent:#46578A; --accent-ink:#FFFFFF; --soft:#EEEDE6;
+    --exec:#7C4DA0; --infl:#D97E27; --rel:#2F6EB5; --strat:#3E8A63;
+    --exec-soft:#F1EAF6; --infl-soft:#FAEFE2; --rel-soft:#E8F0F9; --strat-soft:#E7F2EC;
+    --danger:#B4443C;
+    --serif: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#15181F; --card:#1E222B; --ink:#E7E9EE; --ink2:#9BA1B0; --line:#2E3340;
+      --accent:#8FA0D6; --accent-ink:#15181F; --soft:#262B36;
+      --exec:#B08BD0; --infl:#E5A05C; --rel:#7AA7DC; --strat:#7CB89A;
+      --exec-soft:#2A2333; --infl-soft:#332A20; --rel-soft:#202934; --strat-soft:#203028;
+      --danger:#D97C74;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15181F; --card:#1E222B; --ink:#E7E9EE; --ink2:#9BA1B0; --line:#2E3340;
+    --accent:#8FA0D6; --accent-ink:#15181F; --soft:#262B36;
+    --exec:#B08BD0; --infl:#E5A05C; --rel:#7AA7DC; --strat:#7CB89A;
+    --exec-soft:#2A2333; --infl-soft:#332A20; --rel-soft:#202934; --strat-soft:#203028;
+    --danger:#D97C74;
+  }
+  :root[data-theme="light"]{
+    --bg:#F6F5F1; --card:#FFFFFF; --ink:#232837; --ink2:#5A6072; --line:#E3E1D9;
+    --accent:#46578A; --accent-ink:#FFFFFF; --soft:#EEEDE6;
+    --exec:#7C4DA0; --infl:#D97E27; --rel:#2F6EB5; --strat:#3E8A63;
+    --exec-soft:#F1EAF6; --infl-soft:#FAEFE2; --rel-soft:#E8F0F9; --strat-soft:#E7F2EC;
+    --danger:#B4443C;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+  h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0}
+  .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:600}
+  button{font-family:var(--sans);cursor:pointer}
+  .btn{background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;
+    padding:12px 22px;font-size:15px;font-weight:600}
+  .btn:focus-visible,.dot:focus-visible,.btn2:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .btn2{background:transparent;color:var(--accent);border:1.5px solid var(--accent);
+    border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .muted{color:var(--ink2)}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+
+  /* ---------- intro ---------- */
+  #intro h1{font-size:34px;margin:6px 0 4px}
+  #intro .sub{font-size:16px;color:var(--ink2);max-width:56ch}
+  .rules{display:grid;gap:10px;margin:22px 0}
+  .rules .card{display:flex;gap:14px;align-items:flex-start;padding:16px 18px}
+  .rules .n{font-family:var(--serif);font-size:20px;color:var(--accent);min-width:22px;
+    font-variant-numeric:tabular-nums}
+  .domlegend{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:16px 0}
+  .domlegend .card{padding:10px 14px;font-size:13px;display:flex;gap:8px;align-items:center}
+  .swatch{width:10px;height:10px;border-radius:3px;flex:none}
+
+  /* ---------- test ---------- */
+  #test{display:none}
+  .topbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;
+    font-variant-numeric:tabular-nums}
+  .progress{height:4px;background:var(--soft);border-radius:2px;overflow:hidden;margin-bottom:26px}
+  .progress i{display:block;height:100%;background:var(--accent);width:0%;transition:width .3s}
+  .timerbar{height:6px;background:var(--soft);border-radius:3px;overflow:hidden;margin:0 0 22px}
+  .timerbar i{display:block;height:100%;background:var(--accent);width:100%}
+  .timerbar.warn i{background:var(--danger)}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .stmt{font-family:var(--serif);font-size:19px;line-height:1.45;padding:22px 20px;min-height:120px;
+    display:flex;align-items:center;text-wrap:balance}
+  .stmt.picked{border-color:var(--accent);box-shadow:0 0 0 1.5px var(--accent) inset}
+  .scale{display:flex;justify-content:space-between;align-items:center;margin:26px 6px 6px;gap:6px}
+  .dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:var(--card);
+    flex:none;transition:transform .1s}
+  .dot:hover{border-color:var(--accent);transform:scale(1.1)}
+  .dot.sel{background:var(--accent);border-color:var(--accent)}
+  .dot.big{width:44px;height:44px}
+  .scalelabels{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin:10px 2px 0}
+  .scalelabels span{max-width:120px}
+  .scalelabels .r{text-align:right}
+  .scalelabels .c{text-align:center}
+  .kbdhint{text-align:center;font-size:12px;color:var(--ink2);margin-top:26px}
+  kbd{background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:1px 6px;
+    font-family:var(--sans);font-size:11px}
+  @media (max-width:560px){
+    .pair{grid-template-columns:1fr}
+    .stmt{min-height:0;font-size:17px;padding:16px}
+  }
+
+  /* ---------- results ---------- */
+  #results{display:none}
+  .top5{display:grid;gap:12px;margin:18px 0 30px}
+  .theme-card{border-left:4px solid var(--dc,var(--accent))}
+  .theme-card h3{font-size:21px;margin-bottom:2px}
+  .chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    padding:2px 9px;border-radius:20px;background:var(--dbg,var(--soft));color:var(--dc,var(--ink))}
+  .theme-card .blk{margin-top:10px;font-size:14px}
+  .theme-card .blk b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+  .ranklist{display:grid;gap:4px;margin-top:14px}
+  .rankrow{display:grid;grid-template-columns:34px 150px 1fr 48px 40px;gap:10px;align-items:center;
+    padding:7px 12px;border-radius:8px;font-size:14px;font-variant-numeric:tabular-nums}
+  .rankrow:nth-child(odd){background:var(--soft)}
+  .rankrow .name{font-weight:600;display:flex;gap:7px;align-items:center;white-space:nowrap}
+  .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--dc,var(--accent))}
+  .delta{font-size:12px;text-align:right;color:var(--ink2)}
+  .delta.up{color:var(--strat)} .delta.down{color:var(--danger)}
+  .domsummary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
+  .domsummary .card{padding:12px 14px}
+  .domsummary .val{font-family:var(--serif);font-size:24px;font-variant-numeric:tabular-nums}
+  @media (max-width:560px){
+    .rankrow{grid-template-columns:28px 118px 1fr 40px}
+    .rankrow .delta{display:none}
+  }
+
+  /* ---------- history ---------- */
+  #history{margin-top:44px}
+  .histrow{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);
+    color:var(--bg);padding:10px 20px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .3s;
+    pointer-events:none}
+  .toast.show{opacity:1}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+</style>
+
+<div class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section id="intro">
+    <div class="eyebrow">Unofficial · CliftonStrengths-style · 177 items</div>
+    <h1>Strengths Profiler</h1>
+    <p class="sub">A faithful reconstruction of the CliftonStrengths assessment mechanics —
+      paired statements, a 20-second clock, no going back — with original statements keyed to
+      the 34 talent themes. Not affiliated with Gallup.</p>
+
+    <div class="rules">
+      <div class="card"><span class="n">1</span><div><b>177 paired statements.</b> Each screen shows two self-descriptors. Choose which describes you better, and how strongly — or stay neutral.</div></div>
+      <div class="card"><span class="n">2</span><div><b>20 seconds per item.</b> When the clock runs out the test moves on and the item is skipped. Answer with your first instinct — that's the design.</div></div>
+      <div class="card"><span class="n">3</span><div><b>No going back.</b> Once you answer or the timer expires, the item is locked, exactly like the original.</div></div>
+      <div class="card"><span class="n">4</span><div><b>~25–30 minutes.</b> If you close the tab your progress autosaves and you can resume, but one uninterrupted sitting gives the truest result.</div></div>
+    </div>
+
+    <div class="eyebrow" style="margin-top:26px">The four domains</div>
+    <div class="domlegend">
+      <div class="card"><span class="swatch" style="background:var(--exec)"></span>Executing · 9 themes</div>
+      <div class="card"><span class="swatch" style="background:var(--infl)"></span>Influencing · 8 themes</div>
+      <div class="card"><span class="swatch" style="background:var(--rel)"></span>Relationship Building · 9</div>
+      <div class="card"><span class="swatch" style="background:var(--strat)"></span>Strategic Thinking · 8</div>
+    </div>
+
+    <div class="row" style="margin-top:26px">
+      <button class="btn" id="startBtn">Start the assessment</button>
+      <label style="font-size:13px;color:var(--ink2);display:flex;gap:7px;align-items:center">
+        <input type="checkbox" id="timerToggle" checked> 20-second timer (original conditions)
+      </label>
+    </div>
+    <div id="resumeBox" style="display:none;margin-top:14px">
+      <button class="btn2" id="resumeBtn">Resume unfinished attempt</button>
+    </div>
+
+    <div id="history"></div>
+  </section>
+
+  <!-- ============ TEST ============ -->
+  <section id="test">
+    <div class="topbar">
+      <span class="eyebrow" id="counter">Item 1 of 177</span>
+      <span class="muted" id="clockNum" style="font-size:13px">20s</span>
+    </div>
+    <div class="progress"><i id="progBar"></i></div>
+    <div class="timerbar" id="timerBar"><i id="timerFill"></i></div>
+
+    <div class="pair">
+      <div class="card stmt" id="stmtA"></div>
+      <div class="card stmt" id="stmtB"></div>
+    </div>
+
+    <div class="scale" id="scale">
+      <button class="dot big" data-v="-2" aria-label="Strongly describes me — left statement"></button>
+      <button class="dot"     data-v="-1" aria-label="Describes me — left statement"></button>
+      <button class="dot"     data-v="0"  aria-label="Neutral"></button>
+      <button class="dot"     data-v="1"  aria-label="Describes me — right statement"></button>
+      <button class="dot big" data-v="2"  aria-label="Strongly describes me — right statement"></button>
+    </div>
+    <div class="scalelabels">
+      <span>Strongly<br>describes me</span>
+      <span class="c">Neutral</span>
+      <span class="r">Strongly<br>describes me</span>
+    </div>
+    <p class="kbdhint">Keyboard: <kbd>1</kbd>–<kbd>5</kbd> left to right</p>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="results"></section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   DATA — 34 themes, 4 domains, 5 original statements each.
+   Statements are original text keyed to public theme concepts;
+   Gallup's proprietary items are not reproduced.
+   ============================================================ */
+const DOMAINS = {
+  exec:{name:"Executing", css:"--exec", soft:"--exec-soft"},
+  infl:{name:"Influencing", css:"--infl", soft:"--infl-soft"},
+  rel:{name:"Relationship Building", css:"--rel", soft:"--rel-soft"},
+  strat:{name:"Strategic Thinking", css:"--strat", soft:"--strat-soft"}
+};
+
+const THEMES = [
+/* ---------- EXECUTING ---------- */
+{id:"achiever",dom:"exec",name:"Achiever",
+ desc:"A constant inner drive to accomplish. Every day starts at zero and must end with something tangible done; stamina and productivity are your fuel.",
+ blind:"You may burn out or judge others (and yourself) by output alone; rest can feel like guilt.",
+ act:["Celebrate finished work before jumping to the next thing.","Choose goals worth your stamina — busy is not the same as important."],
+ s:["I feel restless if a day passes without something tangible accomplished.",
+    "I push myself to get more done than most people around me.",
+    "My to-do list is what gets me moving in the morning.",
+    "Even after a big win, I quickly move on to the next task.",
+    "I measure my days by what I finished."]},
+{id:"arranger",dom:"exec",name:"Arranger",
+ desc:"A conductor of moving pieces. You organize people, resources and schedules — and happily re-organize them when conditions change — always hunting the most productive configuration.",
+ blind:"Constant reshuffling can look chaotic or indecisive to people who need stability.",
+ act:["Take on complex, multi-part projects others find overwhelming.","Tell people why you're rearranging — the logic is obvious only to you."],
+ s:["I enjoy juggling many moving pieces at once.",
+    "When plans change, I quickly reshuffle everything into a new arrangement.",
+    "I instinctively see how people and resources fit together best.",
+    "Complex logistics energize me rather than stress me.",
+    "I'm at my best coordinating several things happening at the same time."]},
+{id:"belief",dom:"exec",name:"Belief",
+ desc:"Enduring core values that give your life meaning and direction. Work must matter; family, ethics or spirituality anchor your decisions more than money or status.",
+ blind:"You can seem rigid or judgmental when others don't share your values.",
+ act:["Choose work aligned with what you stand for — misalignment will corrode you.","Articulate your values so others understand your 'non-negotiables'."],
+ s:["My core values guide almost every decision I make.",
+    "Work has to feel meaningful to me, or the money doesn't matter.",
+    "People know exactly what I stand for.",
+    "I would rather give up success than compromise my principles.",
+    "A sense of purpose matters more to me than status."]},
+{id:"consistency",dom:"exec",name:"Consistency",
+ desc:"A deep need for fairness through equal treatment. Clear rules applied uniformly, so that everyone knows what to expect and no one gets special advantages.",
+ blind:"Uniform rules can miss individual circumstances; flexibility may feel like injustice to you.",
+ act:["Be the guardian of fair process in your group.","Pair with someone strong in Individualization when exceptions genuinely matter."],
+ s:["I believe rules should apply to everyone equally.",
+    "Special treatment for some people bothers me deeply.",
+    "I try to treat every person the same, regardless of their status.",
+    "Clear, uniform procedures feel like fairness to me.",
+    "I notice immediately when someone gets an unfair advantage."]},
+{id:"deliberative",dom:"exec",name:"Deliberative",
+ desc:"Careful, vigilant, private. You anticipate risks others miss, take your time deciding, and treat life as something to be managed with serious care.",
+ blind:"Caution can read as distance or pessimism; opportunities can expire while you assess them.",
+ act:["Be the risk radar for fast-moving teams.","Set decision deadlines so vigilance doesn't become paralysis."],
+ s:["I think through the risks carefully before I act.",
+    "I'm private and careful about what I share.",
+    "People see me as the one who spots what could go wrong.",
+    "I'd rather be slow and right than fast and sorry.",
+    "I take my time with decisions, even small ones."]},
+{id:"discipline",dom:"exec",name:"Discipline",
+ desc:"A need for structure and routine. You impose order on the world — plans, timelines, systems — and your precision makes you highly efficient.",
+ blind:"Others' messiness can drive you crazy; sudden change hits you harder than most.",
+ act:["Build the structures your team lives inside — you do it better than anyone.","Loosen your grip on how things get done when only the outcome matters."],
+ s:["I need structure and routine to feel at my best.",
+    "I break big projects into detailed plans with timelines.",
+    "Disorder around me makes it hard for me to function.",
+    "I set up systems for almost everything I do.",
+    "Deadlines and checklists keep my world in order — and I like it that way."]},
+{id:"focus",dom:"exec",name:"Focus",
+ desc:"Direction, prioritization, follow-through. You need a clear destination, and once you have one, you filter out everything that doesn't move you toward it.",
+ blind:"You can steamroll past people, detours and serendipity that actually matter.",
+ act:["Set and share explicit goals — you drift without a target.","Schedule deliberate 'off-goal' time for relationships and exploration."],
+ s:["I need a clear destination before I start moving.",
+    "Once I lock onto a goal, distractions barely touch me.",
+    "I regularly ask whether what I'm doing moves me toward my goal.",
+    "Meetings and detours that lead nowhere frustrate me intensely.",
+    "I always know what matters most right now."]},
+{id:"responsibility",dom:"exec",name:"Responsibility",
+ desc:"Psychological ownership of what you commit to. Your word is a bond; you feel personally accountable and will go to extraordinary lengths not to let people down.",
+ blind:"You take on too much, struggle to delegate, and other people's dropped balls become yours.",
+ act:["Say no early — every yes is a real contract for you.","Delegate outcomes with check-ins instead of holding everything yourself."],
+ s:["If I say I'll do it, it will get done — no matter what.",
+    "I feel personally accountable for anything I commit to.",
+    "Letting someone down haunts me more than failing myself.",
+    "People trust me with things because I never drop them.",
+    "I find it hard to hand over a task I promised to finish."]},
+{id:"restorative",dom:"exec",name:"Restorative",
+ desc:"Energized by problems. Diagnosing what's wrong and bringing something broken back to life is deeply satisfying — you head toward the mess others avoid.",
+ blind:"You can fixate on weaknesses — in projects, others and yourself — and forget what already works.",
+ act:["Take the roles where things are on fire; that's your element.","Balance fixing with building — not everything broken deserves saving."],
+ s:["I love diagnosing what's broken and fixing it.",
+    "Problems energize me more than they discourage me.",
+    "I'm drawn straight to the thing that isn't working.",
+    "Bringing something back to life satisfies me deeply.",
+    "Others avoid messy problems; I head straight for them."]},
+/* ---------- INFLUENCING ---------- */
+{id:"activator",dom:"infl",name:"Activator",
+ desc:"Impatience for action. Analysis has its place, but you know decisions are made by doing — you start, learn from what happens, and pull others into motion.",
+ blind:"Starting before thinking can create rework; your push can feel like pressure.",
+ act:["Partner with planners — you provide ignition, they provide trajectory.","Frame your starts as experiments so imperfection is expected."],
+ s:["I get impatient when talk drags on and nothing starts.",
+    "I learn best by doing, not by planning.",
+    "Once a decision is made, I need to act on it immediately.",
+    "I'd rather start imperfectly than wait for the perfect plan.",
+    "I'm usually the one who pushes the group from discussion to action."]},
+{id:"command",dom:"infl",name:"Command",
+ desc:"Presence and directness. You take charge naturally, say what others only hint at, and feel no fear of confrontation — clarity matters more than comfort.",
+ blind:"Your intensity can intimidate; people may comply without truly agreeing.",
+ act:["Step up in crises — ambiguity is where you're most valuable.","Ask questions before verdicts; softness isn't weakness."],
+ s:["I naturally take charge when no one else does.",
+    "Confrontation doesn't scare me; hidden tension does.",
+    "People say my presence is felt the moment I enter a room.",
+    "I say directly what others only hint at.",
+    "In a crisis, people look to me for direction — and I give it."]},
+{id:"communication",dom:"infl",name:"Communication",
+ desc:"Words come alive in your hands. Explaining, hosting, writing, storytelling — you turn ideas and events into narratives people remember.",
+ blind:"Talking can crowd out listening; polish can be mistaken for substance.",
+ act:["Volunteer to be the voice — presentations, pitches, difficult announcements.","Collect stories and phrases deliberately; they're your raw material."],
+ s:["I can make almost any idea come alive when I talk about it.",
+    "I think out loud — talking helps me find what I mean.",
+    "People say I'm a natural storyteller.",
+    "I enjoy hosting, presenting, and being the voice of the group.",
+    "Finding the perfect phrase gives me real joy."]},
+{id:"competition",dom:"infl",name:"Competition",
+ desc:"Performance is measured against others. Comparison is instinctive, contests are invigorating, and winning — actually winning — is what satisfies.",
+ blind:"Losing can hit disproportionately hard; you may avoid arenas you can't win.",
+ act:["Turn tasks into scoreboards — measurement is your motivation.","Compete with your own past record when no worthy rival exists."],
+ s:["I instinctively compare my performance to other people's.",
+    "Winning matters to me — second place stings.",
+    "Contests bring out my best effort.",
+    "I check how others are doing to know how I'm doing.",
+    "I gravitate toward games I can win."]},
+{id:"maximizer",dom:"infl",name:"Maximizer",
+ desc:"Excellence, not averageness, is your measure. You take something strong and make it superb — polishing strengths feels far better than patching weaknesses.",
+ blind:"You can be perfectionistic, dismissive of 'good enough', and impatient with remedial work.",
+ act:["Invest where you (and others) are already strong — that's your leverage.","Declare 'done' criteria up front so polishing has a finish line."],
+ s:["I'd rather turn something good into something great than fix what's broken.",
+    "Average results bore me; excellence excites me.",
+    "I focus on people's strengths, not their weaknesses.",
+    "Polishing something strong feels better than repairing something weak.",
+    "Quality matters more to me than quantity, every time."]},
+{id:"selfassurance",dom:"infl",name:"Self-Assurance",
+ desc:"An inner compass. You trust your own judgment to a degree others find remarkable — confident not just in your abilities but in your right to decide.",
+ blind:"You may dismiss good outside advice and appear arrogant when you're simply certain.",
+ act:["Take the calls no one else will make — uncertainty doesn't paralyze you.","Show your reasoning occasionally; certainty alone doesn't persuade."],
+ s:["I trust my own judgment more than anyone else's opinion.",
+    "Risky decisions don't shake me; I feel certain in my choices.",
+    "I have an inner compass that tells me what to do.",
+    "Doubt from others rarely makes me doubt myself.",
+    "I'm comfortable making the final call alone."]},
+{id:"significance",dom:"infl",name:"Significance",
+ desc:"A drive to matter — to be seen, heard, and known for real contribution. An audience raises your game; ordinary is your quiet fear.",
+ blind:"Craving recognition can outrun the substance; others' approval can steer you too much.",
+ act:["Aim your ambition at work that deserves visibility.","Define whose recognition actually counts — then ignore the rest."],
+ s:["I want my work to be seen and recognized widely.",
+    "Being ordinary is my quiet fear; I intend to matter.",
+    "I'm drawn to people and projects with big reputations.",
+    "An audience makes me perform better.",
+    "I want my life to leave a visible mark."]},
+{id:"woo",dom:"infl",name:"Woo",
+ desc:"Winning others over. Strangers are energizing, not draining — you love breaking the ice, making the connection, and working the whole room.",
+ blind:"Depth can suffer for breadth; some read your ease as insincerity.",
+ act:["Be the network-builder and first-contact person for your group.","Hand off relationships to Relators to deepen after you open the door."],
+ s:["Meeting new people energizes me — strangers are interesting.",
+    "I enjoy the challenge of winning someone over.",
+    "At events I work the whole room rather than staying with people I know.",
+    "Breaking the ice comes naturally to me.",
+    "I rarely run out of things to say to someone I just met."]},
+/* ---------- RELATIONSHIP BUILDING ---------- */
+{id:"adaptability",dom:"rel",name:"Adaptability",
+ desc:"Living in the now. You take the future as it arrives, respond fluidly to surprises, and stay productive when circumstances change under everyone's feet.",
+ blind:"Long-range planning bores you; others may see drifting where you feel flow.",
+ act:["Thrive in roles where no two days are alike.","Anchor to a few fixed commitments so flexibility doesn't become formlessness."],
+ s:["I live in the moment and take things as they come.",
+    "Sudden changes of plan don't rattle me.",
+    "I'm at my best responding to whatever the day throws at me.",
+    "The future is something I discover, not something I script.",
+    "Interruptions are just the next thing to respond to."]},
+{id:"connectedness",dom:"rel",name:"Connectedness",
+ desc:"Faith in the links between all things. Events have meaning, coincidences rarely feel accidental, and you feel part of something larger than yourself.",
+ blind:"Your certainty of meaning can feel mystical or passive to pragmatists.",
+ act:["Be the bridge-builder between groups, ideas and generations.","Translate your sense of meaning into concrete purpose statements others can act on."],
+ s:["I believe things happen for a reason, even when I can't see it yet.",
+    "I feel connected to something larger than myself.",
+    "I see invisible threads linking people and events.",
+    "Coincidences rarely feel like coincidences to me.",
+    "We are all part of one whole — I feel that, not just think it."]},
+{id:"developer",dom:"rel",name:"Developer",
+ desc:"You see the potential in people — and can't help cultivating it. Small signs of growth in others give you genuine satisfaction; every interaction is a chance to help someone improve.",
+ blind:"You may over-invest in people who don't grow, or keep struggling performers in place too long.",
+ act:["Mentor deliberately — pick people whose growth you'll compound.","Learn to tell potential from wishful thinking; not everyone is your project."],
+ s:["I see potential in people that they don't see in themselves.",
+    "Watching someone grow because of my help is deeply satisfying.",
+    "I notice and celebrate small signs of progress in others.",
+    "People come to me for encouragement.",
+    "I'm patient with people who are still learning."]},
+{id:"empathy",dom:"rel",name:"Empathy",
+ desc:"You feel what others feel. Emotions in a room register in you almost like your own, letting you understand unspoken needs and give people words for their feelings.",
+ blind:"Absorbing everyone's emotions is exhausting; you may struggle with necessary hard calls.",
+ act:["Be the emotional early-warning system for your team.","Build recovery rituals — your sensitivity needs maintenance."],
+ s:["I sense what others are feeling without them saying a word.",
+    "Other people's emotions register in me almost like my own.",
+    "People say I understand them better than most.",
+    "I can walk into a room and feel its mood.",
+    "Friends come to me first when they're hurting."]},
+{id:"harmony",dom:"rel",name:"Harmony",
+ desc:"You look for consensus and common ground. Conflict and friction feel wasteful; you'd rather find the practical middle path where everyone can move forward.",
+ blind:"Avoiding conflict can bury real issues; you may concede too much for peace.",
+ act:["Be the mediator who finds the workable agreement.","Practice naming disagreement early — small friction now prevents rupture later."],
+ s:["I look for common ground before I look for differences.",
+    "Conflict drains me; agreement restores me.",
+    "I'd rather find a practical middle path than win an argument.",
+    "I steer conversations away from friction.",
+    "Debating for its own sake feels pointless to me."]},
+{id:"includer",dom:"rel",name:"Includer",
+ desc:"'Stretch the circle wider.' You instinctively notice who's left out and bring them in — acceptance, to you, is not earned but owed.",
+ blind:"Including everyone can dilute groups that genuinely need selectivity.",
+ act:["Be the one who integrates newcomers and outsiders.","Recognize when exclusivity is a feature, not unfairness."],
+ s:["I notice the person left out of the circle — and I bring them in.",
+    "Excluding anyone feels wrong to me.",
+    "I widen the group whenever I can.",
+    "I instinctively make newcomers feel welcome.",
+    "Everyone deserves a seat at the table, no exceptions."]},
+{id:"individualization",dom:"rel",name:"Individualization",
+ desc:"Intrigued by what makes each person unique. You resist generalizations, notice individual styles and motivations, and instinctively cast the right person for the right role.",
+ blind:"Custom treatment for everyone scales poorly and can look like favoritism.",
+ act:["Be the person who assembles teams — your casting instinct is rare.","Share your observations; people are moved by being accurately seen."],
+ s:["I notice what makes each person different, not what makes them alike.",
+    "I adapt how I treat people to fit who they are.",
+    "Generalizations about groups of people frustrate me.",
+    "I'm good at spotting the right task for the right person.",
+    "I remember specific details about the people in my life."]},
+{id:"positivity",dom:"rel",name:"Positivity",
+ desc:"Contagious enthusiasm. You find what's good, praise generously, build fun into work, and lift the emotional temperature of any room you enter.",
+ blind:"Relentless brightness can seem naive; heavy moods may be dismissed rather than heard.",
+ act:["Use your energy deliberately where morale is lowest.","Let yourself and others sit with hard feelings sometimes — light lands better after honesty."],
+ s:["People say my enthusiasm is contagious.",
+    "I find something to praise in nearly every situation.",
+    "I bring lightness into heavy rooms.",
+    "Fun matters — I build it into everything I do.",
+    "I wake up on the bright side more days than not."]},
+{id:"relator",dom:"rel",name:"Relator",
+ desc:"Depth over breadth. You're drawn to the people you already know; genuine closeness — working and living alongside trusted few — is where you thrive.",
+ blind:"Your inner circle can look like a closed club; networking feels false to you.",
+ act:["Build your work around long-term trusted partnerships.","Give new people a defined trial period instead of a closed door."],
+ s:["I prefer a few deep friendships to many acquaintances.",
+    "I open up only once trust is established — then completely.",
+    "Working closely with people I know well is my ideal.",
+    "Small talk drains me; real conversation feeds me.",
+    "My closest relationships are the core of my life."]},
+/* ---------- STRATEGIC THINKING ---------- */
+{id:"analytical",dom:"strat",name:"Analytical",
+ desc:"'Prove it.' You search for root causes, demand data behind claims, and think in patterns and evidence — rigor is how you respect the truth.",
+ blind:"Your questions can feel like attacks; analysis can stall action and bruise intuition-led people.",
+ act:["Be the one who stress-tests plans and claims before commitment.","Announce your intent ('I'm testing the idea, not you') before you drill."],
+ s:["I need to see the data before I believe the claim.",
+    "'Prove it' is my instinctive reaction to big statements.",
+    "I search for root causes, not surface explanations.",
+    "Patterns in numbers jump out at me.",
+    "Emotion is not evidence — I ask for reasons."]},
+{id:"context",dom:"strat",name:"Context",
+ desc:"You understand the present by looking back. Origins, precedents and case studies reveal the blueprint; decisions only make sense with their backstory.",
+ blind:"Looking back first can slow you in novel situations with no precedent.",
+ act:["Be the institutional memory — brief newcomers on how things came to be.","Ask for the destination too, so history informs rather than anchors."],
+ s:["I understand the present by studying how it came to be.",
+    "I ask 'how did we get here?' before 'where are we going?'",
+    "History and backstory genuinely fascinate me.",
+    "Decisions make sense to me only with their background.",
+    "I learn more from precedents and cases than from theories."]},
+{id:"futuristic",dom:"strat",name:"Futuristic",
+ desc:"Fascinated by tomorrow. Vivid, detailed visions of what could be pull you forward — and when you speak them well, they pull others too.",
+ blind:"The present can feel like an obstacle; visions without milestones frustrate practical people.",
+ act:["Paint the picture for your team — vision is scarce and you have it.","Tie each vision to one next concrete step."],
+ s:["I'm fascinated by what could be possible ten years from now.",
+    "Detailed pictures of the future come to me easily.",
+    "Talking about the future energizes me and people around me.",
+    "Today matters to me mostly as a bridge to tomorrow.",
+    "I'm often the one who describes where we're heading."]},
+{id:"ideation",dom:"strat",name:"Ideation",
+ desc:"Fascinated by ideas and the unexpected connections between them. The obvious answer bores you; a genuinely new concept is a jolt of pure energy.",
+ blind:"Novelty-chasing can leave a trail of unfinished concepts; others may find you impractical.",
+ act:["Schedule real brainstorming time — it's fuel, not procrastination.","Pair each idea with an owner or a kill-date."],
+ s:["New ideas give me a genuine thrill.",
+    "I find unexpected connections between unrelated things.",
+    "Brainstorming is my favorite kind of meeting.",
+    "I get bored quickly with the obvious answer.",
+    "One good concept can keep me up all night."]},
+{id:"input",dom:"strat",name:"Input",
+ desc:"A collector's mind. Information, quotes, objects, links — you gather because it's interesting, and because one day it might be useful to someone.",
+ blind:"Collecting can substitute for deciding; your archive grows faster than your use of it.",
+ act:["Be the group's librarian — the one who always has the resource.","Set a rhythm for turning inputs into outputs (share, write, apply)."],
+ s:["I collect things — information, quotes, links — just in case.",
+    "I find almost everything interesting.",
+    "I save articles I may never read, because I might need them.",
+    "My curiosity has no particular filter — I want to know it all.",
+    "I love being the one who has exactly the resource someone needs."]},
+{id:"intellection",dom:"strat",name:"Intellection",
+ desc:"You like to think. Deep, solitary mental work — musing, questioning, replaying ideas — is not a luxury but a necessity; your best conversations happen in your head.",
+ blind:"Your need for solitude can read as detachment; thinking can displace doing.",
+ act:["Protect daily thinking time on your calendar — unapologetically.","Write or discuss your thoughts so they compound instead of evaporating."],
+ s:["I need time alone just to think.",
+    "My best conversations are the ones inside my head.",
+    "I like stretching my mind on hard, abstract questions.",
+    "Reflection is not a luxury for me; it's a necessity.",
+    "I replay and rework ideas long after others have moved on."]},
+{id:"learner",dom:"strat",name:"Learner",
+ desc:"The process of learning — more than the outcome — excites you. From ignorance to competence is your favorite journey, and you take it again and again.",
+ blind:"You may collect skills without applying them, or chase novelty over mastery.",
+ act:["Choose roles and projects that force new learning curves.","Track what you've learned into visible output — teach it, use it, ship it."],
+ s:["The process of learning excites me more than the outcome.",
+    "I'm always in the middle of learning something new.",
+    "Being a beginner doesn't embarrass me — it thrills me.",
+    "Steady improvement at a skill gives me deep satisfaction.",
+    "I sign up for courses and challenges just to keep growing."]},
+{id:"strategic",dom:"strat",name:"Strategic",
+ desc:"Patterns where others see complexity. For any goal you instantly generate alternative routes, discard the dead ends, and choose the path — it's not a technique, it's how your mind works.",
+ blind:"Your leaps can look like guesses; others need the reasoning you skipped.",
+ act:["Get into planning conversations early, when routes are still open.","Walk people through the paths you discarded — that's where your value shows."],
+ s:["I quickly see patterns where others see complexity.",
+    "For any goal, I instantly generate several alternative routes.",
+    "'What if…?' is how my mind plays.",
+    "I spot the dead ends before we walk into them.",
+    "Choosing the best path comes naturally — I've already simulated the rest."]}
+];
+
+/* ============================================================
+   PAIR GENERATION — deterministic (fixed seed) so every attempt
+   uses identical pairs; presentation order shuffles per attempt.
+   177 pairs = 354 slots; themes appear 10–11 times each.
+   ============================================================ */
+function mulberry32(seed){return function(){let t=seed+=0x6D2B79F5;
+  t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+
+function buildPairs(){
+  const rng=mulberry32(20260812);
+  const order=[...THEMES.keys()];
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+  const slots=[];
+  order.forEach((ti,pos)=>{
+    const n=pos<14?11:10;                     // 14*11 + 20*10 = 354
+    for(let k=0;k<n;k++)slots.push({t:ti,s:k%5});
+  });
+  for(let i=slots.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[slots[i],slots[j]]=[slots[j],slots[i]]}
+  const pairs=[],comboCount={};
+  const used=new Array(slots.length).fill(false);
+  for(let i=0;i<slots.length;i++){
+    if(used[i])continue;
+    let found=-1;
+    for(let j=i+1;j<slots.length;j++){
+      if(used[j]||slots[j].t===slots[i].t)continue;
+      const key=Math.min(slots[i].t,slots[j].t)+"-"+Math.max(slots[i].t,slots[j].t);
+      if((comboCount[key]||0)>=2)continue;
+      found=j;break;
+    }
+    if(found<0){for(let j=i+1;j<slots.length;j++){if(!used[j]&&slots[j].t!==slots[i].t){found=j;break}}}
+    if(found<0)continue;
+    used[i]=used[found]=true;
+    const key=Math.min(slots[i].t,slots[found].t)+"-"+Math.max(slots[i].t,slots[found].t);
+    comboCount[key]=(comboCount[key]||0)+1;
+    pairs.push(rng()<0.5?[slots[i],slots[found]]:[slots[found],slots[i]]);
+  }
+  return pairs; // 177 pairs
+}
+const PAIRS=buildPairs();
+
+/* ============================================================
+   STATE & STORAGE
+   ============================================================ */
+const LS_ATTEMPTS="cs_attempts_v1", LS_PROGRESS="cs_progress_v1";
+const TIMER_SECONDS=20;
+let state=null, timerId=null, timerEnd=0, locked=false;
+
+const $=id=>document.getElementById(id);
+const load=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200)}
+
+function newAttempt(){
+  const order=[...PAIRS.keys()];
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+  return {order, answers:new Array(PAIRS.length).fill(undefined), idx:0,
+          timer:$("timerToggle").checked, started:new Date().toISOString()};
+}
+
+/* ============================================================
+   TEST FLOW
+   ============================================================ */
+function startTest(resume){
+  state = resume ? load(LS_PROGRESS) : newAttempt();
+  if(!state){toast("Nothing to resume");return}
+  $("intro").style.display="none";$("results").style.display="none";$("test").style.display="block";
+  window.scrollTo(0,0);
+  showItem();
+}
+
+function showItem(){
+  if(state.idx>=PAIRS.length){finish();return}
+  locked=false;
+  const pair=PAIRS[state.order[state.idx]];
+  $("stmtA").textContent=THEMES[pair[0].t].s[pair[0].s];
+  $("stmtB").textContent=THEMES[pair[1].t].s[pair[1].s];
+  $("stmtA").classList.remove("picked");$("stmtB").classList.remove("picked");
+  document.querySelectorAll(".dot").forEach(d=>d.classList.remove("sel"));
+  $("counter").textContent=`Item ${state.idx+1} of ${PAIRS.length}`;
+  $("progBar").style.width=(state.idx/PAIRS.length*100)+"%";
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timerId);
+  const bar=$("timerFill"),wrapEl=$("timerBar"),num=$("clockNum");
+  if(!state.timer){bar.style.width="100%";wrapEl.classList.remove("warn");num.textContent="no timer";return}
+  timerEnd=Date.now()+TIMER_SECONDS*1000;
+  wrapEl.classList.remove("warn");
+  timerId=setInterval(()=>{
+    const left=timerEnd-Date.now();
+    if(left<=0){clearInterval(timerId);answer(null);return}
+    bar.style.width=(left/(TIMER_SECONDS*1000)*100)+"%";
+    num.textContent=Math.ceil(left/1000)+"s";
+    wrapEl.classList.toggle("warn",left<5000);
+  },100);
+}
+
+function answer(v){           // v: -2..2 or null (timeout skip)
+  if(locked)return; locked=true;
+  clearInterval(timerId);
+  state.answers[state.order[state.idx]] = v===null ? null : v;
+  if(v!==null){
+    const dot=document.querySelector(`.dot[data-v="${v}"]`);
+    if(dot)dot.classList.add("sel");
+    if(v<0)$("stmtA").classList.add("picked");
+    if(v>0)$("stmtB").classList.add("picked");
+  }
+  state.idx++;
+  save(LS_PROGRESS,state);
+  setTimeout(showItem, v===null?150:380);
+}
+
+$("scale").addEventListener("click",e=>{
+  const d=e.target.closest(".dot"); if(!d)return;
+  answer(parseInt(d.dataset.v,10));
+});
+document.addEventListener("keydown",e=>{
+  if($("test").style.display!=="block")return;
+  const map={"1":-2,"2":-1,"3":0,"4":1,"5":2};
+  if(map[e.key]!==undefined)answer(map[e.key]);
+});
+
+/* ============================================================
+   SCORING
+   Chosen side's theme gets 2 (strong) or 1 (moderate) points.
+   Normalized per theme by 2 × answered appearances.
+   ============================================================ */
+function score(answers){
+  const t=THEMES.map(()=>({pts:0,max:0,strong:0,appear:0,skipped:0}));
+  PAIRS.forEach((pair,i)=>{
+    const v=answers[i];
+    const A=t[pair[0].t],B=t[pair[1].t];
+    A.appear++;B.appear++;
+    if(v===null||v===undefined){A.skipped++;B.skipped++;return}
+    A.max+=2;B.max+=2;
+    if(v<0){A.pts+=-v; if(v===-2)A.strong++}
+    if(v>0){B.pts+=v;  if(v===2)B.strong++}
+  });
+  const rows=t.map((x,i)=>({i, pct: x.max? x.pts/x.max : 0, ...x}));
+  rows.sort((a,b)=> b.pct-a.pct || b.strong-a.strong || b.pts-a.pts ||
+    THEMES[a.i].name.localeCompare(THEMES[b.i].name));
+  return rows;
+}
+
+function finish(){
+  clearInterval(timerId);
+  const answered=state.answers.filter(v=>v!==null&&v!==undefined).length;
+  const rows=score(state.answers);
+  const attempt={
+    finished:new Date().toISOString(), started:state.started, timer:state.timer,
+    answered, skipped:PAIRS.length-answered,
+    ranking:rows.map(r=>({id:THEMES[r.i].id, pct:+(r.pct*100).toFixed(1), strong:r.strong, pts:r.pts})),
+    responses:state.answers
+  };
+  const attempts=load(LS_ATTEMPTS)||[];
+  attempts.push(attempt);
+  save(LS_ATTEMPTS,attempts);
+  localStorage.removeItem(LS_PROGRESS);
+  state=null;
+  renderResults(attempts.length-1);
+}
+
+/* ============================================================
+   RESULTS RENDERING
+   ============================================================ */
+function themeById(id){return THEMES.find(t=>t.id===id)}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+
+function renderResults(attemptIdx){
+  const attempts=load(LS_ATTEMPTS)||[];
+  const a=attempts[attemptIdx]; if(!a)return;
+  const prev=attemptIdx>0?attempts[attemptIdx-1]:null;
+  const prevRank={}; if(prev)prev.ranking.forEach((r,i)=>prevRank[r.id]=i+1);
+
+  const domAgg={exec:[],infl:[],rel:[],strat:[]};
+  a.ranking.forEach((r,i)=>domAgg[themeById(r.id).dom].push(i+1));
+  const domRows=Object.entries(domAgg).map(([d,ranks])=>({d,
+    avg:ranks.reduce((s,x)=>s+x,0)/ranks.length,
+    top10:ranks.filter(x=>x<=10).length}));
+  domRows.sort((x,y)=>x.avg-y.avg);
+
+  let html=`
+    <div class="eyebrow">Attempt ${attemptIdx+1} · ${new Date(a.finished).toLocaleString()} ·
+      ${a.answered}/${PAIRS.length} answered${a.timer?"":" · practice mode (no timer)"}</div>
+    <h2 style="font-size:30px;margin:8px 0 6px">Your Signature Themes</h2>
+    <p class="muted" style="max-width:58ch">Your five most dominant talent themes, ranked by how consistently
+      and strongly you chose their statements. Below them, all 34 themes in order.</p>
+    <div class="domsummary">` +
+    domRows.map((r,i)=>{const D=DOMAINS[r.d];return `
+      <div class="card" style="border-top:3px solid var(${D.css})">
+        <div class="eyebrow" style="font-size:10px">${i===0?"Lead domain":"&nbsp;"}</div>
+        <div style="font-weight:600;font-size:13px">${D.name}</div>
+        <div class="val">${r.avg.toFixed(1)}</div>
+        <div class="muted" style="font-size:11px">avg rank · ${r.top10} in top 10</div>
+      </div>`}).join("") + `</div><div class="top5">`;
+
+  a.ranking.slice(0,5).forEach((r,i)=>{
+    const t=themeById(r.id),D=DOMAINS[t.dom];
+    html+=`
+    <div class="card theme-card" style="--dc:var(${D.css});--dbg:var(${D.soft})">
+      <div class="row" style="justify-content:space-between">
+        <h3>${i+1}. ${t.name}</h3><span class="chip">${D.name}</span>
+      </div>
+      <p style="margin:8px 0 0;font-size:15px">${esc(t.desc)}</p>
+      <div class="blk"><b>Watch out</b><br>${esc(t.blind)}</div>
+      <div class="blk"><b>Use it</b><br>${t.act.map(esc).join("<br>")}</div>
+    </div>`;
+  });
+  html+=`</div><div class="eyebrow">Full ranking — all 34 themes</div><div class="ranklist">`;
+
+  a.ranking.forEach((r,i)=>{
+    const t=themeById(r.id),D=DOMAINS[t.dom];
+    let delta="";
+    if(prev){
+      const d=prevRank[r.id]-(i+1);
+      delta=d>0?`<span class="delta up">▲${d}</span>`:d<0?`<span class="delta down">▼${-d}</span>`:`<span class="delta">·</span>`;
+    }
+    html+=`
+    <div class="rankrow" style="--dc:var(${D.css})">
+      <span class="muted">${i+1}</span>
+      <span class="name"><span class="swatch" style="background:var(${D.css})"></span>${t.name}</span>
+      <span class="bar"><i style="width:${r.pct}%"></i></span>
+      <span style="text-align:right">${r.pct.toFixed(0)}%</span>
+      ${delta||"<span></span>"}
+    </div>`;
+  });
+  html+=`</div>
+    <div class="row" style="margin-top:26px">
+      <button class="btn" id="copyBtn">Copy results for analysis</button>
+      <button class="btn2" id="dlBtn">Download JSON</button>
+      <button class="btn2" id="againBtn">Take it again</button>
+      <button class="btn2" id="homeBtn">Home</button>
+    </div>
+    <p class="muted" style="font-size:13px;max-width:60ch">“Copy results” puts a JSON summary on your
+      clipboard — paste it to Claude for a deep interpretation of theme combinations, domain balance
+      and changes between attempts.</p>`;
+
+  $("test").style.display="none";$("intro").style.display="none";
+  const res=$("results");res.innerHTML=html;res.style.display="block";
+  window.scrollTo(0,0);
+
+  const exportObj=()=>({
+    tool:"Strengths Profiler (unofficial CliftonStrengths-style)",
+    attempt:attemptIdx+1, finished:a.finished, timerUsed:a.timer,
+    answered:a.answered, skipped:a.skipped,
+    ranking:a.ranking.map((r,i)=>({rank:i+1, theme:themeById(r.id).name,
+      domain:DOMAINS[themeById(r.id).dom].name, pct:r.pct, strongPicks:r.strong})),
+    previousTop10: prev? prev.ranking.slice(0,10).map(r=>themeById(r.id).name) : null
+  });
+  $("copyBtn").onclick=()=>{
+    navigator.clipboard.writeText(JSON.stringify(exportObj(),null,2))
+      .then(()=>toast("Copied — paste it to Claude for analysis"))
+      .catch(()=>toast("Copy failed — use Download instead"));
+  };
+  $("dlBtn").onclick=()=>{
+    const blob=new Blob([JSON.stringify(exportObj(),null,2)],{type:"application/json"});
+    const u=URL.createObjectURL(blob);const l=document.createElement("a");
+    l.href=u;l.download=`strengths-attempt-${attemptIdx+1}.json`;l.click();URL.revokeObjectURL(u);
+  };
+  $("againBtn").onclick=()=>{localStorage.removeItem(LS_PROGRESS);startTest(false)};
+  $("homeBtn").onclick=()=>{res.style.display="none";$("intro").style.display="block";renderHistory()};
+}
+
+/* ============================================================
+   HISTORY (intro screen)
+   ============================================================ */
+function renderHistory(){
+  const attempts=load(LS_ATTEMPTS)||[];
+  const h=$("history");
+  if(!attempts.length){h.innerHTML="";return}
+  let html=`<div class="eyebrow" style="margin-bottom:10px">Past attempts</div><div style="display:grid;gap:8px">`;
+  attempts.forEach((a,i)=>{
+    const top3=a.ranking.slice(0,3).map(r=>themeById(r.id).name).join(" · ");
+    html+=`<div class="card histrow">
+      <div><b>Attempt ${i+1}</b> <span class="muted" style="font-size:13px">·
+        ${new Date(a.finished).toLocaleDateString()}</span><br>
+        <span class="muted" style="font-size:13px">Top: ${top3}</span></div>
+      <button class="btn2" data-i="${i}">View</button></div>`;
+  });
+  html+=`</div>`;
+  h.innerHTML=html;
+  h.querySelectorAll("button").forEach(b=>b.onclick=()=>renderResults(parseInt(b.dataset.i,10)));
+}
+
+$("startBtn").onclick=()=>{localStorage.removeItem(LS_PROGRESS);startTest(false)};
+$("resumeBtn").onclick=()=>startTest(true);
+if(load(LS_PROGRESS))$("resumeBox").style.display="block";
+renderHistory();
+</script>
