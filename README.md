@@ -16,6 +16,10 @@ An unofficial, self-hosted reconstruction of the **CliftonStrengths** assessment
 - Progress autosaves to `localStorage`; interrupted attempts resume. Full attempt history is kept, and each retake shows rank deltas (▲/▼) versus the previous attempt.
 - **Copy results for analysis** exports a JSON summary (ranking, percentages, strong-pick counts, previous top 10) to paste into Claude or any tool for deeper interpretation.
 
+## Languages
+
+Fully bilingual **English / Russian** — the RU/EN button in the top-right corner switches everything: UI, all 177 statements, and the 34 theme interpretations. The choice persists between visits, and you can switch mid-test (answers are stored against pair indices, not text, so results are identical either way).
+
 ## Usage
 
 Open `index.html` in a browser — it's a single self-contained file, no build, no dependencies. For localStorage persistence across sessions, serve it from a stable origin, e.g.:
