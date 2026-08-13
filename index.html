@@ -62,6 +62,16 @@
     .spec>div:nth-child(n+3){border-top:1px solid var(--line)}
   }
 
+  /* ---------- primer ---------- */
+  #primer{padding-top:30px}
+  #primer h2{font-size:clamp(30px,6vw,44px);letter-spacing:-.045em;line-height:1.02;margin:10px 0 8px}
+  .prule{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:15px 0;
+    border-bottom:1px solid var(--line2);font-size:15px;line-height:1.45}
+  .prule .n{font-family:var(--mono);font-size:12px;color:var(--ink2);padding-top:2px}
+  .scale.mini{max-width:380px;margin:30px 0 10px}
+  .minilbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink2);
+    max-width:380px;display:flex;justify-content:space-between}
+
   /* ---------- test ---------- */
   #test{display:none;padding-top:26px}
   .topbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;
@@ -229,6 +239,18 @@
     </div>
 
     <div id="history"></div>
+  </section>
+
+  <!-- ============ PRIMER ============ -->
+  <section id="primer" style="display:none">
+    <div class="eyebrow" id="pEyebrow"></div>
+    <h2 id="pTitle"></h2>
+    <div id="pList"></div>
+    <div class="scale mini" aria-hidden="true">
+      <span class="dot big"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot big"></span>
+    </div>
+    <div class="minilbl" id="pMini"></div>
+    <button class="btn" id="primerBtn" style="margin-top:30px"></button>
   </section>
 
   <!-- ============ TEST ============ -->
@@ -926,6 +948,19 @@ en:{
   toastCopied:"Copied — paste it to Claude for analysis", toastFail:"Copy failed — use Download instead",
   toastNothing:"Nothing to resume", locale:"en-US",
   exit:"Exit", toastExit:"Progress saved — resume anytime",
+  primer:{
+    eyebrow:"How to answer",
+    title:"It's a tug-of-war, not two questions",
+    items:[
+      "The two statements are often completely unrelated — on purpose. They come from different talents.",
+      "The question is always the same: which of the two is more you? The far dot means confidently that side, the next one — “rather this side”, the center — an honest tie.",
+      "Every choice gives one talent a point at the other's expense. 177 such duels build the ranking of all 34 talents — so you'll have to choose even when both statements feel like you.",
+      "Neutral is only for a genuine tie: both equally you, or both equally not. Overusing it blurs your own profile.",
+      "The 20 seconds exist so that your instinct answers — not your self-presentation."
+    ],
+    miniL:"confidently left", miniC:"tie", miniR:"confidently right",
+    btn:"Got it — start"
+  },
   v:{
     hdr:"Closing summary",
     lead:(d,share,second)=>`Your profile centers on ${d} — ${share}% of its weight — backed by ${second}.`,
@@ -972,6 +1007,19 @@ ru:{
   toastCopied:"Скопировано — вставьте в чат с Claude", toastFail:"Не удалось скопировать — используйте «Скачать»",
   toastNothing:"Нечего продолжать", locale:"ru-RU",
   exit:"Выйти", toastExit:"Прогресс сохранён — можно продолжить позже",
+  primer:{
+    eyebrow:"Как отвечать",
+    title:"Это перетягивание, а не два вопроса",
+    items:[
+      "Утверждения в паре часто вообще не связаны — это специально: они из разных талантов.",
+      "Вопрос всегда один: какое из двух больше про вас? Крайняя точка — уверенно эта сторона, соседняя — «скорее она», центр — честная ничья.",
+      "Каждый выбор — балл одному таланту за счёт другого. Из 177 таких дуэлей складывается рейтинг всех 34 талантов, поэтому выбирать придётся даже между двумя «своими» утверждениями.",
+      "«Нейтрально» — только для настоящей ничьей: оба одинаково про вас или оба одинаково мимо. Частое нажатие размывает ваш же профиль.",
+      "20 секунд нужны, чтобы отвечал инстинкт, а не самопрезентация."
+    ],
+    miniL:"уверенно левое", miniC:"ничья", miniR:"уверенно правое",
+    btn:"Понятно — начать"
+  },
   v:{
     hdr:"Заключение",
     lead:(d,share,second)=>`Центр тяжести вашего профиля — ${d}: ${share}% его веса, с опорой на домен «${second}».`,
@@ -1015,15 +1063,21 @@ function buildPairs(){
     for(let k=0;k<n;k++)slots.push({t:ti,s:k%5});
   });
   for(let i=slots.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[slots[i],slots[j]]=[slots[j],slots[i]]}
-  const pairs=[],comboCount={};
+  const pairs=[],comboCount={},exactSeen={},sameDomCount={};
   const used=new Array(slots.length).fill(false);
+  const exactKey=(a,b)=>[a.t+"#"+a.s,b.t+"#"+b.s].sort().join("|");
   for(let i=0;i<slots.length;i++){
     if(used[i])continue;
     let found=-1;
+    // pass 1: different theme, combo limit 2, no exact statement-pair repeats,
+    // and at most 3 same-domain duels per theme (keeps opponents varied)
     for(let j=i+1;j<slots.length;j++){
       if(used[j]||slots[j].t===slots[i].t)continue;
       const key=Math.min(slots[i].t,slots[j].t)+"-"+Math.max(slots[i].t,slots[j].t);
       if((comboCount[key]||0)>=2)continue;
+      if(exactSeen[exactKey(slots[i],slots[j])])continue;
+      const A=THEMES[slots[i].t],B=THEMES[slots[j].t];
+      if(A.dom===B.dom && ((sameDomCount[A.id]||0)>=3 || (sameDomCount[B.id]||0)>=3))continue;
       found=j;break;
     }
     if(found<0){for(let j=i+1;j<slots.length;j++){if(!used[j]&&slots[j].t!==slots[i].t){found=j;break}}}
@@ -1031,6 +1085,10 @@ function buildPairs(){
     used[i]=used[found]=true;
     const key=Math.min(slots[i].t,slots[found].t)+"-"+Math.max(slots[i].t,slots[found].t);
     comboCount[key]=(comboCount[key]||0)+1;
+    exactSeen[exactKey(slots[i],slots[found])]=1;
+    const A=THEMES[slots[i].t],B=THEMES[slots[found].t];
+    if(A.dom===B.dom){sameDomCount[A.id]=(sameDomCount[A.id]||0)+1;
+      sameDomCount[B.id]=(sameDomCount[B.id]||0)+1;}
     pairs.push(rng()<0.5?[slots[i],slots[found]]:[slots[found],slots[i]]);
   }
   return pairs; // 177 pairs
@@ -1356,6 +1414,11 @@ function applyLang(){
     `<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}</span>`).join("");
   $("startBtn").textContent=t.start; $("iTimerLbl").textContent=t.timerLbl; $("resumeBtn").textContent=t.resume;
   $("exitBtn").textContent=t.exit;
+  $("pEyebrow").textContent=t.primer.eyebrow; $("pTitle").textContent=t.primer.title;
+  $("pList").innerHTML=t.primer.items.map((x,i)=>
+    `<div class="prule"><span class="n">0${i+1}</span><span>${x}</span></div>`).join("");
+  $("pMini").innerHTML=`<span>${t.primer.miniL}</span><span>${t.primer.miniC}</span><span>${t.primer.miniR}</span>`;
+  $("primerBtn").textContent=t.primer.btn;
   $("lblL").innerHTML=t.lblStrong; $("lblC").textContent=t.lblNeutral; $("lblR").innerHTML=t.lblStrong;
   document.title = lang==="ru"
     ? "Профиль сильных сторон — тест в духе CliftonStrengths"
@@ -1386,7 +1449,12 @@ $("exitBtn").onclick=()=>{
   renderHistory();window.scrollTo(0,0);
   toast(T().toastExit);
 };
-$("startBtn").onclick=()=>{localStorage.removeItem(LS_PROGRESS);startTest(false)};
+$("startBtn").onclick=()=>{
+  localStorage.removeItem(LS_PROGRESS);
+  $("intro").style.display="none";$("results").style.display="none";
+  $("primer").style.display="block";window.scrollTo(0,0);
+};
+$("primerBtn").onclick=()=>{$("primer").style.display="none";startTest(false)};
 $("resumeBtn").onclick=()=>startTest(true);
 if(load(LS_PROGRESS))$("resumeBox").style.display="block";
 $("iStrand").innerHTML=Array.from({length:34},(_,i)=>
