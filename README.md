@@ -1,5 +1,7 @@
 # Strengths Profiler
 
+**Live:** https://asaldatava-stoat.github.io/cliffton-test/
+
 An unofficial, self-hosted reconstruction of the **CliftonStrengths** assessment mechanics. Not affiliated with Gallup; all 177 statements are original text keyed to the publicly documented 34 talent themes.
 
 ## What it replicates
