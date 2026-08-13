@@ -7,7 +7,7 @@
     --accent:#46578A; --accent-ink:#FFFFFF; --soft:#EEEDE6;
     --exec:#7C4DA0; --infl:#D97E27; --rel:#2F6EB5; --strat:#3E8A63;
     --exec-soft:#F1EAF6; --infl-soft:#FAEFE2; --rel-soft:#E8F0F9; --strat-soft:#E7F2EC;
-    --danger:#B4443C;
+    --danger:#B4443C; --on-dom:#FFFFFF;
     --serif: Charter, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
@@ -17,7 +17,7 @@
       --accent:#8FA0D6; --accent-ink:#15181F; --soft:#262B36;
       --exec:#B08BD0; --infl:#E5A05C; --rel:#7AA7DC; --strat:#7CB89A;
       --exec-soft:#2A2333; --infl-soft:#332A20; --rel-soft:#202934; --strat-soft:#203028;
-      --danger:#D97C74;
+      --danger:#D97C74; --on-dom:#15181F;
     }
   }
   :root[data-theme="dark"]{
@@ -25,103 +25,155 @@
     --accent:#8FA0D6; --accent-ink:#15181F; --soft:#262B36;
     --exec:#B08BD0; --infl:#E5A05C; --rel:#7AA7DC; --strat:#7CB89A;
     --exec-soft:#2A2333; --infl-soft:#332A20; --rel-soft:#202934; --strat-soft:#203028;
-    --danger:#D97C74;
+    --danger:#D97C74; --on-dom:#15181F;
   }
   :root[data-theme="light"]{
     --bg:#F6F5F1; --card:#FFFFFF; --ink:#232837; --ink2:#5A6072; --line:#E3E1D9;
     --accent:#46578A; --accent-ink:#FFFFFF; --soft:#EEEDE6;
     --exec:#7C4DA0; --infl:#D97E27; --rel:#2F6EB5; --strat:#3E8A63;
     --exec-soft:#F1EAF6; --infl-soft:#FAEFE2; --rel-soft:#E8F0F9; --strat-soft:#E7F2EC;
-    --danger:#B4443C;
+    --danger:#B4443C; --on-dom:#FFFFFF;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
     -webkit-font-smoothing:antialiased;}
-  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
-  h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0}
-  .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:600}
+  .wrap{max-width:720px;margin:0 auto;padding:38px 22px 90px}
+  h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0;font-weight:600}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:600}
   button{font-family:var(--sans);cursor:pointer}
-  .btn{background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;
-    padding:12px 22px;font-size:15px;font-weight:600}
+  .btn{background:var(--accent);color:var(--accent-ink);border:none;border-radius:3px;
+    padding:13px 26px;font-size:15px;font-weight:600}
+  .btn:hover{filter:brightness(1.1)}
   .btn:focus-visible,.dot:focus-visible,.btn2:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-  .btn2{background:transparent;color:var(--accent);border:1.5px solid var(--accent);
-    border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .btn2{background:transparent;color:var(--accent);border:1px solid var(--accent);
+    border-radius:3px;padding:10px 18px;font-size:14px;font-weight:600}
   .muted{color:var(--ink2)}
   .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .sect{margin-top:44px}
+  .sect>.eyebrow{display:block;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .swatch{width:9px;height:9px;border-radius:2px;flex:none}
 
   /* ---------- intro ---------- */
-  #intro h1{font-size:34px;margin:6px 0 4px}
-  #intro .sub{font-size:16px;color:var(--ink2);max-width:56ch}
-  .rules{display:grid;gap:10px;margin:22px 0}
-  .rules .card{display:flex;gap:14px;align-items:flex-start;padding:16px 18px}
-  .rules .n{font-family:var(--serif);font-size:20px;color:var(--accent);min-width:22px;
+  .masthead .brand{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink2)}
+  #intro h1{font-size:44px;line-height:1.08;margin:14px 0 14px;letter-spacing:-.01em}
+  #intro .sub{font-size:16px;color:var(--ink2);max-width:58ch;margin:0}
+  .spec{display:grid;grid-template-columns:repeat(4,1fr);margin:30px 0 0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .spec>div{padding:16px 14px 16px 0}
+  .spec>div+div{border-left:1px solid var(--line);padding-left:14px}
+  .spec dt{font-family:var(--serif);font-size:30px;line-height:1;margin:0 0 7px;
     font-variant-numeric:tabular-nums}
-  .domlegend{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:16px 0}
-  .domlegend .card{padding:10px 14px;font-size:13px;display:flex;gap:8px;align-items:center}
-  .swatch{width:10px;height:10px;border-radius:3px;flex:none}
+  .spec dd{margin:0;font-size:12px;color:var(--ink2);line-height:1.45}
+  .note{font-size:13.5px;color:var(--ink2);font-style:italic;margin:18px 0 0}
+  .domline{display:flex;gap:8px 22px;flex-wrap:wrap;font-size:13px;margin:12px 0 0}
+  .domline span{display:flex;gap:7px;align-items:center}
+  @media (max-width:560px){
+    #intro h1{font-size:33px}
+    .spec{grid-template-columns:1fr 1fr}
+    .spec>div+div{border-left:none;padding-left:0}
+    .spec>div:nth-child(even){border-left:1px solid var(--line);padding-left:14px}
+    .spec>div:nth-child(n+3){border-top:1px solid var(--line)}
+  }
 
   /* ---------- test ---------- */
   #test{display:none}
-  .topbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;
+  .topbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;
     font-variant-numeric:tabular-nums}
-  .progress{height:4px;background:var(--soft);border-radius:2px;overflow:hidden;margin-bottom:26px}
-  .progress i{display:block;height:100%;background:var(--accent);width:0%;transition:width .3s}
-  .timerbar{height:6px;background:var(--soft);border-radius:3px;overflow:hidden;margin:0 0 22px}
+  .progress{height:2px;background:var(--soft);overflow:hidden;margin-bottom:3px}
+  .progress i{display:block;height:100%;background:var(--ink2);width:0%;transition:width .3s}
+  .timerbar{height:2px;background:transparent;overflow:hidden;margin:0 0 50px}
   .timerbar i{display:block;height:100%;background:var(--accent);width:100%}
   .timerbar.warn i{background:var(--danger)}
-  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .stmt{font-family:var(--serif);font-size:19px;line-height:1.45;padding:22px 20px;min-height:120px;
-    display:flex;align-items:center;text-wrap:balance}
-  .stmt.picked{border-color:var(--accent);box-shadow:0 0 0 1.5px var(--accent) inset}
-  .scale{display:flex;justify-content:space-between;align-items:center;margin:26px 6px 6px;gap:6px}
-  .dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);background:var(--card);
-    flex:none;transition:transform .1s}
-  .dot:hover{border-color:var(--accent);transform:scale(1.1)}
+  .pair{display:grid;grid-template-columns:1fr 1px 1fr;align-items:stretch}
+  .pair .vr{background:var(--line)}
+  .stmt{font-family:var(--serif);font-size:21px;line-height:1.42;padding:4px 28px 16px 0;min-height:104px;
+    display:flex;align-items:flex-start;text-wrap:balance}
+  .stmt:last-child{padding:4px 0 16px 28px}
+  .stmt.picked{color:var(--accent)}
+  .scale{display:flex;justify-content:space-between;align-items:center;margin:36px 2px 0;gap:6px;position:relative}
+  .scale::before{content:"";position:absolute;left:10px;right:10px;top:50%;height:1px;background:var(--line)}
+  .dot{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink2);background:var(--bg);
+    flex:none;transition:transform .1s;position:relative}
+  .dot:hover{border-color:var(--accent);transform:scale(1.12)}
   .dot.sel{background:var(--accent);border-color:var(--accent)}
-  .dot.big{width:44px;height:44px}
-  .scalelabels{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin:10px 2px 0}
-  .scalelabels span{max-width:120px}
+  .dot.big{width:42px;height:42px}
+  .keynums{display:flex;justify-content:space-between;margin:8px 8px 0;font-size:11px;
+    color:var(--ink2);font-variant-numeric:tabular-nums}
+  .keynums span{width:30px;text-align:center}
+  .keynums span:first-child,.keynums span:last-child{width:42px}
+  .scalelabels{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin:14px 2px 0}
+  .scalelabels span{max-width:130px;line-height:1.35}
   .scalelabels .r{text-align:right}
   .scalelabels .c{text-align:center}
-  .kbdhint{text-align:center;font-size:12px;color:var(--ink2);margin-top:26px}
-  kbd{background:var(--soft);border:1px solid var(--line);border-radius:4px;padding:1px 6px;
+  kbd{background:var(--soft);border:1px solid var(--line);border-radius:3px;padding:1px 6px;
     font-family:var(--sans);font-size:11px}
   @media (max-width:560px){
     .pair{grid-template-columns:1fr}
-    .stmt{min-height:0;font-size:17px;padding:16px}
+    .pair .vr{height:1px;width:100%;margin:6px 0}
+    .stmt{min-height:0;font-size:18px;padding:8px 0}
+    .stmt:last-child{padding:8px 0}
   }
 
   /* ---------- results ---------- */
   #results{display:none}
-  .top5{display:grid;gap:12px;margin:18px 0 30px}
-  .theme-card{border-left:4px solid var(--dc,var(--accent))}
-  .theme-card h3{font-size:21px;margin-bottom:2px}
-  .chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-    padding:2px 9px;border-radius:20px;background:var(--dbg,var(--soft));color:var(--dc,var(--ink))}
+  .top5{display:grid;gap:30px;margin:18px 0 10px}
+  .theme-card{border-left:3px solid var(--dc,var(--accent));padding:2px 0 2px 18px}
+  .theme-card h3{font-size:22px;margin:1px 0 0}
+  .chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--dc,var(--ink2))}
   .theme-card .blk{margin-top:10px;font-size:14px}
-  .theme-card .blk b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
-  .ranklist{display:grid;gap:4px;margin-top:14px}
-  .rankrow{display:grid;grid-template-columns:34px 150px 1fr 48px 40px;gap:10px;align-items:center;
-    padding:7px 12px;border-radius:8px;font-size:14px;font-variant-numeric:tabular-nums}
-  .rankrow:nth-child(odd){background:var(--soft)}
+  .theme-card .blk b{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2)}
+  .ranklist{display:grid;margin-top:4px}
+  .rankrow{display:grid;grid-template-columns:30px 152px 1fr 44px 36px;gap:4px 10px;align-items:center;
+    padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;font-variant-numeric:tabular-nums}
   .rankrow .name{font-weight:600;display:flex;gap:7px;align-items:center;white-space:nowrap}
-  .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+  .rankrow .desc{grid-column:2/-1;font-size:12px;color:var(--ink2)}
+  .bar{height:6px;background:var(--soft);overflow:hidden}
   .bar i{display:block;height:100%;background:var(--dc,var(--accent))}
   .delta{font-size:12px;text-align:right;color:var(--ink2)}
   .delta.up{color:var(--strat)} .delta.down{color:var(--danger)}
-  .domsummary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:16px 0}
-  .domsummary .card{padding:12px 14px}
-  .domsummary .val{font-family:var(--serif);font-size:24px;font-variant-numeric:tabular-nums}
   @media (max-width:560px){
-    .rankrow{grid-template-columns:28px 118px 1fr 40px}
+    .rankrow{grid-template-columns:28px 120px 1fr 40px}
     .rankrow .delta{display:none}
   }
 
+  /* ---------- report sections ---------- */
+  .strand{display:flex;gap:3px;align-items:center;margin:20px 0 6px}
+  .strand i{flex:1;height:38px;border-radius:3px;background:var(--sc)}
+  .strand i.dim{opacity:.3}
+  .strand .gap{flex:0 0 16px;background:none;height:0}
+  .stackbar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:18px 0 8px}
+  .stackbar i{display:block;height:100%}
+  .stacklegend{display:flex;gap:14px 20px;flex-wrap:wrap;font-size:12px;color:var(--ink2);
+    margin-bottom:4px;font-variant-numeric:tabular-nums}
+  .stacklegend span{display:flex;gap:6px;align-items:center}
+  .cols2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:14px 0 8px}
+  .numlist{display:grid;gap:7px;font-size:14px;align-content:start}
+  .numlist .it{display:flex;gap:10px;align-items:baseline;border-left:3px solid var(--dc);
+    padding-left:10px;line-height:1.35}
+  .numlist .rk{font-variant-numeric:tabular-nums;color:var(--ink2);min-width:22px;text-align:right;flex:none}
+  .numlist .top .nm{font-weight:700}
+  .domgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+  .domgrid .dcol{display:grid;gap:6px;align-content:start}
+  .domgrid .colhdr{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    text-align:center;padding-bottom:2px;border-bottom:2px solid var(--dc)}
+  .tile{border-radius:3px;padding:8px 4px;text-align:center;font-size:11px;line-height:1.25}
+  .tile .rk{font-family:var(--serif);font-size:19px;display:block;font-variant-numeric:tabular-nums}
+  .tile.hot{background:var(--dc);color:var(--on-dom);font-weight:600}
+  .tile.cold{background:var(--dbg);color:var(--ink)}
+  .rankrow .desc{grid-column:2/-1;font-size:12px;color:var(--ink2);margin-top:1px}
+  .statline{font-size:12px;color:var(--ink2);margin-top:3px;font-variant-numeric:tabular-nums}
+  @media (max-width:560px){
+    .cols2{grid-template-columns:1fr}
+    .domgrid{grid-template-columns:repeat(2,1fr)}
+    .strand i{height:26px}
+  }
+
   /* ---------- history ---------- */
-  #history{margin-top:44px}
-  .histrow{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+  #history{margin-top:52px}
+  .histrow{display:flex;justify-content:space-between;align-items:center;padding:14px 0;
+    border-bottom:1px solid var(--line)}
   .langbtn{position:fixed;top:16px;right:16px;z-index:10;background:var(--card);color:var(--ink);
     border:1.5px solid var(--line);border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;
     letter-spacing:.04em}
@@ -138,29 +190,26 @@
 
   <!-- ============ INTRO ============ -->
   <section id="intro">
-    <div class="eyebrow" id="iEyebrow">Unofficial · CliftonStrengths-style · 177 items</div>
-    <h1 id="iTitle">Strengths Profiler</h1>
-    <p class="sub" id="iSub"></p>
+    <header class="masthead">
+      <div class="brand" id="iEyebrow"></div>
+      <h1 id="iTitle">Strengths Profiler</h1>
+      <p class="sub" id="iSub"></p>
+      <div class="strand" id="iStrand" aria-hidden="true"></div>
+    </header>
 
-    <div class="rules">
-      <div class="card"><span class="n">1</span><div id="iR1"></div></div>
-      <div class="card"><span class="n">2</span><div id="iR2"></div></div>
-      <div class="card"><span class="n">3</span><div id="iR3"></div></div>
-      <div class="card"><span class="n">4</span><div id="iR4"></div></div>
-    </div>
+    <dl class="spec">
+      <div><dt>177</dt><dd id="iS1"></dd></div>
+      <div><dt>20<span style="font-size:18px" id="iSecUnit"> s</span></dt><dd id="iS2"></dd></div>
+      <div><dt>0</dt><dd id="iS3"></dd></div>
+      <div><dt>~30</dt><dd id="iS4"></dd></div>
+    </dl>
+    <p class="note" id="iNote"></p>
+    <div class="domline" id="iDomLine"></div>
 
-    <div class="eyebrow" style="margin-top:26px" id="iDomHdr">The four domains</div>
-    <div class="domlegend">
-      <div class="card"><span class="swatch" style="background:var(--exec)"></span><span id="iD1"></span></div>
-      <div class="card"><span class="swatch" style="background:var(--infl)"></span><span id="iD2"></span></div>
-      <div class="card"><span class="swatch" style="background:var(--rel)"></span><span id="iD3"></span></div>
-      <div class="card"><span class="swatch" style="background:var(--strat)"></span><span id="iD4"></span></div>
-    </div>
-
-    <div class="row" style="margin-top:26px">
+    <div class="row" style="margin-top:34px">
       <button class="btn" id="startBtn">Start the assessment</button>
       <label style="font-size:13px;color:var(--ink2);display:flex;gap:7px;align-items:center">
-        <input type="checkbox" id="timerToggle" checked> <span id="iTimerLbl">20-second timer (original conditions)</span>
+        <input type="checkbox" id="timerToggle" checked> <span id="iTimerLbl"></span>
       </label>
     </div>
     <div id="resumeBox" style="display:none;margin-top:14px">
@@ -180,8 +229,9 @@
     <div class="timerbar" id="timerBar"><i id="timerFill"></i></div>
 
     <div class="pair">
-      <div class="card stmt" id="stmtA"></div>
-      <div class="card stmt" id="stmtB"></div>
+      <div class="stmt" id="stmtA"></div>
+      <div class="vr"></div>
+      <div class="stmt" id="stmtB"></div>
     </div>
 
     <div class="scale" id="scale">
@@ -191,12 +241,12 @@
       <button class="dot"     data-v="1"  aria-label="Describes me — right statement"></button>
       <button class="dot big" data-v="2"  aria-label="Strongly describes me — right statement"></button>
     </div>
+    <div class="keynums" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
     <div class="scalelabels">
       <span id="lblL">Strongly<br>describes me</span>
       <span class="c" id="lblC">Neutral</span>
       <span class="r" id="lblR">Strongly<br>describes me</span>
     </div>
-    <p class="kbdhint" id="kbdHint">Keyboard: <kbd>1</kbd>–<kbd>5</kbd> left to right</p>
   </section>
 
   <!-- ============ RESULTS ============ -->
@@ -713,25 +763,29 @@ strategic:{name:"Стратегия",
 
 const STR = {
 en:{
-  eyebrow:"Unofficial · CliftonStrengths-style · 177 items",
+  eyebrow:"Unofficial · CliftonStrengths-style assessment",
   title:"Strengths Profiler",
-  sub:"A faithful reconstruction of the CliftonStrengths assessment mechanics — paired statements, a 20-second clock, no going back — with original statements keyed to the 34 talent themes. Not affiliated with Gallup.",
-  r1:"<b>177 paired statements.</b> Each screen shows two self-descriptors. Choose which describes you better, and how strongly — or stay neutral.",
-  r2:"<b>20 seconds per item.</b> When the clock runs out the test moves on and the item is skipped. Answer with your first instinct — that's the design.",
-  r3:"<b>No going back.</b> Once you answer or the timer expires, the item is locked, exactly like the original.",
-  r4:"<b>~25–30 minutes.</b> If you close the tab your progress autosaves and you can resume, but one uninterrupted sitting gives the truest result.",
-  domHdr:"The four domains",
-  d1:"Executing · 9 themes", d2:"Influencing · 8 themes", d3:"Relationship Building · 9", d4:"Strategic Thinking · 8",
+  sub:"A reconstruction of the CliftonStrengths assessment mechanics — paired statements, a 20-second clock, no going back — with original statements keyed to the 34 talent themes. Not affiliated with Gallup.",
+  s1:"paired statements — pick the one that describes you better, and how strongly",
+  s2:"per item; when time runs out, the test moves on",
+  s3:"ways back — every answer locks, exactly like the original",
+  s4:"minutes in one sitting; progress autosaves if you leave",
+  note:"Answer on instinct. The time pressure is part of the method — it keeps you from calculating what would look good.",
   start:"Start the assessment", timerLbl:"20-second timer (original conditions)", resume:"Resume unfinished attempt",
   itemOf:(i,n)=>`Item ${i} of ${n}`, noTimer:"no timer",
   lblStrong:"Strongly<br>describes me", lblNeutral:"Neutral",
-  kbd:"Keyboard: <kbd>1</kbd>–<kbd>5</kbd> left to right",
   attempt:"Attempt", answered:"answered", practice:"practice mode (no timer)",
-  h2:"Your Signature Themes",
-  resSub:"Your five most dominant talent themes, ranked by how consistently and strongly you chose their statements. Below them, all 34 themes in order.",
-  leadDom:"Lead domain", avgRank:"avg rank", inTop10:"in top 10",
+  leadWith:d=>`You lead with ${d}.`,
+  domBlurb:{exec:"Your strongest themes are about making things happen — turning ideas into completed work.",
+    infl:"Your strongest themes are about taking charge, speaking up and moving others to action.",
+    rel:"Your strongest themes are about building the relationships that hold a team together.",
+    strat:"Your strongest themes are about absorbing and analyzing information to make better decisions."},
+  strengthen:"Strengthen — your top 10", navigate:"Navigate — themes 11–34",
+  top10Hdr:"Your top 10 in detail",
+  byDomain:"Themes by domain",
+  rankWord:"rank", strongPicks:"strong picks",
   watchOut:"Watch out", useIt:"Use it",
-  fullRanking:"Full ranking — all 34 themes",
+  fullRanking:"Theme sequence — all 34",
   copy:"Copy results for analysis", dl:"Download JSON", again:"Take it again", home:"Home",
   copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep interpretation of theme combinations, domain balance and changes between attempts.",
   past:"Past attempts", top:"Top", view:"View",
@@ -739,25 +793,29 @@ en:{
   toastNothing:"Nothing to resume", locale:"en-US"
 },
 ru:{
-  eyebrow:"Неофициальный · в духе CliftonStrengths · 177 вопросов",
+  eyebrow:"Неофициальный тест в духе CliftonStrengths",
   title:"Профиль сильных сторон",
-  sub:"Точная реконструкция механики теста CliftonStrengths — парные утверждения, 20 секунд на ответ, без возврата назад — с оригинальными формулировками, привязанными к 34 талантам. Не связан с Gallup.",
-  r1:"<b>177 парных утверждений.</b> На каждом экране — два описания. Выберите, какое подходит вам больше и насколько сильно, — или останьтесь нейтральны.",
-  r2:"<b>20 секунд на вопрос.</b> Когда время истекает, тест идёт дальше, а вопрос пропускается. Отвечайте первым импульсом — так задумано.",
-  r3:"<b>Без возврата назад.</b> После ответа или истечения времени вопрос блокируется — как в оригинале.",
-  r4:"<b>~25–30 минут.</b> Если закроете вкладку, прогресс сохранится и можно продолжить, но честнее всего пройти за один присест.",
-  domHdr:"Четыре домена",
-  d1:"Исполнение · 9 талантов", d2:"Влияние · 8 талантов", d3:"Построение отношений · 9", d4:"Стратегическое мышление · 8",
+  sub:"Реконструкция механики теста CliftonStrengths — парные утверждения, 20 секунд на ответ, без возврата назад — с оригинальными формулировками, привязанными к 34 талантам. Не связан с Gallup.",
+  s1:"парных утверждений — выберите то, что больше о вас, и насколько",
+  s2:"на вопрос; когда время выходит, тест идёт дальше",
+  s3:"шагов назад — каждый ответ блокируется, как в оригинале",
+  s4:"минут за один присест; прогресс сохраняется автоматически",
+  note:"Отвечайте по первому импульсу. Ограничение времени — часть метода: оно не даёт просчитывать «правильный» ответ.",
   start:"Начать тест", timerLbl:"Таймер 20 секунд (как в оригинале)", resume:"Продолжить незавершённую попытку",
   itemOf:(i,n)=>`Вопрос ${i} из ${n}`, noTimer:"без таймера",
   lblStrong:"Полностью<br>обо мне", lblNeutral:"Нейтрально",
-  kbd:"Клавиши: <kbd>1</kbd>–<kbd>5</kbd> слева направо",
   attempt:"Попытка", answered:"отвечено", practice:"режим практики (без таймера)",
-  h2:"Ваши ключевые таланты",
-  resSub:"Пять самых выраженных талантов — по тому, насколько последовательно и уверенно вы выбирали их утверждения. Ниже — все 34 в порядке убывания.",
-  leadDom:"Ведущий домен", avgRank:"средний ранг", inTop10:"в топ-10",
+  leadWith:d=>`Ваш ведущий домен — ${d}.`,
+  domBlurb:{exec:"Ваши сильнейшие таланты — о том, как доводить дела до результата.",
+    infl:"Ваши сильнейшие таланты — о том, как брать инициативу, убеждать и вести за собой.",
+    rel:"Ваши сильнейшие таланты — о том, как строить отношения, которые скрепляют команду.",
+    strat:"Ваши сильнейшие таланты — о том, как впитывать и анализировать информацию для сильных решений."},
+  strengthen:"Развивать — ваш топ-10", navigate:"Ориентироваться — таланты 11–34",
+  top10Hdr:"Ваш топ-10 подробно",
+  byDomain:"Таланты по доменам",
+  rankWord:"ранг", strongPicks:"уверенных выборов",
   watchOut:"Осторожно", useIt:"Как использовать",
-  fullRanking:"Полный рейтинг — все 34 таланта",
+  fullRanking:"Последовательность — все 34 таланта",
   copy:"Скопировать для анализа", dl:"Скачать JSON", again:"Пройти ещё раз", home:"На главную",
   copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокой интерпретации сочетаний талантов, баланса доменов и динамики между попытками.",
   past:"Прошлые попытки", top:"Топ", view:"Открыть",
@@ -868,7 +926,7 @@ function startTimer(){
     const left=timerEnd-Date.now();
     if(left<=0){clearInterval(timerId);answer(null);return}
     bar.style.width=(left/(TIMER_SECONDS*1000)*100)+"%";
-    num.textContent=Math.ceil(left/1000)+"s";
+    num.textContent=Math.ceil(left/1000)+(lang==="ru"?" с":" s");
     wrapEl.classList.toggle("warn",left<5000);
   },100);
 }
@@ -951,40 +1009,62 @@ function renderResults(attemptIdx){
   const prev=attemptIdx>0?attempts[attemptIdx-1]:null;
   const prevRank={}; if(prev)prev.ranking.forEach((r,i)=>prevRank[r.id]=i+1);
 
-  const domAgg={exec:[],infl:[],rel:[],strat:[]};
-  a.ranking.forEach((r,i)=>domAgg[themeById(r.id).dom].push(i+1));
-  const domRows=Object.entries(domAgg).map(([d,ranks])=>({d,
-    avg:ranks.reduce((s,x)=>s+x,0)/ranks.length,
-    top10:ranks.filter(x=>x<=10).length}));
-  domRows.sort((x,y)=>x.avg-y.avg);
+  const w={exec:0,infl:0,rel:0,strat:0};
+  a.ranking.forEach((r,i)=>{w[themeById(r.id).dom]+=34-i});
+  const wTot=Object.values(w).reduce((s,x)=>s+x,0)||1;
+  const domOrder=Object.keys(w).sort((x,y)=>w[y]-w[x]);
+  const lead=domOrder[0];
+
+  const strand=a.ranking.map((r,i)=>{
+    const D=DOMAINS[themeById(r.id).dom];
+    return `${i===10?'<i class="gap"></i>':''}<i class="${i<10?'':'dim'}" style="--sc:var(${D.css})" title="${i+1}. ${locThemeById(r.id).name}"></i>`;
+  }).join("");
+
+  const numItem=(r,i)=>{const t=locThemeById(r.id),D=DOMAINS[t.dom];
+    return `<div class="it ${i<10?'top':''}" style="--dc:var(${D.css})">
+      <span class="rk">${i+1}</span><span class="nm">${t.name}</span></div>`};
 
   let html=`
     <div class="eyebrow">${T().attempt} ${attemptIdx+1} · ${new Date(a.finished).toLocaleString(T().locale)} ·
       ${a.answered}/${PAIRS.length} ${T().answered}${a.timer?"":" · "+T().practice}</div>
-    <h2 style="font-size:30px;margin:8px 0 6px">${T().h2}</h2>
-    <p class="muted" style="max-width:58ch">${T().resSub}</p>
-    <div class="domsummary">` +
-    domRows.map((r,i)=>{const D=DOMAINS[r.d];return `
-      <div class="card" style="border-top:3px solid var(${D.css})">
-        <div class="eyebrow" style="font-size:10px">${i===0?T().leadDom:"&nbsp;"}</div>
-        <div style="font-weight:600;font-size:13px">${domName(r.d)}</div>
-        <div class="val">${r.avg.toFixed(1)}</div>
-        <div class="muted" style="font-size:11px">${T().avgRank} · ${r.top10} ${T().inTop10}</div>
-      </div>`}).join("") + `</div><div class="top5">`;
+    <h2 style="font-size:34px;margin:14px 0 10px">${T().leadWith(domName(lead))}</h2>
+    <p class="muted" style="max-width:58ch;margin:0">${T().domBlurb[lead]}</p>
+    <div class="strand">${strand}</div>
+    <div class="stackbar">${domOrder.map(d=>`<i style="width:${(w[d]/wTot*100).toFixed(1)}%;background:var(${DOMAINS[d].css})"></i>`).join("")}</div>
+    <div class="stacklegend">${domOrder.map(d=>`<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}&nbsp;${(w[d]/wTot*100).toFixed(0)}%</span>`).join("")}</div>
 
-  a.ranking.slice(0,5).forEach((r,i)=>{
+    <div class="cols2">
+      <div><div class="eyebrow" style="margin-bottom:10px">${T().strengthen}</div>
+        <div class="numlist">${a.ranking.slice(0,10).map((r,i)=>numItem(r,i)).join("")}</div></div>
+      <div><div class="eyebrow" style="margin-bottom:10px">${T().navigate}</div>
+        <div class="numlist">${a.ranking.slice(10).map((r,i)=>numItem(r,i+10)).join("")}</div></div>
+    </div>
+
+    <div class="sect"><span class="eyebrow">${T().top10Hdr}</span>
+    <div class="top5">`;
+
+  a.ranking.slice(0,10).forEach((r,i)=>{
     const t=locThemeById(r.id),D=DOMAINS[t.dom];
     html+=`
-    <div class="card theme-card" style="--dc:var(${D.css});--dbg:var(${D.soft})">
-      <div class="row" style="justify-content:space-between">
-        <h3>${i+1}. ${t.name}</h3><span class="chip">${domName(t.dom)}</span>
-      </div>
-      <p style="margin:8px 0 0;font-size:15px">${esc(t.desc)}</p>
+    <div class="theme-card" style="--dc:var(${D.css});--dbg:var(${D.soft})">
+      <span class="chip">${domName(t.dom)}</span>
+      <h3>${i+1}. ${t.name}</h3>
+      <div class="statline">${T().rankWord} ${i+1} · ${r.pct.toFixed(0)}% · ${T().strongPicks}: ${r.strong}</div>
+      <p style="margin:9px 0 0;font-size:15px">${esc(t.desc)}</p>
       <div class="blk"><b>${T().watchOut}</b><br>${esc(t.blind)}</div>
       <div class="blk"><b>${T().useIt}</b><br>${t.act.map(esc).join("<br>")}</div>
     </div>`;
   });
-  html+=`</div><div class="eyebrow">${T().fullRanking}</div><div class="ranklist">`;
+
+  html+=`</div></div>
+    <div class="sect"><span class="eyebrow">${T().byDomain}</span>
+    <div class="domgrid">${Object.keys(DOMAINS).map(d=>{
+      const items=a.ranking.map((r,i)=>({r,i})).filter(x=>themeById(x.r.id).dom===d);
+      return `<div class="dcol"><div class="colhdr" style="--dc:var(${DOMAINS[d].css});color:var(${DOMAINS[d].css})">${domName(d)}</div>
+        ${items.map(x=>`<div class="tile ${x.i<10?'hot':'cold'}" style="--dc:var(${DOMAINS[d].css});--dbg:var(${DOMAINS[d].soft})"><span class="rk">${x.i+1}</span>${locThemeById(x.r.id).name}</div>`).join("")}</div>`;
+    }).join("")}</div></div>
+
+    <div class="sect"><span class="eyebrow">${T().fullRanking}</span><div class="ranklist">`;
 
   a.ranking.forEach((r,i)=>{
     const t=locThemeById(r.id),D=DOMAINS[t.dom];
@@ -1000,10 +1080,11 @@ function renderResults(attemptIdx){
       <span class="bar"><i style="width:${r.pct}%"></i></span>
       <span style="text-align:right">${r.pct.toFixed(0)}%</span>
       ${delta||"<span></span>"}
+      <span class="desc">${esc(t.desc)}</span>
     </div>`;
   });
-  html+=`</div>
-    <div class="row" style="margin-top:26px">
+  html+=`</div></div>
+    <div class="row" style="margin-top:30px">
       <button class="btn" id="copyBtn">${T().copy}</button>
       <button class="btn2" id="dlBtn">${T().dl}</button>
       <button class="btn2" id="againBtn">${T().again}</button>
@@ -1021,6 +1102,12 @@ function renderResults(attemptIdx){
     uiLanguage:lang,
     attempt:attemptIdx+1, finished:a.finished, timerUsed:a.timer,
     answered:a.answered, skipped:a.skipped,
+    report:{
+      leadDomain:DOMAINS[lead].name,
+      domainDistribution:Object.fromEntries(domOrder.map(d=>[DOMAINS[d].name,+(w[d]/wTot*100).toFixed(1)])),
+      strengthen:a.ranking.slice(0,10).map(r=>themeById(r.id).name),
+      navigate:a.ranking.slice(10).map(r=>themeById(r.id).name)
+    },
     ranking:a.ranking.map((r,i)=>({rank:i+1, theme:themeById(r.id).name,
       domain:DOMAINS[themeById(r.id).dom].name, pct:r.pct, strongPicks:r.strong})),
     previousTop10: prev? prev.ranking.slice(0,10).map(r=>themeById(r.id).name) : null
@@ -1049,7 +1136,7 @@ function renderHistory(){
   let html=`<div class="eyebrow" style="margin-bottom:10px">${T().past}</div><div style="display:grid;gap:8px">`;
   attempts.forEach((a,i)=>{
     const top3=a.ranking.slice(0,3).map(r=>locThemeById(r.id).name).join(" · ");
-    html+=`<div class="card histrow">
+    html+=`<div class="histrow">
       <div><b>${T().attempt} ${i+1}</b> <span class="muted" style="font-size:13px">·
         ${new Date(a.finished).toLocaleDateString(T().locale)}</span><br>
         <span class="muted" style="font-size:13px">${T().top}: ${top3}</span></div>
@@ -1069,12 +1156,13 @@ function applyLang(){
   document.documentElement.lang=lang;
   $("langBtn").textContent = lang==="en" ? "RU" : "EN";
   $("iEyebrow").textContent=t.eyebrow; $("iTitle").textContent=t.title; $("iSub").textContent=t.sub;
-  $("iR1").innerHTML=t.r1; $("iR2").innerHTML=t.r2; $("iR3").innerHTML=t.r3; $("iR4").innerHTML=t.r4;
-  $("iDomHdr").textContent=t.domHdr;
-  $("iD1").textContent=t.d1; $("iD2").textContent=t.d2; $("iD3").textContent=t.d3; $("iD4").textContent=t.d4;
+  $("iS1").textContent=t.s1; $("iS2").textContent=t.s2; $("iS3").textContent=t.s3; $("iS4").textContent=t.s4;
+  $("iNote").textContent=t.note;
+  $("iSecUnit").textContent = lang==="ru" ? " с" : " s";
+  $("iDomLine").innerHTML=Object.keys(DOMAINS).map(d=>
+    `<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}</span>`).join("");
   $("startBtn").textContent=t.start; $("iTimerLbl").textContent=t.timerLbl; $("resumeBtn").textContent=t.resume;
   $("lblL").innerHTML=t.lblStrong; $("lblC").textContent=t.lblNeutral; $("lblR").innerHTML=t.lblStrong;
-  $("kbdHint").innerHTML=t.kbd;
   document.title = lang==="ru"
     ? "Профиль сильных сторон — тест в духе CliftonStrengths"
     : "Strengths Profiler — CliftonStrengths-style assessment";
@@ -1099,5 +1187,7 @@ $("langBtn").onclick=()=>{
 $("startBtn").onclick=()=>{localStorage.removeItem(LS_PROGRESS);startTest(false)};
 $("resumeBtn").onclick=()=>startTest(true);
 if(load(LS_PROGRESS))$("resumeBox").style.display="block";
+$("iStrand").innerHTML=Array.from({length:34},(_,i)=>
+  `<i style="--sc:var(${DOMAINS[Object.keys(DOMAINS)[i%4]].css})"></i>`).join("");
 applyLang();
 </script>
