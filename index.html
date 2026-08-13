@@ -181,6 +181,19 @@
     text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
   .toast.show{opacity:1}
   @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+
+  /* ---------- print / PDF ---------- */
+  @media print{
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .langbtn,.toast,#results .row,#results .row+p{display:none !important}
+    .wrap{max-width:100%;padding:0}
+    .sect{margin-top:24px}
+    .sect>.eyebrow{break-after:avoid}
+    .theme-card,.verdict,.domgrid .dcol,.rankrow,.stackbar,.stacklegend{break-inside:avoid}
+    .strand i{height:26px}
+    .top5{gap:10px}
+    .theme-card{padding:14px 16px}
+  }
 </style>
 
 <button class="langbtn" id="langBtn" aria-label="Switch language">RU</button>
@@ -788,7 +801,7 @@ en:{
   rankWord:"rank", strongPicks:"strong picks",
   watchOut:"Watch out", useIt:"Use it",
   fullRanking:"Theme sequence — all 34",
-  copy:"Copy results for analysis", dl:"Download JSON", again:"Take it again", home:"Home",
+  copy:"Copy results for analysis", dl:"Download JSON", pdf:"Download PDF", again:"Take it again", home:"Home",
   copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep interpretation of theme combinations, domain balance and changes between attempts.",
   past:"Past attempts", top:"Top", view:"View",
   toastCopied:"Copied — paste it to Claude for analysis", toastFail:"Copy failed — use Download instead",
@@ -832,7 +845,7 @@ ru:{
   rankWord:"ранг", strongPicks:"уверенных выборов",
   watchOut:"Осторожно", useIt:"Как использовать",
   fullRanking:"Последовательность — все 34 таланта",
-  copy:"Скопировать для анализа", dl:"Скачать JSON", again:"Пройти ещё раз", home:"На главную",
+  copy:"Скопировать для анализа", dl:"Скачать JSON", pdf:"Скачать PDF", again:"Пройти ещё раз", home:"На главную",
   copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокой интерпретации сочетаний талантов, баланса доменов и динамики между попытками.",
   past:"Прошлые попытки", top:"Топ", view:"Открыть",
   toastCopied:"Скопировано — вставьте в чат с Claude", toastFail:"Не удалось скопировать — используйте «Скачать»",
@@ -1132,6 +1145,7 @@ function renderResults(attemptIdx){
     <div class="row" style="margin-top:30px">
       <button class="btn" id="copyBtn">${T().copy}</button>
       <button class="btn2" id="dlBtn">${T().dl}</button>
+      <button class="btn2" id="pdfBtn">${T().pdf}</button>
       <button class="btn2" id="againBtn">${T().again}</button>
       <button class="btn2" id="homeBtn">${T().home}</button>
     </div>
@@ -1168,6 +1182,7 @@ function renderResults(attemptIdx){
     const u=URL.createObjectURL(blob);const l=document.createElement("a");
     l.href=u;l.download=`strengths-attempt-${attemptIdx+1}.json`;l.click();URL.revokeObjectURL(u);
   };
+  $("pdfBtn").onclick=()=>window.print();
   $("againBtn").onclick=()=>{localStorage.removeItem(LS_PROGRESS);startTest(false)};
   $("homeBtn").onclick=()=>{res.style.display="none";$("intro").style.display="block";renderHistory()};
 }
