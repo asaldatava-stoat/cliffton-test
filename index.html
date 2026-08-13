@@ -776,6 +776,125 @@ strategic:{name:"Стратегия",
  s:["Я быстро вижу закономерности там, где другие видят сложность.","Для любой цели я сразу вижу несколько альтернативных маршрутов.","«А что если…?» — так играет мой ум.","Я замечаю тупики до того, как мы в них зайдём.","Выбрать лучший путь легко — остальные уже просчитаны у меня в голове."]}
 };
 
+/* Per-theme fragments for combination insights: p = what it contributes, c = how it steers the rest */
+const FRAG={
+en:{
+achiever:{p:"a tireless engine for finishing things",c:"turns it into daily, tangible output"},
+arranger:{p:"a knack for juggling moving parts",c:"assembles it into a working configuration"},
+belief:{p:"a firm system of values",c:"binds it to what truly matters"},
+consistency:{p:"a sharpened sense of fairness",c:"keeps it within rules that are equal for everyone"},
+deliberative:{p:"a risk radar and careful precision",c:"insures it against hasty moves"},
+discipline:{p:"a need for order and systems",c:"fits it into structure and deadlines"},
+focus:{p:"the ability to hold a course and cut the noise",c:"aims all of it at a single goal"},
+responsibility:{p:"a word that works like a contract",c:"turns it into commitments that will be kept"},
+restorative:{p:"a pull toward what's broken and the skill to fix it",c:"points it at whatever isn't working"},
+activator:{p:"impatience for action",c:"makes it start now"},
+command:{p:"presence and directness",c:"gives it a voice people hear"},
+communication:{p:"a gift for bringing ideas alive in words",c:"turns it into stories people remember"},
+competition:{p:"a comparing instinct and a hunger to win",c:"turns it into a contest worth winning"},
+maximizer:{p:"a nose for excellence",c:"polishes it from good to superb"},
+selfassurance:{p:"an inner compass independent of others' opinions",c:"gives it the confidence of final calls"},
+significance:{p:"a drive toward visible contribution",c:"raises the stakes: it has to matter"},
+woo:{p:"ease of first contact",c:"opens new doors and new people to it"},
+adaptability:{p:"flexibility in the present moment",c:"lets it change course midstream"},
+connectedness:{p:"a sense that everything links to everything",c:"sets it inside a larger picture of meaning"},
+developer:{p:"an eye for other people's potential",c:"aims it at other people's growth"},
+empathy:{p:"a precise read of other people's states",c:"tunes it to the feelings of real people"},
+harmony:{p:"a search for common ground",c:"steers it away from friction toward agreement"},
+includer:{p:"a radar for whoever is left outside the circle",c:"widens the circle it reaches"},
+individualization:{p:"an eye for what makes each person unique",c:"tailors it to the specific person"},
+positivity:{p:"contagious energy and lightness",c:"charges it with enthusiasm"},
+relator:{p:"depth in a few trusted bonds",c:"builds it on close working alliances"},
+analytical:{p:"a demand for causes and proof",c:"tests it against the data"},
+context:{p:"an understanding of the present through its origins",c:"gives it historical depth"},
+futuristic:{p:"a detailed eye for the future",c:"pulls it toward tomorrow's possibilities"},
+ideation:{p:"sparks of new ideas and connections",c:"feeds it unexpected ideas"},
+input:{p:"a collection of facts, links and finds",c:"supplies it with gathered material"},
+intellection:{p:"deep solitary thought",c:"thinks it all the way through"},
+learner:{p:"a thrill for mastering the new",c:"turns it into one more learning curve"},
+strategic:{p:"instant route-mapping",c:"bends it toward the best path"}
+},
+ru:{
+achiever:{p:"неутомимый двигатель завершения дел",c:"переводит это в ежедневный ощутимый результат"},
+arranger:{p:"талант держать много движущихся частей",c:"собирает это в работающую конфигурацию"},
+belief:{p:"прочную систему ценностей",c:"подчиняет это тому, что действительно важно"},
+consistency:{p:"обострённое чувство справедливости",c:"держит это в рамках одинаковых для всех правил"},
+deliberative:{p:"радар рисков и осторожную точность",c:"страхует это от поспешных шагов"},
+discipline:{p:"потребность в порядке и системе",c:"укладывает это в структуру и сроки"},
+focus:{p:"умение держать курс и отсекать лишнее",c:"наводит всё это на одну цель"},
+responsibility:{p:"слово, которое равно контракту",c:"превращает это в обязательства, которые будут выполнены"},
+restorative:{p:"тягу к сломанному и умение чинить",c:"направляет это туда, где что-то не работает"},
+activator:{p:"нетерпение к действию",c:"заставляет это стартовать немедленно"},
+command:{p:"присутствие и прямоту",c:"даёт этому голос, который слышат"},
+communication:{p:"дар оживлять идеи словами",c:"превращает это в истории, которые запоминают"},
+competition:{p:"инстинкт сравнения и жажду победы",c:"превращает это в состязание, которое хочется выиграть"},
+maximizer:{p:"нюх на превосходное",c:"шлифует это от хорошего к великолепному"},
+selfassurance:{p:"внутренний компас, не зависящий от чужих мнений",c:"даёт этому уверенность финальных решений"},
+significance:{p:"стремление к заметному вкладу",c:"поднимает этому ставки: это должно иметь значение"},
+woo:{p:"лёгкость первого контакта",c:"открывает этому новые двери и новых людей"},
+adaptability:{p:"гибкость к настоящему моменту",c:"позволяет этому меняться на ходу"},
+connectedness:{p:"чувство связанности всего со всем",c:"встраивает это в большую картину смысла"},
+developer:{p:"глаз на чужой потенциал",c:"направляет это на рост других людей"},
+empathy:{p:"точное чтение чужих состояний",c:"настраивает это на чувства конкретных людей"},
+harmony:{p:"поиск общей почвы",c:"уводит это от трения к согласию"},
+includer:{p:"радар на тех, кто остался за кругом",c:"расширяет этим круг причастных"},
+individualization:{p:"зрение на уникальность каждого",c:"настраивает это под конкретного человека"},
+positivity:{p:"заразительную энергию и лёгкость",c:"заряжает это энтузиазмом"},
+relator:{p:"глубину немногих доверенных связей",c:"строит на этом близкие рабочие союзы"},
+analytical:{p:"требование доказательств и причин",c:"проверяет это данными"},
+context:{p:"понимание настоящего через его истоки",c:"даёт этому историческую глубину"},
+futuristic:{p:"детальное зрение на будущее",c:"тянет это к завтрашним возможностям"},
+ideation:{p:"искры новых идей и связей",c:"подпитывает это неожиданными идеями"},
+input:{p:"коллекцию фактов, ссылок и находок",c:"снабжает это накопленным материалом"},
+intellection:{p:"глубокую одиночную мысль",c:"продумывает это до конца"},
+learner:{p:"азарт освоения нового",c:"превращает это в очередную кривую обучения"},
+strategic:{p:"мгновенный расчёт маршрутов",c:"подчиняет это выбору лучшего пути"}
+}};
+
+/* Deep interpretation of the lead+second domain pair (12 combos) and of the weakest domain */
+const DOMPAIR={
+en:{
+"strat+rel":"You think in maps and patterns but realize them through people: for you an idea doesn't exist apart from the people to build it with.",
+"strat+exec":"A rare case of vision and execution living in one person: you chart the route yourself and walk it to the end yourself.",
+"strat+infl":"You don't just see the path — you can sell it. Strategy without a stage feels too small for you.",
+"rel+strat":"People first, plan second: you build on trust, and strategic thinking gives those bonds a direction.",
+"rel+exec":"Your strength is a team that finishes: you hold people together and convert that cohesion into results.",
+"rel+infl":"You lead through closeness, not authority: contact first, influence second.",
+"exec+strat":"Above all you finish — but not blindly: behind the execution stands a calculated picture.",
+"exec+rel":"You get things done, and done together: results, for you, have names and faces.",
+"exec+infl":"You move and you move others: execution backed by the power to rally.",
+"infl+strat":"You lead people, and the leadership has a map: influence resting on calculated moves.",
+"infl+rel":"Your influence grows out of relationships: people listen because they trust you.",
+"infl+exec":"You don't just call the way forward — you take the first step: words backed by work."
+},
+ru:{
+"strat+rel":"Вы думаете картами и закономерностями, но воплощаете их через людей: идея у вас не существует отдельно от тех, с кем её делать.",
+"strat+exec":"Редкий случай, когда картина и исполнение живут в одном человеке: вы сами прокладываете маршрут и сами проходите его до конца.",
+"strat+infl":"Вы не только видите путь — вы умеете его продать. Стратегия без трибуны вам тесна.",
+"rel+strat":"Сначала люди, потом план: вы строите на доверии, а стратегическое мышление даёт этим связям направление.",
+"rel+exec":"Ваша сила — команда, которая доводит до конца: вы держите людей вместе и превращаете эту связность в результат.",
+"rel+infl":"Вы ведёте через близость, а не через власть: сначала контакт, потом влияние.",
+"exec+strat":"Вы прежде всего доводите до конца — но не вслепую: за исполнением стоит просчитанная картина.",
+"exec+rel":"Вы делаете — и делаете вместе: результат для вас имеет имена и лица.",
+"exec+infl":"Вы двигаетесь сами и двигаете других: исполнение подкреплено умением увлечь.",
+"infl+strat":"Вы ведёте людей, и у этого лидерства есть карта: влияние опирается на просчитанные ходы.",
+"infl+rel":"Ваше влияние растёт из отношений: вас слушают, потому что вам доверяют.",
+"infl+exec":"Вы не просто зовёте вперёд — вы первым делаете шаг: слова подкреплены делом."
+}};
+const WEAKDOM={
+en:{
+exec:"Executing is your rear guard, not your front line: routine follow-through is better built on systems or partners.",
+infl:"Influencing is your rear guard: you persuade by doing rather than from a stage — find the people who will do the telling.",
+rel:"Relationship Building is your rear guard: bonds take deliberate effort from you rather than happening by themselves.",
+strat:"Strategic Thinking is your rear guard: long bets are worth checking with people who live in the big picture."
+},
+ru:{
+exec:"Домен «Исполнение» — ваш тыл, а не фронт: рутинное доведение до конца лучше строить на системах или партнёрах.",
+infl:"Домен «Влияние» — ваш тыл: вам ближе убеждать делом, чем с трибуны, — ищите тех, кто озвучит.",
+rel:"Домен «Построение отношений» — ваш тыл: связи требуют от вас осознанного усилия, а не случаются сами.",
+strat:"Домен «Стратегическое мышление» — ваш тыл: длинные ставки полезно сверять с теми, кто живёт большой картиной."
+}};
+
 const STR = {
 en:{
   eyebrow:"Unofficial · CliftonStrengths-style assessment",
@@ -815,6 +934,8 @@ en:{
       rel:"someone who holds people and bonds together",
       strat:"someone who sees the pattern first and acts second"},
     base:(t1,t2,t3,core)=>`At its base sit ${t1}, ${t2} and ${t3}: ${core}.`,
+    pair:(a,b,ap,bc)=>`${a} brings ${ap}; ${b} ${bc}.`,
+    pairsIntro:"How your top talents interlock: ",
     contrast:(hi,lo)=>`The sharpest gap runs between ${hi} and ${lo} — you spent almost no attention choosing ${lo}. Treat that not as a flaw but as a side worth delegating.`,
     confident:(n,ans,strong)=>`You answered decisively: only ${n} neutral answers out of ${ans}, and ${strong} strong picks. This profile can be trusted.`,
     unsure:n=>`A noticeable share of answers were neutral (${n}) — a retake may sharpen the picture.`,
@@ -859,6 +980,8 @@ ru:{
       rel:"человек, который держит людей и связи вместе",
       strat:"человек, который сначала видит картину и только потом действует"},
     base:(t1,t2,t3,core)=>`В основании — ${t1}, ${t2} и ${t3}: ${core}.`,
+    pair:(a,b,ap,bc)=>`«${a}» даёт ${ap}, а «${b}» ${bc}.`,
+    pairsIntro:"Как сцеплены ваши ведущие таланты: ",
     contrast:(hi,lo)=>`Самый заметный разрыв — между «${hi}» и «${lo}»: на выбор в пользу «${lo}» вы почти не тратили внимания. Это не слабость, а сторона, которую эффективнее делегировать.`,
     confident:(n,ans,strong)=>`Вы отвечали решительно: нейтральных ответов всего ${n} из ${ans}, уверенных выборов — ${strong}. Этому профилю можно доверять.`,
     unsure:n=>`Заметная часть ответов нейтральна (${n}) — повторное прохождение может уточнить картину.`,
@@ -1130,11 +1253,20 @@ function renderResults(attemptIdx){
   const neutral=(a.responses||[]).filter(v=>v===0).length;
   const strongTotal=a.ranking.reduce((s,x)=>s+x.strong,0);
   const leadShare=Math.round(w[lead]/wTot*100);
+  const F=FRAG[lang]||FRAG.en;
+  const pairText=(i,j)=>{
+    const A=a.ranking[i],B=a.ranking[j];
+    return V.pair(locThemeById(A.id).name,locThemeById(B.id).name,F[A.id].p,F[B.id].c);
+  };
+  const domPair=(DOMPAIR[lang]||DOMPAIR.en)[lead+"+"+domOrder[1]];
+  const weakNote=(WEAKDOM[lang]||WEAKDOM.en)[domOrder[3]];
   const vParas=[
     V.lead(domName(lead),leadShare,domName(domOrder[1]))+" "+
       V.base(locThemeById(a.ranking[0].id).name,locThemeById(a.ranking[1].id).name,
              locThemeById(a.ranking[2].id).name,V.core[lead]),
-    V.contrast(locThemeById(a.ranking[0].id).name,locThemeById(a.ranking[33].id).name),
+    domPair,
+    V.pairsIntro+pairText(0,1)+" "+pairText(2,3),
+    V.contrast(locThemeById(a.ranking[0].id).name,locThemeById(a.ranking[33].id).name)+" "+weakNote,
     (neutral<=a.answered*0.15 ? V.confident(neutral,a.answered,strongTotal) : V.unsure(neutral))
       + (leadShare<30 ? " "+V.balanced : "")
   ];
