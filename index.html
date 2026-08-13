@@ -169,6 +169,13 @@
   .langbtn{position:fixed;top:14px;right:14px;z-index:10;background:var(--ink);color:var(--accent-ink);
     border:none;border-radius:0;padding:8px 14px;font-family:var(--mono);font-size:13px;font-weight:400}
   .langbtn:hover{background:rgba(0,0,0,.8)}
+  .exitbtn{background:none;border:none;padding:0;font-family:var(--mono);font-size:12px;
+    text-transform:uppercase;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  .exitbtn:hover{color:var(--danger)}
+  .verdict{background:var(--ink);color:var(--accent-ink);padding:26px 28px;font-size:16px;
+    line-height:1.55;letter-spacing:-.01em}
+  .verdict p{margin:0 0 15px}
+  .verdict p:last-child{margin:0}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);
     color:var(--accent-ink);padding:12px 22px;border-radius:0;font-family:var(--mono);font-size:12px;
     text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
@@ -215,7 +222,10 @@
   <section id="test">
     <div class="topbar">
       <span class="eyebrow" id="counter">Item 1 of 177</span>
-      <span class="muted" id="clockNum" style="font-size:13px">20s</span>
+      <span style="display:flex;gap:18px;align-items:baseline">
+        <span class="muted" id="clockNum">20s</span>
+        <button class="exitbtn" id="exitBtn">Exit</button>
+      </span>
     </div>
     <div class="progress"><i id="progBar"></i></div>
     <div class="timerbar" id="timerBar"><i id="timerFill"></i></div>
@@ -782,7 +792,21 @@ en:{
   copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep interpretation of theme combinations, domain balance and changes between attempts.",
   past:"Past attempts", top:"Top", view:"View",
   toastCopied:"Copied — paste it to Claude for analysis", toastFail:"Copy failed — use Download instead",
-  toastNothing:"Nothing to resume", locale:"en-US"
+  toastNothing:"Nothing to resume", locale:"en-US",
+  exit:"Exit", toastExit:"Progress saved — resume anytime",
+  v:{
+    hdr:"Closing summary",
+    lead:(d,share,second)=>`Your profile centers on ${d} — ${share}% of its weight — backed by ${second}.`,
+    core:{exec:"someone who turns intentions into finished work",
+      infl:"someone who moves people and decisions forward",
+      rel:"someone who holds people and bonds together",
+      strat:"someone who sees the pattern first and acts second"},
+    base:(t1,t2,t3,core)=>`At its base sit ${t1}, ${t2} and ${t3}: ${core}.`,
+    contrast:(hi,lo)=>`The sharpest gap runs between ${hi} and ${lo} — you spent almost no attention choosing ${lo}. Treat that not as a flaw but as a side worth delegating.`,
+    confident:(n,ans,strong)=>`You answered decisively: only ${n} neutral answers out of ${ans}, and ${strong} strong picks. This profile can be trusted.`,
+    unsure:n=>`A noticeable share of answers were neutral (${n}) — a retake may sharpen the picture.`,
+    balanced:"The domains are nearly balanced: you switch modes rather than live in one."
+  }
 },
 ru:{
   eyebrow:"Неофициальный тест в духе CliftonStrengths",
@@ -812,7 +836,21 @@ ru:{
   copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокой интерпретации сочетаний талантов, баланса доменов и динамики между попытками.",
   past:"Прошлые попытки", top:"Топ", view:"Открыть",
   toastCopied:"Скопировано — вставьте в чат с Claude", toastFail:"Не удалось скопировать — используйте «Скачать»",
-  toastNothing:"Нечего продолжать", locale:"ru-RU"
+  toastNothing:"Нечего продолжать", locale:"ru-RU",
+  exit:"Выйти", toastExit:"Прогресс сохранён — можно продолжить позже",
+  v:{
+    hdr:"Заключение",
+    lead:(d,share,second)=>`Центр тяжести вашего профиля — ${d}: ${share}% его веса, с опорой на домен «${second}».`,
+    core:{exec:"человек, который превращает намерения в завершённые дела",
+      infl:"человек, который двигает людей и решения вперёд",
+      rel:"человек, который держит людей и связи вместе",
+      strat:"человек, который сначала видит картину и только потом действует"},
+    base:(t1,t2,t3,core)=>`В основании — ${t1}, ${t2} и ${t3}: ${core}.`,
+    contrast:(hi,lo)=>`Самый заметный разрыв — между «${hi}» и «${lo}»: на выбор в пользу «${lo}» вы почти не тратили внимания. Это не слабость, а сторона, которую эффективнее делегировать.`,
+    confident:(n,ans,strong)=>`Вы отвечали решительно: нейтральных ответов всего ${n} из ${ans}, уверенных выборов — ${strong}. Этому профилю можно доверять.`,
+    unsure:n=>`Заметная часть ответов нейтральна (${n}) — повторное прохождение может уточнить картину.`,
+    balanced:"Домены почти сбалансированы: вы переключаетесь между режимами, а не живёте в одном."
+  }
 }};
 
 let lang = localStorage.getItem("cs_lang") || "en";
@@ -1075,7 +1113,22 @@ function renderResults(attemptIdx){
       <span class="desc">${esc(t.desc)}</span>
     </div>`;
   });
+  const V=T().v;
+  const neutral=(a.responses||[]).filter(v=>v===0).length;
+  const strongTotal=a.ranking.reduce((s,x)=>s+x.strong,0);
+  const leadShare=Math.round(w[lead]/wTot*100);
+  const vParas=[
+    V.lead(domName(lead),leadShare,domName(domOrder[1]))+" "+
+      V.base(locThemeById(a.ranking[0].id).name,locThemeById(a.ranking[1].id).name,
+             locThemeById(a.ranking[2].id).name,V.core[lead]),
+    V.contrast(locThemeById(a.ranking[0].id).name,locThemeById(a.ranking[33].id).name),
+    (neutral<=a.answered*0.15 ? V.confident(neutral,a.answered,strongTotal) : V.unsure(neutral))
+      + (leadShare<30 ? " "+V.balanced : "")
+  ];
+
   html+=`</div></div>
+    <div class="sect"><span class="eyebrow">${V.hdr}</span>
+      <div class="verdict">${vParas.map(p=>`<p>${p}</p>`).join("")}</div></div>
     <div class="row" style="margin-top:30px">
       <button class="btn" id="copyBtn">${T().copy}</button>
       <button class="btn2" id="dlBtn">${T().dl}</button>
@@ -1094,6 +1147,7 @@ function renderResults(attemptIdx){
     uiLanguage:lang,
     attempt:attemptIdx+1, finished:a.finished, timerUsed:a.timer,
     answered:a.answered, skipped:a.skipped,
+    closingSummary:vParas,
     report:{
       leadDomain:DOMAINS[lead].name,
       domainDistribution:Object.fromEntries(domOrder.map(d=>[DOMAINS[d].name,+(w[d]/wTot*100).toFixed(1)])),
@@ -1154,6 +1208,7 @@ function applyLang(){
   $("iDomLine").innerHTML=Object.keys(DOMAINS).map(d=>
     `<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}</span>`).join("");
   $("startBtn").textContent=t.start; $("iTimerLbl").textContent=t.timerLbl; $("resumeBtn").textContent=t.resume;
+  $("exitBtn").textContent=t.exit;
   $("lblL").innerHTML=t.lblStrong; $("lblC").textContent=t.lblNeutral; $("lblR").innerHTML=t.lblStrong;
   document.title = lang==="ru"
     ? "Профиль сильных сторон — тест в духе CliftonStrengths"
@@ -1176,6 +1231,14 @@ $("langBtn").onclick=()=>{
   applyLang();
 };
 
+$("exitBtn").onclick=()=>{
+  clearInterval(timerId);
+  if(state)save(LS_PROGRESS,state);
+  $("test").style.display="none";$("intro").style.display="block";
+  $("resumeBox").style.display="block";
+  renderHistory();window.scrollTo(0,0);
+  toast(T().toastExit);
+};
 $("startBtn").onclick=()=>{localStorage.removeItem(LS_PROGRESS);startTest(false)};
 $("resumeBtn").onclick=()=>startTest(true);
 if(load(LS_PROGRESS))$("resumeBox").style.display="block";
