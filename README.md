@@ -1,30 +1,19 @@
-# Strengths Profiler
+# Psych Tests
 
 **Live:** https://asaldatava-stoat.github.io/cliffton-test/
 
-An unofficial, self-hosted reconstruction of the **CliftonStrengths** assessment mechanics. Not affiliated with Gallup; all 177 statements are original text keyed to the publicly documented 34 talent themes.
+Self-hosted, unofficial reconstructions of personality assessments — each a single self-contained HTML file, bilingual EN/RU, results stored only in your browser, JSON export for analysis with Claude.
 
-## What it replicates
+| Test | Folder | Based on |
+|---|---|---|
+| Strengths Profiler | [`clifton/`](clifton/) | CliftonStrengths mechanics — 177 paired statements, 20 s timer, 34 themes / 4 domains |
+| Enneagram Profiler | [`enneagram/`](enneagram/) | RHETI mechanics — 144 balanced pairs, 9 types, +18 instinct pairs, wing / tritype / arrows |
 
-- **177 paired statements** — two self-descriptors per screen, choose which describes you better on a 5-point scale (Strongly / Describes me / Neutral / Describes me / Strongly)
-- **20-second timer per item** — expires → item skipped, test moves on (toggleable "practice mode" without timer)
-- **No going back** — answered or expired items are locked
-- **Ranked output of all 34 themes** across the four domains (Executing, Influencing, Relationship Building, Strategic Thinking), with the Top 5 "signature themes" interpreted in detail (description, blind spots, actions)
+The root `index.html` is the landing page. Each test has its own README with mechanics and scoring details.
 
-## Mechanics
+Not affiliated with Gallup or the Enneagram Institute; all statements are original text.
 
-- Statement pairs are generated with a **fixed-seed PRNG**, so every attempt uses identical pairs — retakes are directly comparable. Only presentation order shuffles.
-- Each theme appears 10–11 times; scoring is ipsative: the chosen side's theme earns 2 (strong) or 1 (moderate) points, normalized by that theme's answered appearances.
-- Progress autosaves to `localStorage`; interrupted attempts resume. Full attempt history is kept, and each retake shows rank deltas (▲/▼) versus the previous attempt.
-- **Copy results for analysis** exports a JSON summary (ranking, percentages, strong-pick counts, previous top 10) to paste into Claude or any tool for deeper interpretation.
-
-## Languages
-
-Fully bilingual **English / Russian** — the RU/EN button in the top-right corner switches everything: UI, all 177 statements, and the 34 theme interpretations. The choice persists between visits, and you can switch mid-test (answers are stored against pair indices, not text, so results are identical either way).
-
-## Usage
-
-Open `index.html` in a browser — it's a single self-contained file, no build, no dependencies. For localStorage persistence across sessions, serve it from a stable origin, e.g.:
+## Local
 
 ```bash
 python3 -m http.server 8517

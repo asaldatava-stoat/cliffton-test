@@ -1,0 +1,1329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enneagram Profiler — RHETI-style assessment</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --ink:#000000; --ink2:rgba(0,0,0,.55);
+    --line:#000000; --line2:rgba(0,0,0,.14);
+    --accent:#000000; --accent-ink:#FFFFFF; --soft:rgba(0,0,0,.05); --tint:#F5F9FC;
+    --panel:#F2F2F0; --panel-hi:#E7E7E4; --hover:#EDEDEA; --track:rgba(0,0,0,.09);
+    --gut:clamp(20px,5vw,64px);
+    --body:#FE7445; --heart:#CDABFE; --head:#33AAFF; --inst:#D1DDD3;
+    --body-soft:#FFE9E0; --heart-soft:#F3ECFF; --head-soft:#E3F2FF; --inst-soft:#EDF2EE;
+    --danger:#FE7445; --on-dom:#000000;
+    --grot:"Helvetica Neue",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    --mono:"Geist Mono",ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--grot);font-weight:500;
+    letter-spacing:-.01em;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:720px;margin:0 auto;padding:0 22px 90px}
+  body.testing .wrap{padding-bottom:22px}
+  h1,h2,h3{font-family:var(--grot);text-wrap:balance;margin:0;font-weight:500;letter-spacing:-.04em}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:0;text-transform:uppercase;
+    color:var(--ink);font-weight:400}
+  button{font-family:var(--grot);cursor:pointer}
+  .btn{background:var(--accent);color:var(--accent-ink);border:none;border-radius:2px;
+    padding:14px 28px;font-size:15px;font-weight:500;letter-spacing:-.01em}
+  .btn:hover{background:rgba(0,0,0,.8)}
+  .btn:focus-visible,.dot:focus-visible,.btn2:focus-visible{outline:3px solid var(--head);outline-offset:2px}
+  .btn2{background:transparent;color:var(--ink);border:1px solid var(--ink);
+    border-radius:2px;padding:10px 18px;font-size:14px;font-weight:500}
+  .btn2:hover{background:var(--soft)}
+  .muted{color:var(--ink2)}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .sect{margin-top:56px}
+  .sect>.eyebrow{display:block;padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:18px}
+  .swatch{width:10px;height:10px;border-radius:0;flex:none}
+
+  /* ---------- intro (full-bleed) ---------- */
+  #intro{margin:0 calc(50% - 50vw + var(--sbw,0px)/2);width:calc(100vw - var(--sbw,0px))}
+  #intro>*:not(.hero){padding-left:max(var(--gut),calc(50% - 760px));
+    padding-right:max(var(--gut),calc(50% - 760px))}
+  .hero{background:var(--heart);padding:18px max(var(--gut),calc(50% - 760px)) 60px}
+  .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(60px,14vh,130px)}
+  .brandchip{background:var(--ink);color:var(--accent-ink);font-family:var(--grot);
+    font-weight:700;font-size:20px;letter-spacing:-.03em;padding:4px 10px 6px}
+  .masthead .brand{font-family:var(--mono);font-size:13px;text-transform:uppercase;color:var(--ink)}
+  #intro h1{font-size:clamp(42px,11vw,132px);line-height:.92;margin:12px 0 26px;letter-spacing:-.055em}
+  #intro .sub{font-size:clamp(16px,1.5vw,20px);color:var(--ink);max-width:52ch;margin:0;line-height:1.35}
+  #intro .strand{margin:0}
+  #intro .strand i{height:clamp(44px,7vh,70px)}
+  .spec{display:grid;grid-template-columns:repeat(4,1fr);margin:46px 0 0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .spec>div{padding:22px 20px 22px 0}
+  .spec>div+div{border-left:1px solid var(--line);padding-left:20px}
+  .spec dt{font-family:var(--grot);font-weight:500;font-size:clamp(34px,4vw,54px);letter-spacing:-.04em;
+    line-height:1;margin:0 0 10px;font-variant-numeric:tabular-nums}
+  .spec dd{margin:0;font-family:var(--mono);font-size:11px;text-transform:uppercase;
+    color:var(--ink2);line-height:1.5;letter-spacing:0;max-width:34ch}
+  .note{font-size:15px;color:var(--ink2);margin:24px 0 0;max-width:70ch}
+  .domline{display:flex;gap:8px 26px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;margin:16px 0 0}
+  .domline span{display:flex;gap:7px;align-items:center}
+  #intro .row{margin-top:38px !important}
+  @media (max-width:560px){
+    .spec{grid-template-columns:1fr 1fr}
+    .spec>div{padding:16px 12px 16px 0}
+    .spec>div+div{border-left:none;padding-left:0}
+    .spec>div:nth-child(even){border-left:1px solid var(--line);padding-left:12px}
+    .spec>div:nth-child(n+3){border-top:1px solid var(--line)}
+  }
+
+  /* ---------- primer ---------- */
+  #primer{padding-top:30px}
+  #primer h2{font-size:clamp(30px,6vw,44px);letter-spacing:-.045em;line-height:1.02;margin:10px 0 8px}
+  .prule{display:grid;grid-template-columns:40px 1fr;gap:14px;padding:15px 0;
+    border-bottom:1px solid var(--line2);font-size:15px;line-height:1.45}
+  .prule .n{font-family:var(--mono);font-size:12px;color:var(--ink2);padding-top:2px}
+  .scale.mini{max-width:380px;margin:30px 0 10px}
+  .minilbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink2);
+    max-width:380px;display:flex;justify-content:space-between}
+
+  /* ---------- test ---------- */
+  #test{display:none;flex-direction:column;min-height:calc(100vh - 48px);
+    min-height:calc(100svh - 48px);padding-top:22px}
+  .topbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;
+    font-family:var(--mono);font-size:12px;text-transform:uppercase;font-variant-numeric:tabular-nums}
+  .progress{height:3px;background:var(--track);overflow:hidden}
+  .progress i{display:block;height:100%;background:var(--ink);width:0%;transition:width .3s}
+  .teststage{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 0 30px}
+  .partlbl{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink2);margin-bottom:14px}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+  .stmt{background:var(--panel);font-family:var(--grot);font-weight:500;font-size:clamp(18px,2vw,23px);
+    letter-spacing:-.03em;line-height:1.3;padding:26px 24px;min-height:150px;
+    display:flex;align-items:center;text-wrap:balance;transition:background .15s}
+  .stmt.hot{background:var(--panel-hi)}
+  .stmt.picked{background:var(--heart)}
+  body.part2 .stmt.picked{background:var(--inst)}
+  .scale{display:flex;justify-content:space-between;align-items:center;margin:42px 2px 0;gap:6px;position:relative}
+  .scale::before{content:"";position:absolute;left:10px;right:10px;top:50%;height:1px;background:var(--track)}
+  .dot{width:30px;height:30px;border-radius:50%;border:1px solid var(--ink);background:var(--bg);
+    flex:none;transition:transform .1s,background .1s;position:relative;z-index:1}
+  .dot:hover{transform:scale(1.14);background:var(--hover)}
+  .dot.sel{background:var(--ink);border-color:var(--ink)}
+  .dot.big{width:42px;height:42px}
+  .keynums{display:flex;justify-content:space-between;margin:10px 8px 0;font-family:var(--mono);
+    font-size:11px;color:var(--ink2)}
+  .keynums span{width:30px;text-align:center}
+  .keynums span:first-child,.keynums span:last-child{width:42px}
+  .scalelabels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;color:var(--ink2);margin:16px 2px 0}
+  .scalelabels span{max-width:140px;line-height:1.5}
+  .scalelabels .r{text-align:right}
+  .scalelabels .c{text-align:center}
+  .interlude{display:none;flex:1;flex-direction:column;justify-content:center;padding:24px 0 30px}
+  .interlude h2{font-size:clamp(28px,5vw,40px);margin:10px 0 14px}
+  .interlude p{font-size:16px;max-width:56ch;margin:0 0 10px}
+  @media (max-width:560px){
+    .pair{grid-template-columns:1fr;gap:10px}
+    .stmt{min-height:96px;padding:18px 16px}
+    .scale{margin-top:30px}
+    .topbar{padding-right:52px}
+  }
+
+  /* ---------- results ---------- */
+  #results{display:none;padding-top:26px}
+  #results h2{letter-spacing:-.045em;line-height:1.02}
+  .headline{display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:center;margin-top:14px}
+  .headline h2{font-size:clamp(34px,6vw,56px)}
+  .codechips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+  .codechip{font-family:var(--mono);font-size:12px;text-transform:uppercase;border:1px solid var(--ink);
+    padding:6px 10px;background:var(--bg)}
+  .codechip.solid{background:var(--ink);color:var(--accent-ink)}
+  .ennea{width:100%;max-width:300px;justify-self:end}
+  .ennea .ring{fill:none;stroke:var(--ink);stroke-width:1}
+  .ennea .inner{fill:none;stroke:rgba(0,0,0,.18);stroke-width:1}
+  .ennea .stress{stroke:var(--danger);stroke-width:2;fill:none}
+  .ennea .growth{stroke:var(--ink);stroke-width:2;fill:none}
+  .ennea .wing{stroke:var(--ink);stroke-width:2;fill:none;stroke-dasharray:3 3}
+  .ennea text{font-family:var(--mono);font-size:13px;fill:var(--ink)}
+  .ennea .lbl{font-size:10px;text-transform:uppercase;fill:var(--ink2)}
+  .type-card{background:var(--tint);border-left:6px solid var(--dc,var(--ink));padding:22px 24px;margin-top:14px}
+  .type-card h3{font-size:26px;margin:3px 0 0;letter-spacing:-.035em}
+  .type-card.minor h3{font-size:20px}
+  .chip{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase;color:var(--ink)}
+  .type-card .blk{margin-top:12px;font-size:14px}
+  .type-card .blk b{display:block;font-family:var(--mono);font-weight:400;font-size:11px;
+    text-transform:uppercase;color:var(--ink2);margin-bottom:2px}
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;margin-top:14px}
+  .kv .blk{margin-top:0}
+  .statline{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--ink2);margin-top:4px}
+  .ranklist{display:grid;margin-top:4px}
+  .rankrow{display:grid;grid-template-columns:34px 170px 1fr 44px 36px;gap:4px 10px;align-items:center;
+    padding:11px 0;border-bottom:1px solid var(--line2);font-size:14px;font-variant-numeric:tabular-nums}
+  .rankrow>.muted{font-family:var(--mono);font-size:12px}
+  .rankrow .name{font-weight:500;display:flex;gap:8px;align-items:center;white-space:nowrap}
+  .rankrow .desc{grid-column:2/-1;font-size:12px;color:var(--ink2);letter-spacing:0}
+  .bar{height:14px;background:var(--soft);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--dc,var(--ink))}
+  .delta{font-family:var(--mono);font-size:11px;text-align:right;color:var(--ink)}
+  .delta.down{color:var(--danger)}
+  .strand{display:flex;gap:2px;align-items:center;margin:24px 0 6px}
+  .strand i{flex:1;height:44px;border-radius:0;background:var(--sc)}
+  .strand i.dim{opacity:.25}
+  .stackbar{display:flex;gap:2px;height:18px;margin:22px 0 8px}
+  .stackbar i{display:block;height:100%}
+  .stacklegend{display:flex;gap:12px 20px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;color:var(--ink);margin-bottom:4px;font-variant-numeric:tabular-nums}
+  .stacklegend span{display:flex;gap:7px;align-items:center}
+  .cols2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:14px 0 8px}
+  .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+  .tile{background:var(--soft);padding:14px 14px 16px;border-top:3px solid var(--dc)}
+  .tile .rk{font-family:var(--grot);font-weight:500;font-size:34px;letter-spacing:-.04em;line-height:1;
+    display:block;font-variant-numeric:tabular-nums}
+  .tile .nm{font-weight:500;display:block;margin-top:6px}
+  .tile .sm{font-size:12px;color:var(--ink2);display:block;margin-top:4px;line-height:1.4}
+  .arrows{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .arrow{padding:16px 18px;border:1px solid var(--line);font-size:14px}
+  .arrow b{display:block;font-family:var(--mono);font-weight:400;font-size:11px;text-transform:uppercase;margin-bottom:8px}
+  .arrow.st b{color:var(--danger)}
+  .arrow .big{font-size:22px;letter-spacing:-.03em;display:block;margin-bottom:6px;font-weight:500}
+  .verdict{background:var(--ink);color:var(--accent-ink);padding:26px 28px;font-size:16px;line-height:1.55;letter-spacing:-.01em}
+  .verdict p{margin:0 0 15px}
+  .verdict p:last-child{margin:0}
+  @media (max-width:560px){
+    .headline{grid-template-columns:1fr}
+    .ennea{justify-self:start}
+    .rankrow{grid-template-columns:28px 130px 1fr 40px}
+    .rankrow .delta{display:none}
+    .cols2,.kv,.arrows{grid-template-columns:1fr}
+    .cols3{grid-template-columns:1fr}
+    .strand i{height:28px}
+  }
+
+  /* ---------- history / misc ---------- */
+  #history{margin-top:60px}
+  .histrow{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line2)}
+  .langbtn{position:fixed;top:14px;right:14px;z-index:10;background:var(--ink);color:var(--accent-ink);
+    border:none;border-radius:0;padding:8px 14px;font-family:var(--mono);font-size:13px;font-weight:400}
+  .langbtn:hover{background:rgba(0,0,0,.8)}
+  .exitbtn{background:none;border:none;padding:0;font-family:var(--mono);font-size:12px;
+    text-transform:uppercase;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  .exitbtn:hover{color:var(--danger)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);
+    color:var(--accent-ink);padding:12px 22px;border-radius:0;font-family:var(--mono);font-size:12px;
+    text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none}
+  .toast.show{opacity:1}
+  kbd{background:var(--soft);border:1px solid var(--line);border-radius:3px;padding:1px 6px;font-size:11px}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important} }
+
+  @media print{
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .langbtn,.toast,#results .row,#results .row+p{display:none !important}
+    .wrap{max-width:100%;padding:0}
+    .sect{margin-top:24px}
+    .sect>.eyebrow{break-after:avoid}
+    .type-card,.verdict,.rankrow,.stackbar,.stacklegend,.tile,.arrow,.headline{break-inside:avoid}
+    .strand i{height:26px}
+  }
+</style>
+</head>
+<body>
+<button class="langbtn" id="langBtn" aria-label="Switch language">RU</button>
+<div class="wrap">
+
+  <!-- ============ INTRO ============ -->
+  <section id="intro">
+    <header class="masthead hero">
+      <div class="topline"><span class="brandchip">EP 26</span></div>
+      <div class="brand" id="iEyebrow"></div>
+      <h1 id="iTitle">Enneagram Profiler</h1>
+      <p class="sub" id="iSub"></p>
+    </header>
+    <div class="strand" id="iStrand" aria-hidden="true"></div>
+
+    <dl class="spec">
+      <div><dt>144</dt><dd id="iS1"></dd></div>
+      <div><dt>+18</dt><dd id="iS2"></dd></div>
+      <div><dt>0</dt><dd id="iS3"></dd></div>
+      <div><dt>~35</dt><dd id="iS4"></dd></div>
+    </dl>
+    <p class="note" id="iNote"></p>
+    <div class="domline" id="iDomLine"></div>
+
+    <div class="row" style="margin-top:34px">
+      <button class="btn" id="startBtn">Start the assessment</button>
+    </div>
+    <div id="resumeBox" style="display:none;margin-top:14px">
+      <button class="btn2" id="resumeBtn">Resume unfinished attempt</button>
+    </div>
+
+    <div id="history"></div>
+  </section>
+
+  <!-- ============ PRIMER ============ -->
+  <section id="primer" style="display:none">
+    <div class="eyebrow" id="pEyebrow"></div>
+    <h2 id="pTitle"></h2>
+    <div id="pList"></div>
+    <div class="scale mini" aria-hidden="true">
+      <span class="dot big"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot big"></span>
+    </div>
+    <div class="minilbl" id="pMini"></div>
+    <button class="btn" id="primerBtn" style="margin-top:30px"></button>
+  </section>
+
+  <!-- ============ TEST ============ -->
+  <section id="test">
+    <div class="topbar">
+      <span class="eyebrow" id="counter">Item 1 of 144</span>
+      <button class="exitbtn" id="exitBtn">Exit</button>
+    </div>
+    <div class="progress"><i id="progBar"></i></div>
+
+    <div class="teststage" id="stage">
+      <div class="partlbl" id="partLbl"></div>
+      <div class="pair">
+        <div class="stmt" id="stmtA"></div>
+        <div class="stmt" id="stmtB"></div>
+      </div>
+      <div class="scale" id="scale">
+        <button class="dot big" data-v="-2" aria-label="Strongly describes me — left statement"></button>
+        <button class="dot"     data-v="-1" aria-label="Describes me — left statement"></button>
+        <button class="dot"     data-v="0"  aria-label="Neutral"></button>
+        <button class="dot"     data-v="1"  aria-label="Describes me — right statement"></button>
+        <button class="dot big" data-v="2"  aria-label="Strongly describes me — right statement"></button>
+      </div>
+      <div class="keynums" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+      <div class="scalelabels">
+        <span id="lblL">Strongly<br>describes me</span>
+        <span class="c" id="lblC">Neutral</span>
+        <span class="r" id="lblR">Strongly<br>describes me</span>
+      </div>
+    </div>
+
+    <div class="interlude" id="interlude">
+      <div class="eyebrow" id="ilEyebrow"></div>
+      <h2 id="ilTitle"></h2>
+      <p id="ilP1"></p><p id="ilP2" class="muted"></p>
+      <div><button class="btn" id="ilBtn" style="margin-top:22px"></button></div>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="results"></section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============================================================
+   DATA — 9 types, 3 centers, 16 original statements per type.
+   Statements are original text keyed to the public Enneagram
+   type descriptions; RHETI items are not reproduced.
+   Type numbers follow the standard circle: 9 at the top,
+   1–8 clockwise. Wings, tritype and arrows are derived.
+   ============================================================ */
+const CENTERS = {
+  body:{types:[8,9,1], css:"--body", soft:"--body-soft"},
+  heart:{types:[2,3,4], css:"--heart", soft:"--heart-soft"},
+  head:{types:[5,6,7], css:"--head", soft:"--head-soft"}
+};
+const centerOf = n => n===8||n===9||n===1 ? "body" : n<=4 ? "heart" : "head";
+const STRESS = {1:4,2:8,3:9,4:2,5:7,6:3,7:1,8:5,9:6};
+const GROWTH = {1:7,2:4,3:6,4:1,5:8,6:9,7:5,8:2,9:3};
+
+const TYPES = [
+{n:1,
+ en:{name:"The Reformer",tag:"principled, purposeful, self-controlled, perfectionistic",
+  fear:"being corrupt, defective, or wrong",desire:"to be good, balanced, and have integrity",
+  desc:"Ones live by an inner standard of how things ought to be — and measure everything, themselves first of all, against it. They are conscientious and ethical, with a strong sense of right and wrong, and a drive to improve whatever they touch. The cost is a relentless inner critic that rarely lets them rest.",
+  watch:"Righteousness and resentment: when the standard becomes the point, people around you become projects, and your own anger goes underground as irritation and rigidity.",
+  use:["Schedule imperfection: one task a week done to 80% on purpose, then observe that nothing collapses.","Name the feeling under the judgment — most 'shoulds' are anger or fear wearing a suit."],
+  stress:"drifts toward the moody, self-absorbed side of Four — feeling misunderstood, dwelling on what's wrong with themselves",
+  growth:"opens into the spontaneous, joyful side of Seven — lighter, more accepting, able to play",
+  s:["I notice what's wrong or out of place before I notice what's fine.",
+     "I hold myself to standards most people would call too strict.",
+     "When something is done carelessly, I find it hard to let it pass.",
+     "I have a strong inner sense of how things should be done.",
+     "I feel responsible for improving the things around me.",
+     "I'm more comfortable with rules and principles than with improvising.",
+     "I often postpone rest until everything is done properly.",
+     "Being fair and correct matters more to me than being liked.",
+     "I catch myself being critical — of others, but mostly of myself.",
+     "I find it hard to relax while there is still something left to fix.",
+     "If something is worth doing, it's worth doing right.",
+     "I feel guilty when I let a standard slip, even a small one.",
+     "I organize my life around what I ought to do rather than what I feel like doing.",
+     "People who don't take their responsibilities seriously irritate me.",
+     "I prefer clear right and wrong to shades of grey.",
+     "I have trouble accepting praise for work I know isn't perfect."]},
+ ru:{name:"Реформатор",tag:"принципиальный, целеустремлённый, сдержанный, перфекционист",
+  fear:"оказаться испорченным, дефектным, неправым",desire:"быть хорошим, цельным, честным перед собой",
+  desc:"Единицы живут по внутреннему эталону того, как всё должно быть, — и сверяют с ним всё, в первую очередь себя. Они совестливы и этичны, остро чувствуют правое и неправое и стремятся улучшить всё, к чему прикасаются. Цена — неумолимый внутренний критик, который почти не даёт отдыха.",
+  watch:"Праведность и обида: когда стандарт становится самоцелью, люди вокруг превращаются в проекты, а собственный гнев уходит в подполье — в раздражение и жёсткость.",
+  use:["Планируйте несовершенство: одно дело в неделю намеренно на 80% — и наблюдайте, что ничего не рушится.","Называйте чувство под суждением: большинство «надо» — это гнев или страх в костюме."],
+  stress:"уходит в мрачную, погружённую в себя сторону Четвёрки: чувствует себя непонятым, застревает в том, что с ней не так",
+  growth:"раскрывается в спонтанную, радостную сторону Семёрки: легче, принимающе, с готовностью играть",
+  s:["Я замечаю, что не так или не на месте, раньше, чем то, что в порядке.",
+     "Я держу себя в рамках, которые большинство назвало бы слишком строгими.",
+     "Когда что-то сделано небрежно, мне трудно это пропустить.",
+     "У меня сильное внутреннее чувство того, как всё должно быть сделано.",
+     "Я чувствую ответственность за то, чтобы улучшать всё вокруг.",
+     "Мне комфортнее с правилами и принципами, чем с импровизацией.",
+     "Я часто откладываю отдых, пока всё не сделано как следует.",
+     "Быть справедливым и правым для меня важнее, чем нравиться.",
+     "Я ловлю себя на критике — других, но в основном себя.",
+     "Мне трудно расслабиться, пока остаётся что-то, что нужно исправить.",
+     "Если что-то стоит делать, это стоит делать правильно.",
+     "Я чувствую вину, когда даю слабину даже в мелочи.",
+     "Я строю жизнь вокруг того, что должен, а не того, чего хочется.",
+     "Меня раздражают люди, которые несерьёзно относятся к своим обязанностям.",
+     "Я предпочитаю чёткое «правильно/неправильно» оттенкам серого.",
+     "Мне трудно принимать похвалу за работу, которая, я знаю, не идеальна."]}},
+{n:2,
+ en:{name:"The Helper",tag:"generous, demonstrative, people-pleasing, possessive",
+  fear:"being unwanted, unworthy of being loved",desire:"to feel loved and needed",
+  desc:"Twos orient toward other people's needs with uncanny accuracy — and toward being the one who meets them. Warm, empathic and generous, they make others feel seen. Underneath runs a quiet bargain: if I'm needed enough, I'll be loved. Their own needs go unspoken, and eventually unfelt.",
+  watch:"Giving with a ledger: helping becomes a way to be indispensable, resentment builds when it isn't reciprocated, and honest 'no' feels like rejection of you rather than of the request.",
+  use:["Ask for something concrete once a day — small, direct, without justifying it.","Before helping, pause: was I asked? Do I have the energy? What would I want if no one needed me?"],
+  stress:"drifts toward the domineering, confrontational side of Eight — demanding acknowledgment, controlling through guilt",
+  growth:"opens into the self-aware, creative side of Four — attending to their own inner life, able to say what they need",
+  s:["I sense what people need before they say it.",
+     "I feel most alive when I'm helping someone.",
+     "It's hard for me to say no when someone asks for my help.",
+     "I remember the small details of people's lives — worries, birthdays, preferences.",
+     "I put others' needs ahead of my own without noticing.",
+     "I feel hurt when my efforts for others go unnoticed.",
+     "I express warmth easily and freely.",
+     "I find it difficult to ask for help myself.",
+     "I like being the person others turn to.",
+     "I can feel resentful when I give a lot and get little back.",
+     "Relationships matter more to me than achievements.",
+     "I adjust my personality to make others comfortable.",
+     "I quickly become indispensable in the groups I join.",
+     "I flatter people more than I probably should.",
+     "I feel unworthy unless I'm needed by someone.",
+     "I have trouble knowing what I want when no one else is involved."]},
+ ru:{name:"Помощник",tag:"щедрый, открытый, угождающий, собственнический",
+  fear:"оказаться ненужным, недостойным любви",desire:"чувствовать себя любимым и нужным",
+  desc:"Двойки с поразительной точностью настроены на потребности других — и на то, чтобы быть тем, кто их удовлетворит. Тёплые, эмпатичные и щедрые, они дают людям почувствовать себя увиденными. Внизу — тихая сделка: если я буду достаточно нужен, меня будут любить. Собственные потребности остаются невысказанными, а потом и непрочувствованными.",
+  watch:"Давать со счётом: помощь становится способом быть незаменимым, копится обида, когда её не возвращают, а честное «нет» ощущается как отказ вам, а не просьбе.",
+  use:["Раз в день просите о чём-то конкретном — маленьком, прямо, без оправданий.","Перед тем как помочь, пауза: меня просили? У меня есть силы? Чего бы я хотел, если бы никто во мне не нуждался?"],
+  stress:"уходит в доминирующую, конфронтационную сторону Восьмёрки: требует признания, управляет через чувство вины",
+  growth:"раскрывается в осознанную, творческую сторону Четвёрки: внимание к своей внутренней жизни, способность сказать, что нужно",
+  s:["Я чувствую, что людям нужно, до того как они это скажут.",
+     "Я особенно живу, когда кому-то помогаю.",
+     "Мне трудно отказать, когда меня просят о помощи.",
+     "Я помню мелкие детали жизни людей — тревоги, дни рождения, предпочтения.",
+     "Я ставлю нужды других выше своих, не замечая этого.",
+     "Мне больно, когда мои усилия ради других остаются незамеченными.",
+     "Я легко и свободно выражаю тепло.",
+     "Мне самому трудно просить о помощи.",
+     "Мне нравится быть тем, к кому обращаются.",
+     "Я могу затаить обиду, когда много отдаю и мало получаю.",
+     "Отношения для меня важнее достижений.",
+     "Я подстраиваю себя, чтобы другим было комфортно.",
+     "Я быстро становлюсь незаменимым в группах, куда прихожу.",
+     "Я льщу людям больше, чем, наверное, стоило бы.",
+     "Я чувствую себя недостойным, если никому не нужен.",
+     "Мне трудно понять, чего я хочу, когда никто другой не участвует."]}},
+{n:3,
+ en:{name:"The Achiever",tag:"adaptable, excelling, driven, image-conscious",
+  fear:"being worthless, a failure",desire:"to feel valuable and worthwhile",
+  desc:"Threes know what success looks like in any room and become it. Energetic, competent and adaptable, they get things done and make it look easy. The engine is a fear that they are only as valuable as their last result — so the performance rarely stops, and feelings that would slow it down are set aside.",
+  watch:"Image replacing self: you can become so good at being what works that you lose track of what's true — and rest, failure or sadness all register as threats rather than information.",
+  use:["Do one thing a week that no one will see or measure, and notice what it's like.","When asked how you are, answer with a feeling before a status update."],
+  stress:"drifts toward the disengaged, numbed side of Nine — going through the motions, losing drive, avoiding what matters",
+  growth:"opens into the cooperative, committed side of Six — genuinely loyal to people and causes beyond their own image",
+  s:["I set goals and measure myself by whether I reach them.",
+     "I want to be seen as successful in whatever I do.",
+     "I'm good at presenting myself well in different settings.",
+     "Failing publicly is one of my deepest fears.",
+     "I focus on results and efficiency more than on process.",
+     "I adapt my image to what works best with the people in front of me.",
+     "I have trouble slowing down; there's always the next thing.",
+     "I compare myself to others more than I admit.",
+     "I like being admired for my competence.",
+     "I sometimes lose track of what I actually feel because I'm busy performing.",
+     "I know how to make things look polished and professional.",
+     "I feel most myself when I'm accomplishing something.",
+     "I'd rather look capable than admit I'm struggling.",
+     "Competition energizes me.",
+     "I quickly figure out what counts as 'winning' in any situation.",
+     "Rest feels like wasted time unless it's been earned."]},
+ ru:{name:"Достигатель",tag:"адаптивный, успешный, целеустремлённый, ориентированный на образ",
+  fear:"оказаться никчёмным, неудачником",desire:"чувствовать себя ценным и стоящим",
+  desc:"Тройки знают, как выглядит успех в любой комнате, — и становятся им. Энергичные, компетентные, гибкие, они доводят дела до результата так, что это кажется лёгким. Двигатель — страх, что они стоят ровно столько, сколько их последний результат, поэтому представление почти не прекращается, а чувства, которые могли бы его замедлить, откладываются.",
+  watch:"Образ вместо себя: можно так хорошо научиться быть тем, что работает, что потерять то, что правда. Отдых, провал и грусть начинают восприниматься как угрозы, а не как информация.",
+  use:["Раз в неделю делайте что-то, чего никто не увидит и не измерит, — и замечайте, каково это.","На вопрос «как ты?» отвечайте чувством прежде, чем статусом."],
+  stress:"уходит в отстранённую, онемевшую сторону Девятки: действует на автомате, теряет драйв, избегает важного",
+  growth:"раскрывается в кооперативную, преданную сторону Шестёрки: искренняя верность людям и делу, а не своему образу",
+  s:["Я ставлю цели и оцениваю себя по тому, достигаю ли их.",
+     "Я хочу выглядеть успешным во всём, что делаю.",
+     "Я умею хорошо подать себя в разных ситуациях.",
+     "Публичный провал — один из моих самых глубоких страхов.",
+     "Я сосредоточен на результате и эффективности больше, чем на процессе.",
+     "Я подстраиваю свой образ под то, что лучше сработает с людьми передо мной.",
+     "Мне трудно замедлиться: всегда есть следующее дело.",
+     "Я сравниваю себя с другими чаще, чем признаю.",
+     "Мне нравится, когда мной восхищаются за компетентность.",
+     "Иногда я теряю связь с тем, что чувствую, потому что занят тем, чтобы производить впечатление.",
+     "Я знаю, как сделать так, чтобы всё выглядело отточенно и профессионально.",
+     "Я больше всего собой, когда чего-то добиваюсь.",
+     "Я скорее буду выглядеть способным, чем признаю, что мне тяжело.",
+     "Соревнование меня заряжает.",
+     "Я быстро понимаю, что считается «победой» в любой ситуации.",
+     "Отдых кажется потерей времени, если он не заслужен."]}},
+{n:4,
+ en:{name:"The Individualist",tag:"expressive, dramatic, self-absorbed, temperamental",
+  fear:"having no identity or personal significance",desire:"to find themselves and their significance",
+  desc:"Fours experience themselves as fundamentally different — and they are both proud of it and wounded by it. Emotionally deep, aesthetically attuned and honest about the dark, they bring meaning and authenticity wherever they go. The undertow is a sense that something essential is missing in them, and a longing for what is absent that dims what is present.",
+  watch:"Curating suffering: melancholy can become identity, envy can masquerade as depth, and waiting to be understood can replace the work of being known.",
+  use:["Finish something ordinary every day — the mundane is where identity actually consolidates.","When a feeling arrives, name it and then ask: what would I do right now if I weren't feeling this?"],
+  stress:"drifts toward the clinging, over-involved side of Two — seeking reassurance, losing themselves in another person",
+  growth:"opens into the principled, disciplined side of One — acting on values rather than moods, building something steady",
+  s:["I feel that something essential is missing in me that others seem to have.",
+     "My moods are deep and shift often; I take them seriously.",
+     "I want to be seen as unique — being ordinary feels like a small death.",
+     "I'm drawn to melancholy, beauty and things with emotional depth.",
+     "I express myself best through some creative or aesthetic medium.",
+     "I long for what is absent more than I enjoy what is present.",
+     "I feel misunderstood more often than most people.",
+     "I can be very self-absorbed when my feelings are stirred.",
+     "I need to feel that my life is authentic and truly mine.",
+     "I envy people who seem naturally at ease with themselves.",
+     "I'm sensitive to the atmosphere and mood of a place.",
+     "I withdraw when hurt, and hope someone notices.",
+     "I would rather feel deeply than feel comfortable.",
+     "My identity is something I keep searching for and refining.",
+     "I dramatize my emotions somewhat, even to myself.",
+     "I dwell on the past and on what could have been."]},
+ ru:{name:"Индивидуалист",tag:"выразительный, драматичный, погружённый в себя, переменчивый",
+  fear:"не иметь идентичности и личной значимости",desire:"найти себя и свою значимость",
+  desc:"Четвёрки ощущают себя фундаментально другими — и одновременно гордятся этим, и ранены этим. Эмоционально глубокие, чуткие к красоте и честные о тёмном, они привносят смысл и подлинность туда, где появляются. Подводное течение — ощущение, что в них не хватает чего-то важного, и тоска по отсутствующему, которая гасит то, что есть.",
+  watch:"Кураторство страдания: меланхолия может стать идентичностью, зависть — притвориться глубиной, а ожидание, что вас поймут, — заменить работу по тому, чтобы вас узнали.",
+  use:["Каждый день доводите до конца что-то обыденное: идентичность собирается именно в рутине.","Когда приходит чувство, назовите его и спросите: что бы я сделал прямо сейчас, если бы не чувствовал этого?"],
+  stress:"уходит в цепляющуюся, чрезмерно вовлечённую сторону Двойки: ищет подтверждения, растворяется в другом человеке",
+  growth:"раскрывается в принципиальную, дисциплинированную сторону Единицы: действует из ценностей, а не настроений, строит устойчивое",
+  s:["Я чувствую, что во мне не хватает чего-то важного, что у других вроде бы есть.",
+     "Мои настроения глубоки и часто меняются; я отношусь к ним серьёзно.",
+     "Я хочу быть особенным — быть обычным ощущается как маленькая смерть.",
+     "Меня тянет к меланхолии, красоте и вещам с эмоциональной глубиной.",
+     "Лучше всего я выражаю себя через творчество или эстетику.",
+     "Я тоскую по тому, чего нет, сильнее, чем радуюсь тому, что есть.",
+     "Я чувствую себя непонятым чаще, чем большинство людей.",
+     "Я могу быть очень погружён в себя, когда задеты мои чувства.",
+     "Мне нужно чувствовать, что моя жизнь подлинная и по-настоящему моя.",
+     "Я завидую людям, которым, кажется, естественно легко с самими собой.",
+     "Я чувствителен к атмосфере и настроению места.",
+     "Когда мне больно, я отстраняюсь — и надеюсь, что кто-то заметит.",
+     "Я предпочту чувствовать глубоко, чем чувствовать себя комфортно.",
+     "Моя идентичность — то, что я всё время ищу и уточняю.",
+     "Я слегка драматизирую свои эмоции, даже перед самим собой.",
+     "Я застреваю в прошлом и в том, что могло бы быть."]}},
+{n:5,
+ en:{name:"The Investigator",tag:"perceptive, innovative, secretive, isolated",
+  fear:"being helpless, useless, overwhelmed",desire:"to be capable and competent",
+  desc:"Fives meet the world by understanding it first. Curious, independent and intensely focused, they build inner models of how things work and prefer to observe before they engage. Because they experience their energy and resources as limited, they minimize needs, guard their time, and keep feelings for later — often much later.",
+  watch:"Preparation as avoidance: you can always know a little more before acting, and detachment that feels like clarity is sometimes just distance from your own body and from other people.",
+  use:["Act at 70% knowledge on something small each week; note that competence grew from the doing, not the reading.","Say one feeling out loud to another person on the day it happens."],
+  stress:"drifts toward the scattered, hyperactive side of Seven — restless, distracted, escaping into stimulation",
+  growth:"opens into the confident, embodied side of Eight — acting decisively, taking up space, trusting their gut",
+  s:["I need a lot of time alone to think and recharge.",
+     "I'd rather understand something completely than act on it half-informed.",
+     "Too much social contact drains me.",
+     "I collect knowledge in areas most people never think about.",
+     "I keep my feelings private and process them later, alone.",
+     "I prefer to observe a situation before participating in it.",
+     "I minimize my needs so I don't have to depend on others.",
+     "Being intruded upon is one of the things I dislike most.",
+     "I feel more competent in the world of ideas than in the practical world.",
+     "I detach from emotion in order to see things clearly.",
+     "I'm uncomfortable when people expect me to react on the spot.",
+     "I can go deep into a subject and lose track of everything else.",
+     "I feel I have limited energy and must guard it.",
+     "A few close people suit me better than many acquaintances.",
+     "I question the assumptions others take for granted.",
+     "I like being the one who knows how things really work."]},
+ ru:{name:"Исследователь",tag:"проницательный, изобретательный, скрытный, отстранённый",
+  fear:"оказаться беспомощным, бесполезным, не справиться",desire:"быть способным и компетентным",
+  desc:"Пятёрки встречают мир тем, что сначала его понимают. Любопытные, независимые, предельно сосредоточенные, они строят внутренние модели того, как всё устроено, и предпочитают наблюдать прежде, чем включаться. Поскольку свои силы и ресурсы они ощущают ограниченными, они сводят потребности к минимуму, оберегают время и откладывают чувства на потом — часто на очень потом.",
+  watch:"Подготовка как избегание: всегда можно узнать ещё немного, прежде чем действовать, а отстранённость, которая ощущается как ясность, иногда просто дистанция от собственного тела и от других людей.",
+  use:["Раз в неделю действуйте при 70% знания в чём-то небольшом — и замечайте, что компетентность выросла из дела, не из чтения.","Произносите одно чувство вслух другому человеку в тот день, когда оно возникло."],
+  stress:"уходит в рассеянную, гиперактивную сторону Семёрки: беспокойство, отвлечение, бегство в стимуляцию",
+  growth:"раскрывается в уверенную, телесную сторону Восьмёрки: решительно действует, занимает место, доверяет чутью",
+  s:["Мне нужно много времени в одиночестве, чтобы думать и восстанавливаться.",
+     "Я предпочту понять что-то до конца, чем действовать, зная наполовину.",
+     "Слишком много общения меня истощает.",
+     "Я собираю знания в областях, о которых большинство и не думает.",
+     "Я держу чувства при себе и разбираю их позже, наедине.",
+     "Я предпочитаю понаблюдать за ситуацией, прежде чем в неё включаться.",
+     "Я сводлю свои потребности к минимуму, чтобы не зависеть от других.",
+     "Вторжение в моё пространство — одно из того, что я не люблю больше всего.",
+     "Я чувствую себя компетентнее в мире идей, чем в практическом мире.",
+     "Я отстраняюсь от эмоций, чтобы видеть ясно.",
+     "Мне некомфортно, когда от меня ждут реакции сразу, на месте.",
+     "Я могу уйти вглубь темы и потерять из виду всё остальное.",
+     "Я чувствую, что моя энергия ограничена и её нужно беречь.",
+     "Несколько близких людей мне подходят больше, чем много знакомых.",
+     "Я ставлю под вопрос допущения, которые другие принимают как данность.",
+     "Мне нравится быть тем, кто знает, как всё устроено на самом деле."]}},
+{n:6,
+ en:{name:"The Loyalist",tag:"engaging, responsible, anxious, suspicious",
+  fear:"being without support or guidance",desire:"to have security and support",
+  desc:"Sixes scan for what could go wrong and prepare for it — which makes them reliable, hard-working and the steadiest people in a crisis. They are loyal to people and systems they trust, and skeptical of those they don't; often both at once. The inner life is a committee: courage and doubt, trust and suspicion, arguing over every important decision.",
+  watch:"Anxiety mistaken for insight: worst-case thinking can feel like realism, and the search for certainty can keep you circling instead of choosing.",
+  use:["Set a decision deadline before you start gathering opinions; when it arrives, choose with what you have.","Track predictions: write down the feared outcome and check it a week later. Build evidence about your own forecasting."],
+  stress:"drifts toward the competitive, image-driven side of Three — overworking, performing confidence, avoiding vulnerability",
+  growth:"opens into the relaxed, trusting side of Nine — calmer, more accepting, at home in themselves",
+  s:["I anticipate problems before they happen and prepare for them.",
+     "I question people's motives, especially those in charge.",
+     "I feel safer when I have people or systems I can rely on.",
+     "I second-guess my decisions more than I'd like.",
+     "I stay loyal to people and groups long after others would have left.",
+     "I can be skeptical and trusting at the same time — it depends on the day.",
+     "I often imagine worst-case scenarios.",
+     "I want clear guidelines so I know where I stand.",
+     "I look for reassurance but don't fully trust it when I get it.",
+     "When I'm anxious I either freeze or push back hard.",
+     "I'm a steady, responsible presence in a crisis.",
+     "I notice inconsistencies between what people say and what they do.",
+     "I seek advice before acting on anything important.",
+     "I feel a mix of courage and doubt about most big decisions.",
+     "I test people before I let them close.",
+     "Uncertainty bothers me more than bad news."]},
+ ru:{name:"Лоялист",tag:"вовлечённый, ответственный, тревожный, подозрительный",
+  fear:"остаться без поддержки и опоры",desire:"иметь безопасность и поддержку",
+  desc:"Шестёрки сканируют, что может пойти не так, и готовятся к этому, — поэтому они надёжны, работоспособны и самые устойчивые люди в кризис. Они верны людям и системам, которым доверяют, и скептичны к тем, кому нет; часто и то и другое одновременно. Внутренняя жизнь — комитет: смелость и сомнение, доверие и подозрение спорят о каждом важном решении.",
+  watch:"Тревога, принятая за проницательность: мышление худшим сценарием может ощущаться как реализм, а поиск уверенности — держать вас в кругах вместо выбора.",
+  use:["Назначайте дедлайн решения до того, как начнёте собирать мнения; когда он наступит, выбирайте с тем, что есть.","Ведите учёт прогнозов: записывайте пугающий исход и проверяйте через неделю. Собирайте данные о собственной точности."],
+  stress:"уходит в соревновательную, ориентированную на образ сторону Тройки: перерабатывает, изображает уверенность, избегает уязвимости",
+  growth:"раскрывается в расслабленную, доверяющую сторону Девятки: спокойнее, принимающе, дома в самом себе",
+  s:["Я предвижу проблемы до того, как они случаются, и готовлюсь к ним.",
+     "Я ставлю под сомнение мотивы людей, особенно тех, кто у власти.",
+     "Я чувствую себя безопаснее, когда есть люди или системы, на которые можно опереться.",
+     "Я перепроверяю свои решения чаще, чем хотелось бы.",
+     "Я остаюсь верен людям и группам ещё долго после того, как другие бы ушли.",
+     "Я могу быть скептичным и доверчивым одновременно — зависит от дня.",
+     "Я часто представляю худшие сценарии.",
+     "Мне нужны ясные ориентиры, чтобы понимать, где я стою.",
+     "Я ищу подтверждения, но не вполне верю им, когда получаю.",
+     "Когда я тревожусь, я либо замираю, либо резко даю отпор.",
+     "В кризис я — устойчивая, ответственная опора.",
+     "Я замечаю расхождения между тем, что люди говорят, и тем, что делают.",
+     "Я советуюсь, прежде чем сделать что-то важное.",
+     "Перед большими решениями я чувствую смесь смелости и сомнения.",
+     "Я проверяю людей, прежде чем подпустить близко.",
+     "Неопределённость беспокоит меня сильнее, чем плохие новости."]}},
+{n:7,
+ en:{name:"The Enthusiast",tag:"spontaneous, versatile, acquisitive, scattered",
+  fear:"being deprived and trapped in pain",desire:"to be satisfied and content",
+  desc:"Sevens move toward the next good thing with speed and delight. Optimistic, quick-minded and versatile, they generate options, energy and possibilities wherever they go. The motion has a purpose: to stay ahead of pain, boredom and limitation. So commitments narrow, details blur, and difficult feelings get reframed before they've been felt.",
+  watch:"Escaping into the future: anticipation can replace experience, breadth can replace depth, and relentless positivity can leave you unable to sit with anyone's sadness — including your own.",
+  use:["Choose one thing and stay past the point where it gets boring; that's where mastery, and satisfaction, live.","When something hurts, wait one full day before finding the silver lining."],
+  stress:"drifts toward the critical, perfectionistic side of One — irritable, judgmental, suddenly rigid",
+  growth:"opens into the focused, profound side of Five — going deep, sitting still, finding wonder in one thing",
+  s:["I keep several options open so I never feel trapped.",
+     "I get bored quickly and look for the next stimulating thing.",
+     "I'm naturally optimistic and can reframe almost anything positively.",
+     "Planning future experiences excites me as much as having them.",
+     "I have many interests and struggle to commit to just one.",
+     "I avoid painful feelings by staying busy and upbeat.",
+     "I'm usually the one who lifts the energy in a room.",
+     "I say yes to more than I can realistically do.",
+     "Limits and routines make me restless.",
+     "I can rationalize my way out of almost any regret.",
+     "I want life to be an adventure.",
+     "I skim over details when they slow me down.",
+     "Missing out on something is worse for me than choosing wrong.",
+     "I have a quick, associative mind that jumps between ideas.",
+     "I find it hard to sit with sadness — mine or anyone else's.",
+     "I trust that things will work out, so I don't dwell on risks."]},
+ ru:{name:"Энтузиаст",tag:"спонтанный, разносторонний, жадный до впечатлений, рассеянный",
+  fear:"оказаться обделённым, застрять в боли",desire:"быть удовлетворённым и довольным",
+  desc:"Семёрки движутся к следующему хорошему со скоростью и восторгом. Оптимистичные, быстрые, разносторонние, они порождают варианты, энергию и возможности везде, где появляются. У этого движения есть цель — оставаться впереди боли, скуки и ограничений. Поэтому обязательства сужаются, детали размываются, а трудные чувства переосмысливаются раньше, чем их успели прочувствовать.",
+  watch:"Бегство в будущее: предвкушение может заменить опыт, широта — глубину, а неутомимый позитив — лишить способности быть рядом с чьей-то грустью, включая собственную.",
+  use:["Выберите одно и оставайтесь дальше точки, где становится скучно: там живут мастерство и удовлетворение.","Когда что-то ранит, подождите полный день, прежде чем искать в этом плюсы."],
+  stress:"уходит в критичную, перфекционистскую сторону Единицы: раздражительность, осуждение, внезапная жёсткость",
+  growth:"раскрывается в сосредоточенную, глубокую сторону Пятёрки: уходит вглубь, сидит спокойно, находит чудо в одном",
+  s:["Я держу несколько вариантов открытыми, чтобы никогда не чувствовать себя в ловушке.",
+     "Мне быстро становится скучно, и я ищу следующее, что зацепит.",
+     "Я оптимист по природе и могу переосмыслить почти что угодно в плюс.",
+     "Планировать будущие впечатления мне так же радостно, как их проживать.",
+     "У меня много интересов, и мне трудно выбрать один.",
+     "Я избегаю болезненных чувств, оставаясь занятым и бодрым.",
+     "Обычно я тот, кто поднимает энергию в комнате.",
+     "Я соглашаюсь на большее, чем реально могу сделать.",
+     "Ограничения и рутина вызывают у меня беспокойство.",
+     "Я могу рационализировать почти любое сожаление.",
+     "Я хочу, чтобы жизнь была приключением.",
+     "Я проскакиваю детали, когда они меня тормозят.",
+     "Упустить что-то для меня хуже, чем выбрать неправильно.",
+     "У меня быстрый ассоциативный ум, который прыгает между идеями.",
+     "Мне трудно оставаться в грусти — своей или чьей-то ещё.",
+     "Я верю, что всё сложится, поэтому не зацикливаюсь на рисках."]}},
+{n:8,
+ en:{name:"The Challenger",tag:"self-confident, decisive, willful, confrontational",
+  fear:"being harmed or controlled by others",desire:"to protect themselves and determine their own course",
+  desc:"Eights take up space. Direct, energetic and decisive, they take charge because someone has to, protect the people they consider theirs, and say what others are only thinking. The intensity guards something: a conviction that vulnerability is dangerous, and that the only safe position is the strong one.",
+  watch:"Strength as armor: bluntness can become cruelty without your noticing, control can crowd out trust, and the tenderness you'd defend in others gets denied in yourself.",
+  use:["Let someone else lead one thing that matters to you, and don't rescue it.","Say 'that hurt' once a week, out loud, to a person — before you turn it into anger."],
+  stress:"drifts toward the withdrawn, secretive side of Five — pulling back, going cold, strategizing alone",
+  growth:"opens into the open-hearted, caring side of Two — letting people in, protecting with warmth rather than force",
+  s:["I take charge naturally; someone has to.",
+     "I say what I think directly, even when it's uncomfortable.",
+     "I protect the people I consider mine.",
+     "I don't like anyone having power over me.",
+     "I respect strength and lose respect for people who won't stand up for themselves.",
+     "I have a lot of energy and intensity, and I know it.",
+     "Showing vulnerability feels dangerous to me.",
+     "I'd rather confront a problem head-on than let it fester.",
+     "I push against limits to see if they're real.",
+     "I know instinctively who is in control of a situation.",
+     "I can be blunt to the point of hurting people without meaning to.",
+     "I trust my gut over anyone's arguments.",
+     "I feel most alive when I'm acting on something big.",
+     "I have a strong sense of justice and won't stay quiet about unfairness.",
+     "Being controlled or manipulated makes me furious.",
+     "I make decisions quickly and rarely look back."]},
+ ru:{name:"Бросающий вызов",tag:"уверенный, решительный, своевольный, конфронтационный",
+  fear:"быть уязвлённым или подконтрольным другим",desire:"защитить себя и самому определять свой путь",
+  desc:"Восьмёрки занимают место. Прямые, энергичные, решительные, они берут руль, потому что кто-то должен, защищают тех, кого считают своими, и говорят то, о чём другие только думают. Интенсивность охраняет нечто: убеждение, что уязвимость опасна и единственная безопасная позиция — сильная.",
+  watch:"Сила как броня: прямота незаметно превращается в жестокость, контроль вытесняет доверие, а нежность, которую вы защищали бы в других, себе не разрешается.",
+  use:["Позвольте кому-то другому вести что-то важное для вас — и не спасайте.","Раз в неделю скажите «мне было больно» вслух, человеку — до того, как это станет злостью."],
+  stress:"уходит в замкнутую, скрытную сторону Пятёрки: отступает, холодеет, стратегирует в одиночку",
+  growth:"раскрывается в открытую, заботливую сторону Двойки: впускает людей, защищает теплом, а не силой",
+  s:["Я естественно беру руль: кто-то должен.",
+     "Я говорю то, что думаю, прямо, даже когда это неудобно.",
+     "Я защищаю тех, кого считаю своими.",
+     "Я не терплю, чтобы у кого-то была власть надо мной.",
+     "Я уважаю силу и теряю уважение к тем, кто не может за себя постоять.",
+     "У меня много энергии и напора, и я это знаю.",
+     "Показывать уязвимость для меня опасно.",
+     "Я предпочту встретить проблему лоб в лоб, чем дать ей гноиться.",
+     "Я давлю на границы, чтобы проверить, настоящие ли они.",
+     "Я инстинктивно понимаю, кто контролирует ситуацию.",
+     "Я могу быть резким до того, что задеваю людей, не желая этого.",
+     "Я доверяю своему чутью больше, чем чьим-либо аргументам.",
+     "Я особенно живу, когда действую в чём-то большом.",
+     "У меня сильное чувство справедливости, и я не промолчу о несправедливости.",
+     "Когда меня контролируют или манипулируют мной, я прихожу в ярость.",
+     "Я принимаю решения быстро и редко оглядываюсь."]}},
+{n:9,
+ en:{name:"The Peacemaker",tag:"receptive, reassuring, agreeable, complacent",
+  fear:"loss and separation, fragmentation",desire:"to have inner stability and peace of mind",
+  desc:"Nines hold the room together by not disturbing it. Accepting, steady and genuinely able to see every side, they make others feel welcome and calm. The cost is their own position: preferences go unvoiced, anger goes unfelt, and the important gets deferred in favor of the comfortable — until it's hard to know what they themselves want.",
+  watch:"Peace as absence: going along can become disappearing, patience can become inertia, and the stubbornness you don't show as anger still shows — as delay.",
+  use:["State one preference a day before anyone else states theirs — restaurant, film, plan.","Do the most important thing first, for fifteen minutes, before any comfortable task."],
+  stress:"drifts toward the anxious, reactive side of Six — worried, suspicious, seeking reassurance",
+  growth:"opens into the energetic, self-developing side of Three — pursuing goals, showing up, claiming their worth",
+  s:["I go along with others to keep the peace.",
+     "It's hard for me to know what I want when others have strong preferences.",
+     "I avoid conflict, even when I'm right.",
+     "I can see all sides of an argument, which makes it hard to take a side.",
+     "I have a calm presence that people find soothing.",
+     "I put off what's important in favor of small comfortable tasks.",
+     "I merge with the people I'm close to and adopt their views.",
+     "Being pushed makes me quietly dig in.",
+     "I need routine and comfort more than excitement.",
+     "I underestimate my own importance in groups.",
+     "I'd rather adapt than assert.",
+     "I numb out with TV, food or busywork when I'm stressed.",
+     "I want everyone to feel included and accepted.",
+     "I say 'it doesn't matter' when it actually does.",
+     "I have trouble getting started but am steady once I do.",
+     "I rarely feel anger directly; it shows up as stubbornness."]},
+ ru:{name:"Миротворец",tag:"восприимчивый, успокаивающий, уступчивый, инертный",
+  fear:"потери и разделённости, распада",desire:"внутренней стабильности и покоя",
+  desc:"Девятки держат комнату вместе тем, что не тревожат её. Принимающие, устойчивые, по-настоящему способные видеть все стороны, они дают другим почувствовать себя желанными и спокойными. Цена — собственная позиция: предпочтения не озвучиваются, гнев не ощущается, важное откладывается ради удобного — пока не становится трудно понять, чего они хотят сами.",
+  watch:"Покой как отсутствие: соглашаться можно до исчезновения, терпение может стать инерцией, а упрямство, которое вы не показываете как гнев, всё равно проявляется — как затягивание.",
+  use:["Озвучивайте одно предпочтение в день до того, как его озвучат другие: ресторан, фильм, план.","Делайте самое важное первым, пятнадцать минут, до любого удобного дела."],
+  stress:"уходит в тревожную, реактивную сторону Шестёрки: беспокойство, подозрительность, поиск подтверждений",
+  growth:"раскрывается в энергичную, развивающуюся сторону Тройки: идёт к целям, проявляется, заявляет о своей ценности",
+  s:["Я соглашаюсь с другими, чтобы сохранить мир.",
+     "Мне трудно понять, чего я хочу, когда у других сильные предпочтения.",
+     "Я избегаю конфликта, даже когда прав.",
+     "Я вижу все стороны спора, и поэтому мне трудно занять сторону.",
+     "У меня спокойное присутствие, которое людей успокаивает.",
+     "Я откладываю важное ради маленьких удобных дел.",
+     "Я сливаюсь с близкими людьми и перенимаю их взгляды.",
+     "Когда на меня давят, я тихо упираюсь.",
+     "Мне нужны рутина и комфорт больше, чем острые ощущения.",
+     "Я недооцениваю свою значимость в группах.",
+     "Я скорее подстроюсь, чем настою на своём.",
+     "В стрессе я отключаюсь через сериалы, еду или мелкую занятость.",
+     "Я хочу, чтобы каждый чувствовал себя принятым.",
+     "Я говорю «неважно», когда на самом деле важно.",
+     "Мне трудно начать, но, начав, я устойчив.",
+     "Я редко чувствую гнев напрямую — он проявляется как упрямство."]}}
+];
+const TYPE = n => TYPES[n-1];
+
+/* Wings — Riso-Hudson labels; one-line originals. Key "NwW". */
+const WINGS = {
+ en:{
+  "1w9":["The Idealist","More reserved and philosophical: principles held quietly, anger cooled into detachment."],
+  "1w2":["The Advocate","More outgoing and involved: principles put to work for people, with warmth — and sharper criticism."],
+  "2w1":["The Servant","More dutiful and self-controlled: helping as moral obligation, with a stronger inner critic."],
+  "2w3":["The Host","More charming and ambitious: helping as a social art, more concerned with being liked and admired."],
+  "3w2":["The Charmer","Warmer and more people-oriented: success measured in approval, achieved through connection."],
+  "3w4":["The Professional","More introspective and image-conscious: success as craft, with more private self-doubt."],
+  "4w3":["The Aristocrat","More sociable and ambitious: individuality expressed with polish, wanting to be both unique and admired."],
+  "4w5":["The Bohemian","More withdrawn and cerebral: individuality pursued inwardly, with less concern for being seen."],
+  "5w4":["The Iconoclast","More creative and emotional: knowledge with a personal, aesthetic edge, more moody and independent."],
+  "5w6":["The Problem Solver","More practical and cooperative: knowledge applied to systems, more anxious and loyal."],
+  "6w5":["The Defender","More serious and self-contained: security through competence and analysis, more private."],
+  "6w7":["The Buddy","More sociable and playful: security through relationships and humor, more visibly anxious."],
+  "7w6":["The Entertainer","More relational and responsible: adventure shared with others, more anxious underneath."],
+  "7w8":["The Realist","More assertive and materialistic: adventure pursued with force, less concern for approval."],
+  "8w7":["The Maverick","More energetic and expansive: power as adventure, quicker, louder, more impulsive."],
+  "8w9":["The Bear","More calm and steady: power held quietly, protective rather than confrontational."],
+  "9w8":["The Referee","More assertive and grounded: peace kept with a firmer hand, more willing to push back."],
+  "9w1":["The Dreamer","More idealistic and orderly: peace pursued through principles, more self-critical."]},
+ ru:{
+  "1w9":["Идеалист","Более сдержанный и философский: принципы держатся тихо, гнев остывает в отстранённость."],
+  "1w2":["Адвокат","Более открытый и вовлечённый: принципы работают на людей, с теплом — и более острой критикой."],
+  "2w1":["Служитель","Более долженствующий и сдержанный: помощь как моральный долг, с сильным внутренним критиком."],
+  "2w3":["Хозяин","Более обаятельный и амбициозный: помощь как социальное искусство, больше заботы о том, чтобы нравиться."],
+  "3w2":["Обаятельный","Теплее и ориентированнее на людей: успех измеряется одобрением и достигается через связи."],
+  "3w4":["Профессионал","Более интроспективный и внимательный к образу: успех как ремесло, с большей скрытой неуверенностью."],
+  "4w3":["Аристократ","Более общительный и амбициозный: индивидуальность с лоском, желание быть и уникальным, и признанным."],
+  "4w5":["Богема","Более замкнутый и рассудочный: индивидуальность ищется внутри, меньше заботы о том, чтобы быть увиденным."],
+  "5w4":["Иконоборец","Более творческий и эмоциональный: знание с личным, эстетическим оттенком, переменчивее и независимее."],
+  "5w6":["Решатель проблем","Более практичный и кооперативный: знание прилагается к системам, больше тревоги и лояльности."],
+  "6w5":["Защитник","Более серьёзный и самодостаточный: безопасность через компетентность и анализ, более закрытый."],
+  "6w7":["Приятель","Более общительный и игривый: безопасность через отношения и юмор, тревога заметнее."],
+  "7w6":["Артист","Более контактный и ответственный: приключение делится с другими, внизу больше тревоги."],
+  "7w8":["Реалист","Более напористый и материалистичный: приключение берётся силой, меньше заботы об одобрении."],
+  "8w7":["Бунтарь","Более энергичный и размашистый: сила как приключение — быстрее, громче, импульсивнее."],
+  "8w9":["Медведь","Более спокойный и устойчивый: сила держится тихо, защита вместо конфронтации."],
+  "9w8":["Рефери","Более напористый и заземлённый: мир держится более твёрдой рукой, больше готовности дать отпор."],
+  "9w1":["Мечтатель","Более идеалистичный и упорядоченный: мир ищется через принципы, больше самокритики."]}
+};
+
+/* Instinctual variants — 6 statements each; block of 18 pairs. */
+const INSTINCTS = [
+{id:"sp",
+ en:{name:"Self-Preservation",short:"SP",
+  desc:"Attention goes first to safety, comfort, health, resources and routine. You notice the temperature of a room, the state of your body, the balance of your account. Security is the ground everything else stands on.",
+  s:["I notice right away whether a place is warm enough, quiet enough, and whether there's food.",
+     "I worry about money and security more than the people around me seem to.",
+     "My home is my base; I invest a lot in making it comfortable.",
+     "I take care of practical matters — health, bills, supplies — before anything else.",
+     "I need enough rest and a predictable routine to feel like myself.",
+     "In a new situation I first check the exits, the schedule, and where I'll sit."]},
+ ru:{name:"Самосохранение",short:"SP",
+  desc:"Внимание первым делом идёт на безопасность, комфорт, здоровье, ресурсы и распорядок. Вы замечаете температуру в комнате, состояние тела, остаток на счёте. Безопасность — почва, на которой стоит всё остальное.",
+  s:["Я сразу замечаю, достаточно ли в месте тепло, тихо и есть ли еда.",
+     "Я беспокоюсь о деньгах и безопасности больше, чем, кажется, люди вокруг.",
+     "Мой дом — моя база; я много вкладываю в то, чтобы в нём было удобно.",
+     "Я решаю практические вопросы — здоровье, счета, запасы — раньше всего остального.",
+     "Мне нужно достаточно отдыха и предсказуемый распорядок, чтобы быть собой.",
+     "В новой ситуации я сначала проверяю выходы, расписание и где буду сидеть."]}},
+{id:"so",
+ en:{name:"Social",short:"SO",
+  desc:"Attention goes to groups, belonging, status and the web of relationships. You read a room fast, know who is allied with whom, and feel your place — or lack of it — in the community. Being part of something matters more than comfort.",
+  s:["I'm aware of who is in, who is out, and how groups are organized.",
+     "I care about my reputation and how I'm seen by the community.",
+     "I get energy from being part of something larger than myself.",
+     "I read a room quickly — who is allied with whom, what the mood is.",
+     "Being excluded hurts me more than being uncomfortable.",
+     "I follow the news, trends and affairs of the groups I belong to."]},
+ ru:{name:"Социальный",short:"SO",
+  desc:"Внимание идёт на группы, принадлежность, статус и сеть отношений. Вы быстро читаете комнату, знаете, кто с кем, и чувствуете своё место — или его отсутствие — в сообществе. Быть частью чего-то важнее комфорта.",
+  s:["Я осознаю, кто внутри, кто снаружи и как устроены группы.",
+     "Мне важна моя репутация и то, как меня видит сообщество.",
+     "Я получаю энергию от того, что являюсь частью чего-то большего, чем я.",
+     "Я быстро читаю комнату: кто с кем в союзе, какое настроение.",
+     "Быть исключённым для меня больнее, чем быть в дискомфорте.",
+     "Я слежу за новостями, трендами и делами групп, к которым принадлежу."]}},
+{id:"sx",
+ en:{name:"One-to-One (Sexual)",short:"SX",
+  desc:"Attention goes to intensity, attraction and deep one-to-one connection. You seek chemistry — with people, ideas, projects — and lose interest in anything without a spark. Depth with a few beats breadth with many.",
+  s:["I want intense, one-to-one connection; ordinary friendliness bores me.",
+     "I focus my energy on a few people or passions and neglect the rest.",
+     "I notice attraction and chemistry — mine and others' — very quickly.",
+     "I'd rather have one deep conversation than a whole evening of small talk.",
+     "I lose interest in things that don't have some spark or edge.",
+     "I pursue what fascinates me with an intensity others find overwhelming."]},
+ ru:{name:"Один-на-один (сексуальный)",short:"SX",
+  desc:"Внимание идёт на интенсивность, притяжение и глубокую связь один на один. Вы ищете химию — с людьми, идеями, проектами — и теряете интерес ко всему без искры. Глубина с немногими важнее широты со многими.",
+  s:["Мне нужна интенсивная связь один на один; обычная дружелюбность мне скучна.",
+     "Я направляю энергию на нескольких людей или страстей и запускаю остальное.",
+     "Я очень быстро замечаю притяжение и химию — свои и чужие.",
+     "Я предпочту один глубокий разговор целому вечеру светской болтовни.",
+     "Я теряю интерес к тому, в чём нет искры или остроты.",
+     "Я иду за тем, что меня захватывает, с интенсивностью, которая других ошеломляет."]}}
+];
+
+/* ---------- UI strings ---------- */
+const CENTER_NAME = {
+  en:{body:"Body / Instinctive",heart:"Heart / Feeling",head:"Head / Thinking"},
+  ru:{body:"Тело / инстинкт",heart:"Сердце / чувства",head:"Голова / мышление"}
+};
+const STR = {
+en:{
+  eyebrow:"Unofficial · RHETI-style Enneagram assessment",
+  title:"Enneagram Profiler",
+  sub:"A reconstruction of the Enneagram Type Indicator mechanics — 144 paired statements, every type meeting every other type equally — with original statements keyed to the nine types. Adds a short instinct block. Not affiliated with the Enneagram Institute.",
+  s1:"paired statements — pick the one that describes you better, and how strongly",
+  s2:"pairs at the end for your instinctual variant (self-preservation / social / one-to-one)",
+  s3:"ways back — every answer locks, like the original",
+  s4:"minutes in one sitting; progress autosaves if you leave",
+  note:"Answer as you actually are, not as you'd like to be. The forced choice is the method — it makes the profile honest even when both statements feel like you.",
+  start:"Start the assessment", resume:"Resume unfinished attempt",
+  itemOf:(i,n)=>`Item ${i} of ${n}`, part1:"Part 1 · Type", part2:"Part 2 · Instinct",
+  lblStrong:"Strongly<br>describes me", lblNeutral:"Neutral",
+  attempt:"Attempt", answered:"answered",
+  exit:"Exit", toastExit:"Progress saved — resume anytime", toastNothing:"Nothing to resume",
+  primer:{
+    eyebrow:"How to answer",
+    title:"Two statements, one question: which is more you?",
+    items:[
+      "Each pair comes from two different types. Often neither statement is 'about' the other — that's intended.",
+      "The far dot means confidently that side, the next one — 'rather this side', the center — an honest tie.",
+      "Every choice gives one type a point at the other's expense. 144 such duels rank all nine types; every type meets every other exactly four times.",
+      "Neutral is only for a genuine tie: both equally you, or both equally not. Overusing it blurs your own profile.",
+      "After the 144, a short second part (18 pairs) ranks your three instincts — self-preservation, social, one-to-one."
+    ],
+    miniL:"confidently left", miniC:"tie", miniR:"confidently right",
+    btn:"Got it — start"
+  },
+  interlude:{eyebrow:"Part 1 complete",title:"Now the instincts",
+    p1:"The next 18 pairs don't touch the nine types. They ask where your attention goes first: to safety and comfort, to groups and belonging, or to intense one-to-one connection.",
+    p2:"Same scale, same rule — which is more you.",btn:"Continue"},
+  yourType:n=>`Type ${n}`, wingWord:"wing", balanced:"balanced wings", instinctStack:"Instinct stack",
+  centersHdr:"Centers of intelligence", tritypeHdr:"Tritype — your lead in each center",
+  arrowsHdr:"Arrows — where you go", stressLbl:"Under stress → Type", growthLbl:"In growth → Type",
+  instinctHdr:"Instinctual variant", coreHdr:"Your type in detail", alsoHdr:"Also strong",
+  fear:"Core fear", desire:"Core desire", watchOut:"Watch out", useIt:"Use it", wingHdr:"Your wing",
+  fullRanking:"All nine types", rankWord:"rank", strongPicks:"strong picks",
+  copy:"Copy results for analysis", dl:"Download JSON", pdf:"Download PDF", again:"Take it again", home:"Home",
+  copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep read of your type, wing, tritype and instinct, and of what changed between attempts.",
+  past:"Past attempts", view:"View", toastCopied:"Copied — paste it to Claude for analysis", toastFail:"Copy failed — use Download instead",
+  locale:"en-US",
+  v:{
+    hdr:"Closing summary",
+    lead:(n,name,code,inst)=>`Your profile points to Type ${n}, ${name} — ${code}, with the ${inst} instinct leading.`,
+    close:(a,b,pa,pb)=>`Types ${a} and ${b} are nearly tied (${pa}% vs ${pb}%). Read both; the type whose core fear stings more when you read it is usually yours.`,
+    clear:(a,gap)=>`Type ${a} leads by a clear margin (${gap} points over the runner-up), so the core type is unlikely to be in doubt.`,
+    center:(c,share,low)=>`Your center of gravity is the ${c} center (${share}% of the profile's weight); the ${low} center is where you spend the least attention.`,
+    tri:(t)=>`Across the three centers your tritype is ${t}: `,
+    arrows:(n,s,sTxt,g,gTxt)=>`Under pressure, Type ${n} ${sTxt}. Growth pulls the other way — toward Type ${g}: there, Type ${n} ${gTxt}.`,
+    inst:(a,b,c)=>`Your instinct stack reads ${a}/${b}, with ${c} in the blind spot — the part of life you tend to neglect until it forces the issue.`,
+    confident:(n,ans,strong)=>`You answered decisively: only ${n} neutral answers out of ${ans}, ${strong} strong picks. This profile can be trusted.`,
+    unsure:n=>`A noticeable share of answers were neutral (${n}) — a retake may sharpen the picture.`
+  }
+},
+ru:{
+  eyebrow:"Неофициальный тест эннеаграммы в духе RHETI",
+  title:"Профиль эннеаграммы",
+  sub:"Реконструкция механики Enneagram Type Indicator — 144 парных утверждения, каждый тип встречается с каждым поровну — с оригинальными формулировками по девяти типам. Плюс короткий блок на инстинкт. Не связан с Enneagram Institute.",
+  s1:"парных утверждений — выберите то, что больше о вас, и насколько",
+  s2:"пар в конце — на инстинктивный подтип (самосохранение / социальный / один-на-один)",
+  s3:"шагов назад — каждый ответ блокируется, как в оригинале",
+  s4:"минут за один присест; прогресс сохраняется автоматически",
+  note:"Отвечайте как есть, а не как хотелось бы. Принудительный выбор — это и есть метод: он делает профиль честным даже там, где оба утверждения про вас.",
+  start:"Начать тест", resume:"Продолжить незавершённую попытку",
+  itemOf:(i,n)=>`Вопрос ${i} из ${n}`, part1:"Часть 1 · Тип", part2:"Часть 2 · Инстинкт",
+  lblStrong:"Полностью<br>обо мне", lblNeutral:"Нейтрально",
+  attempt:"Попытка", answered:"отвечено",
+  exit:"Выйти", toastExit:"Прогресс сохранён — можно продолжить позже", toastNothing:"Нечего продолжать",
+  primer:{
+    eyebrow:"Как отвечать",
+    title:"Два утверждения, один вопрос: что больше про вас?",
+    items:[
+      "Каждая пара — из двух разных типов. Часто утверждения никак не связаны друг с другом — так задумано.",
+      "Крайняя точка — уверенно эта сторона, соседняя — «скорее она», центр — честная ничья.",
+      "Каждый выбор — балл одному типу за счёт другого. 144 таких дуэли ранжируют все девять типов; каждый тип встречается с каждым ровно четыре раза.",
+      "«Нейтрально» — только для настоящей ничьей: оба одинаково про вас или оба одинаково мимо. Частое нажатие размывает ваш же профиль.",
+      "После 144 пар — короткая вторая часть (18 пар), которая ранжирует три инстинкта: самосохранение, социальный, один-на-один."
+    ],
+    miniL:"уверенно левое", miniC:"ничья", miniR:"уверенно правое",
+    btn:"Понятно — начать"
+  },
+  interlude:{eyebrow:"Часть 1 завершена",title:"Теперь инстинкты",
+    p1:"Следующие 18 пар не касаются девяти типов. Они про то, куда внимание идёт первым: на безопасность и комфорт, на группы и принадлежность или на интенсивную связь один на один.",
+    p2:"Та же шкала, то же правило — что больше про вас.",btn:"Продолжить"},
+  yourType:n=>`Тип ${n}`, wingWord:"крыло", balanced:"крылья уравновешены", instinctStack:"Стек инстинктов",
+  centersHdr:"Центры интеллекта", tritypeHdr:"Тритип — ведущий тип в каждом центре",
+  arrowsHdr:"Стрелки — куда вы движетесь", stressLbl:"В стрессе → тип", growthLbl:"В росте → тип",
+  instinctHdr:"Инстинктивный подтип", coreHdr:"Ваш тип подробно", alsoHdr:"Также сильны",
+  fear:"Базовый страх", desire:"Базовое желание", watchOut:"Осторожно", useIt:"Как использовать", wingHdr:"Ваше крыло",
+  fullRanking:"Все девять типов", rankWord:"ранг", strongPicks:"уверенных выборов",
+  copy:"Скопировать для анализа", dl:"Скачать JSON", pdf:"Скачать PDF", again:"Пройти ещё раз", home:"На главную",
+  copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокого разбора типа, крыла, тритипа и инстинкта, а также динамики между попытками.",
+  past:"Прошлые попытки", view:"Открыть", toastCopied:"Скопировано — вставьте в чат с Claude", toastFail:"Не удалось скопировать — используйте «Скачать»",
+  locale:"ru-RU",
+  v:{
+    hdr:"Заключение",
+    lead:(n,name,code,inst)=>`Ваш профиль указывает на тип ${n}, «${name}» — ${code}, с ведущим инстинктом «${inst}».`,
+    close:(a,b,pa,pb)=>`Типы ${a} и ${b} почти равны (${pa}% против ${pb}%). Прочитайте оба: обычно ваш — тот, чей базовый страх при чтении задевает сильнее.`,
+    clear:(a,gap)=>`Тип ${a} ведёт с заметным отрывом (${gap} пунктов от второго), так что в базовом типе вряд ли есть сомнение.`,
+    center:(c,share,low)=>`Центр тяжести вашего профиля — ${c} (${share}% веса); центр «${low}» — там, где вы тратите меньше всего внимания.`,
+    tri:(t)=>`По трём центрам ваш тритип — ${t}: `,
+    arrows:(n,s,sTxt,g,gTxt)=>`Под давлением тип ${n} ${sTxt}. Рост тянет в другую сторону — к типу ${g}: там тип ${n} ${gTxt}.`,
+    inst:(a,b,c)=>`Ваш стек инстинктов — ${a}/${b}, а ${c} в слепой зоне: та часть жизни, которую вы склонны запускать, пока она не заявит о себе сама.`,
+    confident:(n,ans,strong)=>`Вы отвечали решительно: нейтральных ответов всего ${n} из ${ans}, уверенных выборов — ${strong}. Этому профилю можно доверять.`,
+    unsure:n=>`Заметная часть ответов нейтральна (${n}) — повторное прохождение может уточнить картину.`
+  }
+}};
+
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const lsDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
+let lang = lsGet("en_lang") || "en";
+const T = ()=>STR[lang];
+const L = t => t[lang];                    // localized block of a type / instinct
+const cName = c => CENTER_NAME[lang][c];
+
+/* ============================================================
+   PAIR GENERATION — deterministic (fixed seed). 36 type combos
+   × 4 meetings = 144 pairs; each type appears 32 times, each of
+   its 16 statements exactly twice, no statement-pair repeats.
+   Instinct block: 3 combos × 6 = 18 pairs, 6 statements × 2.
+   Presentation order shuffles per attempt; pairs never change,
+   so attempts stay comparable.
+   ============================================================ */
+function mulberry32(seed){return function(){let t=seed+=0x6D2B79F5;
+  t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(a,rng){for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function buildBlock(nItems, nStmts, meetings, seed){
+  // items 0..nItems-1; every unordered pair meets `meetings` times
+  for(let attempt=0;attempt<200;attempt++){
+    const rng=mulberry32(seed+attempt);
+    const combos=[];
+    for(let a=0;a<nItems;a++)for(let b=a+1;b<nItems;b++)for(let k=0;k<meetings;k++)combos.push([a,b]);
+    shuffle(combos,rng);
+    const deck=Array.from({length:nItems},()=>{           // each statement used (nItems-1)*meetings/nStmts times
+      const reps=(nItems-1)*meetings/nStmts, d=[];
+      for(let r=0;r<reps;r++)for(let s=0;s<nStmts;s++)d.push(s);
+      return shuffle(d,rng);
+    });
+    const seen=new Set(), pairs=[];
+    let ok=true;
+    for(const [a,b] of combos){
+      const sa=deck[a].pop(), sb=deck[b].pop();
+      const key=a+"#"+sa+"|"+b+"#"+sb;
+      if(seen.has(key)){ok=false;break}
+      seen.add(key);
+      const A={t:a,s:sa},B={t:b,s:sb};
+      pairs.push(rng()<0.5?[A,B]:[B,A]);
+    }
+    if(ok)return pairs;
+  }
+  throw new Error("pair generation failed");
+}
+const TYPE_PAIRS = buildBlock(9,16,4,20260903);          // 144 — t is 0-based type index
+const INST_PAIRS = buildBlock(3,6,6,20260904);            // 18  — t is instinct index
+const N1=TYPE_PAIRS.length, N2=INST_PAIRS.length, NALL=N1+N2;
+const pairAt = i => i<N1 ? {kind:"type",pair:TYPE_PAIRS[i]} : {kind:"inst",pair:INST_PAIRS[i-N1]};
+const stmtText = (kind,slot) => kind==="type" ? L(TYPES[slot.t]).s[slot.s] : L(INSTINCTS[slot.t]).s[slot.s];
+
+/* ============================================================
+   STATE & STORAGE
+   ============================================================ */
+const LS_ATTEMPTS="en_attempts_v1", LS_PROGRESS="en_progress_v1";
+let state=null, locked=false;
+const $=id=>document.getElementById(id);
+const fitBleed=()=>document.documentElement.style.setProperty("--sbw",
+  (window.innerWidth-document.documentElement.clientWidth)+"px");
+fitBleed();window.addEventListener("resize",fitBleed);
+const load=k=>{try{return JSON.parse(lsGet(k))}catch(e){return null}};
+const save=(k,v)=>lsSet(k,JSON.stringify(v));
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+
+function newAttempt(){
+  const rng=Math.random;
+  const o1=shuffle([...Array(N1).keys()],rng), o2=shuffle([...Array(N2).keys()].map(i=>i+N1),rng);
+  return {order:[...o1,...o2], answers:new Array(NALL).fill(undefined), idx:0, interludeSeen:false,
+          started:new Date().toISOString()};
+}
+
+/* ============================================================
+   TEST FLOW
+   ============================================================ */
+function startTest(resume){
+  state = resume ? load(LS_PROGRESS) : newAttempt();
+  if(!state){toast(T().toastNothing);return}
+  $("intro").style.display="none";$("results").style.display="none";$("primer").style.display="none";
+  $("test").style.display="flex";document.body.classList.add("testing");window.scrollTo(0,0);
+  showItem();
+}
+function showItem(){
+  if(!state)return;
+  if(state.idx>=NALL){finish();return}
+  if(state.idx===N1 && !state.interludeSeen){showInterlude();return}
+  locked=false;
+  const {kind,pair}=pairAt(state.order[state.idx]);
+  document.body.classList.toggle("part2",kind==="inst");
+  $("stage").style.display="flex";$("interlude").style.display="none";
+  $("partLbl").textContent = kind==="type" ? T().part1 : T().part2;
+  $("stmtA").textContent=stmtText(kind,pair[0]);$("stmtB").textContent=stmtText(kind,pair[1]);
+  $("stmtA").classList.remove("picked","hot");$("stmtB").classList.remove("picked","hot");
+  document.querySelectorAll(".dot").forEach(d=>d.classList.remove("sel"));
+  const i = kind==="type" ? state.idx+1 : state.idx-N1+1, n = kind==="type" ? N1 : N2;
+  $("counter").textContent=T().itemOf(i,n);
+  $("progBar").style.width=(state.idx/NALL*100)+"%";
+}
+function showInterlude(){
+  const t=T().interlude;
+  $("stage").style.display="none";$("interlude").style.display="flex";
+  $("ilEyebrow").textContent=t.eyebrow;$("ilTitle").textContent=t.title;
+  $("ilP1").textContent=t.p1;$("ilP2").textContent=t.p2;$("ilBtn").textContent=t.btn;
+  $("counter").textContent=T().part2;
+  $("progBar").style.width=(N1/NALL*100)+"%";
+}
+$("ilBtn").onclick=()=>{state.interludeSeen=true;save(LS_PROGRESS,state);showItem()};
+
+function answer(v){
+  if(locked)return; locked=true;
+  state.answers[state.order[state.idx]]=v;
+  const dot=document.querySelector(`.dot[data-v="${v}"]`); if(dot)dot.classList.add("sel");
+  if(v<0)$("stmtA").classList.add("picked"); if(v>0)$("stmtB").classList.add("picked");
+  state.idx++; save(LS_PROGRESS,state);
+  setTimeout(showItem,380);
+}
+$("scale").addEventListener("click",e=>{const d=e.target.closest(".dot");if(d)answer(parseInt(d.dataset.v,10))});
+$("scale").addEventListener("mouseover",e=>{const d=e.target.closest(".dot");if(!d||locked)return;
+  const v=parseInt(d.dataset.v,10);$("stmtA").classList.toggle("hot",v<0);$("stmtB").classList.toggle("hot",v>0)});
+$("scale").addEventListener("mouseleave",()=>{$("stmtA").classList.remove("hot");$("stmtB").classList.remove("hot")});
+document.addEventListener("keydown",e=>{
+  if($("test").style.display!=="flex"||$("stage").style.display==="none")return;
+  const map={"1":-2,"2":-1,"3":0,"4":1,"5":2};
+  if(map[e.key]!==undefined)answer(map[e.key]);
+});
+
+/* ============================================================
+   SCORING — chosen side earns 2 (strong) / 1 (moderate); pct is
+   points over 2 × answered appearances. Wing, tritype and the
+   instinct stack are derived from the same ranking.
+   ============================================================ */
+function scoreBlock(pairs, answers, offset, n){
+  const t=Array.from({length:n},()=>({pts:0,max:0,strong:0}));
+  pairs.forEach((pair,i)=>{
+    const v=answers[offset+i]; if(v===null||v===undefined)return;
+    const A=t[pair[0].t],B=t[pair[1].t]; A.max+=2;B.max+=2;
+    if(v<0){A.pts+=-v;if(v===-2)A.strong++} if(v>0){B.pts+=v;if(v===2)B.strong++}
+  });
+  return t.map((x,i)=>({i,pct:x.max?x.pts/x.max*100:0,...x}))
+          .sort((a,b)=>b.pct-a.pct||b.strong-a.strong||a.i-b.i);
+}
+function analyze(answers){
+  const types=scoreBlock(TYPE_PAIRS,answers,0,9).map(r=>({n:r.i+1,pct:+r.pct.toFixed(1),strong:r.strong}));
+  const insts=scoreBlock(INST_PAIRS,answers,N1,3).map(r=>({id:INSTINCTS[r.i].id,pct:+r.pct.toFixed(1),strong:r.strong}));
+  const pct={}; types.forEach(r=>pct[r.n]=r.pct);
+  const top=types[0].n, lo=top===1?9:top-1, hi=top===9?1:top+1;
+  const wing = Math.abs(pct[lo]-pct[hi])<0.5 ? null : (pct[lo]>pct[hi]?lo:hi);
+  const tri = Object.keys(CENTERS).map(c=>({c,n:CENTERS[c].types.slice().sort((a,b)=>pct[b]-pct[a])[0]}))
+    .sort((a,b)=>pct[b.n]-pct[a.n]);
+  const cw={}; Object.keys(CENTERS).forEach(c=>cw[c]=CENTERS[c].types.reduce((s,n)=>s+pct[n],0));
+  const cTot=Object.values(cw).reduce((s,x)=>s+x,0)||1;
+  const centers=Object.keys(CENTERS).map(c=>({c,share:+(cw[c]/cTot*100).toFixed(1)})).sort((a,b)=>b.share-a.share);
+  return {types,insts,top,wing,tri,centers};
+}
+
+function finish(){
+  const answered=state.answers.filter(v=>v!==null&&v!==undefined).length;
+  const a={finished:new Date().toISOString(),started:state.started,answered,skipped:NALL-answered,
+           ...analyze(state.answers),responses:state.answers};
+  const attempts=load(LS_ATTEMPTS)||[]; attempts.push(a); save(LS_ATTEMPTS,attempts);
+  lsDel(LS_PROGRESS); state=null; document.body.classList.remove("part2");
+  renderResults(attempts.length-1);
+}
+
+/* ============================================================
+   ENNEAGRAM DIAGRAM — dot size = score; stress/growth arrows and
+   wing highlighted for the lead type.
+   ============================================================ */
+function enneaSVG(a){
+  const cx=150,cy=150,R=112;
+  const pos=n=>{const rad=(-90+n*40)*Math.PI/180;return [cx+R*Math.cos(rad),cy+R*Math.sin(rad)]};
+  const line=(m,n,cls)=>{const [x1,y1]=pos(m),[x2,y2]=pos(n);return `<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`};
+  const pct={}; a.types.forEach(r=>pct[r.n]=r.pct);
+  let s=`<svg class="ennea" viewBox="0 0 300 300" role="img" aria-label="Enneagram">`;
+  s+=`<circle class="ring" cx="${cx}" cy="${cy}" r="${R}"/>`;
+  [[1,4],[4,2],[2,8],[8,5],[5,7],[7,1],[3,6],[6,9],[9,3]].forEach(([m,n])=>s+=line(m,n,"inner"));
+  s+=line(a.top,STRESS[a.top],"stress")+line(a.top,GROWTH[a.top],"growth");
+  if(a.wing)s+=line(a.top,a.wing,"wing");
+  for(let n=1;n<=9;n++){
+    const [x,y]=pos(n), r=5+pct[n]/100*13, C=CENTERS[centerOf(n)];
+    s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="var(${C.css})" stroke="${n===a.top?'var(--ink)':'none'}" stroke-width="2"/>`;
+    const [lx,ly]=[cx+(R+24)*Math.cos((-90+n*40)*Math.PI/180),cy+(R+24)*Math.sin((-90+n*40)*Math.PI/180)];
+    s+=`<text x="${lx}" y="${ly+4}" text-anchor="middle">${n}</text>`;
+  }
+  return s+`</svg>`;
+}
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+const typeCode = a => a.wing ? `${a.top}w${a.wing}` : `${a.top}`;
+const instName = id => L(INSTINCTS.find(i=>i.id===id)).name;
+const instShort = id => INSTINCTS.find(i=>i.id===id)[lang].short;
+
+function renderResults(attemptIdx){
+  const attempts=load(LS_ATTEMPTS)||[];
+  const a=attempts[attemptIdx]; if(!a)return;
+  const prev=attemptIdx>0?attempts[attemptIdx-1]:null;
+  const prevRank={}; if(prev)prev.types.forEach((r,i)=>prevRank[r.n]=i+1);
+  const t=T(), top=TYPE(a.top), TL=L(top), C=CENTERS[centerOf(a.top)];
+  const wingKey=a.wing?`${a.top}w${a.wing}`:null, wing=wingKey?WINGS[lang][wingKey]:null;
+  const instCode=a.insts.slice(0,2).map(i=>i.id).join("/");
+
+  const card=(r,i,minor)=>{const ty=TYPE(r.n),X=L(ty),CC=CENTERS[centerOf(r.n)];
+    return `<div class="type-card ${minor?'minor':''}" style="--dc:var(${CC.css})">
+      <span class="chip">${cName(centerOf(r.n))} · ${t.rankWord} ${i+1} · ${r.pct.toFixed(0)}% · ${t.strongPicks}: ${r.strong}</span>
+      <h3>${t.yourType(r.n)} — ${X.name}</h3>
+      <div class="statline">${X.tag}</div>
+      <p style="margin:10px 0 0;font-size:15px">${esc(X.desc)}</p>
+      ${minor?"":`<div class="kv"><div class="blk"><b>${t.fear}</b>${X.fear}</div><div class="blk"><b>${t.desire}</b>${X.desire}</div></div>
+      <div class="blk"><b>${t.watchOut}</b>${esc(X.watch)}</div>
+      <div class="blk"><b>${t.useIt}</b>${X.use.map(esc).join("<br>")}</div>
+      ${wing?`<div class="blk"><b>${t.wingHdr} · ${wingKey} · ${wing[0]}</b>${wing[1]}</div>`:`<div class="blk"><b>${t.wingHdr}</b>${t.balanced}</div>`}`}
+    </div>`};
+
+  let html=`
+    <div class="eyebrow">${t.attempt} ${attemptIdx+1} · ${new Date(a.finished).toLocaleString(t.locale)} · ${a.answered}/${NALL} ${t.answered}</div>
+    <div class="headline">
+      <div>
+        <h2>${t.yourType(a.top)}<br>${TL.name}</h2>
+        <p class="muted" style="margin:10px 0 0;max-width:40ch">${TL.tag}</p>
+        <div class="codechips">
+          <span class="codechip solid">${typeCode(a)}</span>
+          <span class="codechip">${instCode}</span>
+          ${wing?`<span class="codechip">${wing[0]}</span>`:""}
+          <span class="codechip">${cName(centerOf(a.top))}</span>
+        </div>
+      </div>
+      ${enneaSVG(a)}
+    </div>
+    <div class="stackbar">${a.centers.map(c=>`<i style="width:${c.share}%;background:var(${CENTERS[c.c].css})"></i>`).join("")}</div>
+    <div class="stacklegend">${a.centers.map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c.c].css})"></span>${cName(c.c)}&nbsp;${c.share.toFixed(0)}%</span>`).join("")}</div>
+
+    <div class="sect"><span class="eyebrow">${t.coreHdr}</span>${card(a.types[0],0,false)}</div>
+    <div class="sect"><span class="eyebrow">${t.alsoHdr}</span>${card(a.types[1],1,true)}${card(a.types[2],2,true)}</div>
+
+    <div class="sect"><span class="eyebrow">${t.arrowsHdr}</span>
+      <div class="arrows">
+        <div class="arrow st"><b>${t.stressLbl} ${STRESS[a.top]}</b><span class="big">${L(TYPE(STRESS[a.top])).name}</span>${esc(TL.stress)}.</div>
+        <div class="arrow"><b>${t.growthLbl} ${GROWTH[a.top]}</b><span class="big">${L(TYPE(GROWTH[a.top])).name}</span>${esc(TL.growth)}.</div>
+      </div></div>
+
+    <div class="sect"><span class="eyebrow">${t.tritypeHdr} · ${a.tri.map(x=>x.n).join("")}</span>
+      <div class="cols3">${a.tri.map(x=>`<div class="tile" style="--dc:var(${CENTERS[x.c].css})">
+        <span class="rk">${x.n}</span><span class="nm">${L(TYPE(x.n)).name}</span><span class="sm">${cName(x.c)} · ${a.types.find(r=>r.n===x.n).pct.toFixed(0)}%</span></div>`).join("")}</div></div>
+
+    <div class="sect"><span class="eyebrow">${t.instinctHdr} · ${instCode}</span>
+      <div class="ranklist">${a.insts.map((r,i)=>`<div class="rankrow" style="--dc:var(--inst)">
+        <span class="muted">${i+1}</span><span class="name">${instShort(r.id)} · ${instName(r.id)}</span>
+        <span class="bar"><i style="width:${r.pct}%;background:var(--ink)"></i></span><span style="text-align:right">${r.pct.toFixed(0)}%</span><span></span>
+        ${i===0?`<span class="desc">${esc(L(INSTINCTS.find(x=>x.id===r.id)).desc)}</span>`:""}</div>`).join("")}</div></div>
+
+    <div class="sect"><span class="eyebrow">${t.fullRanking}</span><div class="ranklist">`;
+  a.types.forEach((r,i)=>{
+    const X=L(TYPE(r.n)),CC=CENTERS[centerOf(r.n)];
+    let delta="<span></span>";
+    if(prev){const d=prevRank[r.n]-(i+1);delta=d>0?`<span class="delta">▲${d}</span>`:d<0?`<span class="delta down">▼${-d}</span>`:`<span class="delta">·</span>`}
+    html+=`<div class="rankrow" style="--dc:var(${CC.css})">
+      <span class="muted">${i+1}</span>
+      <span class="name"><span class="swatch" style="background:var(${CC.css})"></span>${r.n} · ${X.name}</span>
+      <span class="bar"><i style="width:${r.pct}%"></i></span><span style="text-align:right">${r.pct.toFixed(0)}%</span>${delta}
+      <span class="desc">${X.tag}</span></div>`;
+  });
+
+  /* closing summary */
+  const V=t.v, neutral=(a.responses||[]).filter(v=>v===0).length, strongTotal=a.types.reduce((s,x)=>s+x.strong,0);
+  const gap=+(a.types[0].pct-a.types[1].pct).toFixed(1);
+  const paras=[
+    V.lead(a.top,TL.name,typeCode(a),instName(a.insts[0].id))+" "+
+      (gap<6 ? V.close(a.types[0].n,a.types[1].n,a.types[0].pct.toFixed(0),a.types[1].pct.toFixed(0)) : V.clear(a.top,gap.toFixed(0))),
+    V.center(cName(a.centers[0].c),a.centers[0].share.toFixed(0),cName(a.centers[2].c)),
+    V.tri(a.tri.map(x=>x.n).join("-"))+a.tri.map(x=>`${x.n} — ${L(TYPE(x.n)).tag}`).join("; ")+".",
+    V.arrows(a.top,STRESS[a.top],TL.stress,GROWTH[a.top],TL.growth),
+    V.inst(instName(a.insts[0].id),instName(a.insts[1].id),instName(a.insts[2].id)),
+    neutral<=a.answered*0.15 ? V.confident(neutral,a.answered,strongTotal) : V.unsure(neutral)
+  ];
+  html+=`</div></div>
+    <div class="sect"><span class="eyebrow">${V.hdr}</span><div class="verdict">${paras.map(p=>`<p>${p}</p>`).join("")}</div></div>
+    <div class="row" style="margin-top:30px">
+      <button class="btn" id="copyBtn">${t.copy}</button>
+      <button class="btn2" id="dlBtn">${t.dl}</button>
+      <button class="btn2" id="pdfBtn">${t.pdf}</button>
+      <button class="btn2" id="againBtn">${t.again}</button>
+      <button class="btn2" id="homeBtn">${t.home}</button>
+    </div>
+    <p class="muted" style="font-size:13px;max-width:60ch">${t.copyNote}</p>`;
+
+  $("test").style.display="none";$("intro").style.display="none";document.body.classList.remove("testing");
+  const res=$("results");res.innerHTML=html;res.style.display="block";res.dataset.attempt=attemptIdx;window.scrollTo(0,0);
+
+  const exportObj=()=>({
+    tool:"Enneagram Profiler (unofficial RHETI-style)", uiLanguage:lang,
+    attempt:attemptIdx+1, finished:a.finished, answered:a.answered, skipped:a.skipped,
+    type:{number:a.top,name:TYPE(a.top).en.name,wing:a.wing,code:typeCode(a),center:centerOf(a.top),
+          stressPoint:STRESS[a.top],growthPoint:GROWTH[a.top]},
+    tritype:a.tri.map(x=>x.n).join(""),
+    instinctStack:a.insts.map(i=>({instinct:i.id,pct:i.pct})),
+    centers:Object.fromEntries(a.centers.map(c=>[c.c,c.share])),
+    ranking:a.types.map((r,i)=>({rank:i+1,type:r.n,name:TYPE(r.n).en.name,pct:r.pct,strongPicks:r.strong})),
+    closingSummary:paras,
+    previousTop3: prev ? prev.types.slice(0,3).map(r=>r.n) : null
+  });
+  $("copyBtn").onclick=()=>navigator.clipboard.writeText(JSON.stringify(exportObj(),null,2)).then(()=>toast(t.toastCopied)).catch(()=>toast(t.toastFail));
+  $("dlBtn").onclick=()=>{const b=new Blob([JSON.stringify(exportObj(),null,2)],{type:"application/json"});
+    const u=URL.createObjectURL(b),l=document.createElement("a");l.href=u;l.download=`enneagram-attempt-${attemptIdx+1}.json`;l.click();URL.revokeObjectURL(u)};
+  $("pdfBtn").onclick=()=>window.print();
+  $("againBtn").onclick=()=>{lsDel(LS_PROGRESS);startTest(false)};
+  $("homeBtn").onclick=()=>{res.style.display="none";$("intro").style.display="block";renderHistory()};
+}
+
+/* ============================================================
+   HISTORY / LANGUAGE / WIRING
+   ============================================================ */
+function renderHistory(){
+  const attempts=load(LS_ATTEMPTS)||[], h=$("history");
+  if(!attempts.length){h.innerHTML="";return}
+  let html=`<div class="eyebrow" style="margin-bottom:10px">${T().past}</div><div style="display:grid;gap:8px">`;
+  attempts.forEach((a,i)=>{
+    html+=`<div class="histrow"><div><b>${T().attempt} ${i+1}</b> <span class="muted" style="font-size:13px">· ${new Date(a.finished).toLocaleDateString(T().locale)}</span><br>
+      <span class="muted" style="font-size:13px">${typeCode(a)} · ${L(TYPE(a.top)).name} · ${a.insts.slice(0,2).map(x=>x.id).join("/")}</span></div>
+      <button class="btn2" data-i="${i}">${T().view}</button></div>`;
+  });
+  h.innerHTML=html+`</div>`;
+  h.querySelectorAll("button").forEach(b=>b.onclick=()=>renderResults(parseInt(b.dataset.i,10)));
+}
+function applyLang(){
+  const t=T(); document.documentElement.lang=lang;
+  $("langBtn").textContent= lang==="en"?"RU":"EN";
+  $("iEyebrow").textContent=t.eyebrow;$("iTitle").textContent=t.title;$("iSub").textContent=t.sub;
+  $("iS1").textContent=t.s1;$("iS2").textContent=t.s2;$("iS3").textContent=t.s3;$("iS4").textContent=t.s4;$("iNote").textContent=t.note;
+  $("iDomLine").innerHTML=Object.keys(CENTERS).map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c].css})"></span>${cName(c)} · ${CENTERS[c].types.join(" ")}</span>`).join("");
+  $("startBtn").textContent=t.start;$("resumeBtn").textContent=t.resume;$("exitBtn").textContent=t.exit;
+  $("pEyebrow").textContent=t.primer.eyebrow;$("pTitle").textContent=t.primer.title;
+  $("pList").innerHTML=t.primer.items.map((x,i)=>`<div class="prule"><span class="n">0${i+1}</span><span>${x}</span></div>`).join("");
+  $("pMini").innerHTML=`<span>${t.primer.miniL}</span><span>${t.primer.miniC}</span><span>${t.primer.miniR}</span>`;
+  $("primerBtn").textContent=t.primer.btn;
+  $("lblL").innerHTML=t.lblStrong;$("lblC").textContent=t.lblNeutral;$("lblR").innerHTML=t.lblStrong;
+  document.title= lang==="ru" ? "Профиль эннеаграммы — тест в духе RHETI" : "Enneagram Profiler — RHETI-style assessment";
+  renderHistory();
+  if($("test").style.display==="flex" && state){
+    if($("interlude").style.display==="flex")showInterlude(); else if(state.idx<NALL){locked=false;showItem()}
+  }
+  const res=$("results");
+  if(res.style.display==="block"&&res.dataset.attempt!==undefined)renderResults(parseInt(res.dataset.attempt,10));
+}
+$("langBtn").onclick=()=>{lang=lang==="en"?"ru":"en";lsSet("en_lang",lang);applyLang()};
+$("exitBtn").onclick=()=>{
+  if(state)save(LS_PROGRESS,state);
+  $("test").style.display="none";$("intro").style.display="block";document.body.classList.remove("testing","part2");
+  $("resumeBox").style.display="block";renderHistory();window.scrollTo(0,0);toast(T().toastExit);
+};
+$("startBtn").onclick=()=>{lsDel(LS_PROGRESS);$("intro").style.display="none";$("results").style.display="none";$("primer").style.display="block";window.scrollTo(0,0)};
+$("primerBtn").onclick=()=>startTest(false);
+$("resumeBtn").onclick=()=>startTest(true);
+if(load(LS_PROGRESS))$("resumeBox").style.display="block";
+$("iStrand").innerHTML=[8,9,1,2,3,4,5,6,7].map(n=>`<i style="--sc:var(${CENTERS[centerOf(n)].css})" title="${n}"></i>`).join("");
+applyLang();
+</script>
+</body>
+</html>
