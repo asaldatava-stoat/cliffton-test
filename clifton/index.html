@@ -132,12 +132,50 @@
   kbd{background:var(--soft);border:1px solid var(--line);border-radius:3px;padding:1px 6px;
     font-family:var(--sans);font-size:11px}
   @media (max-width:560px){
+    .teststage{justify-content:flex-start;padding:18px 0 20px}
     .pair{grid-template-columns:1fr;gap:10px}
-    .stmt{min-height:96px;padding:18px 16px}
-    .scale{margin-top:30px}
+    .stmt{min-height:111px;padding:38px 20px 20px}
+    #test .stmt-badge{display:flex;position:absolute;top:10px;left:10px;width:23px;height:23px;
+      align-items:center;justify-content:center;border-radius:50%;background:var(--ink);color:var(--accent-ink);
+      font-family:var(--mono);font-size:11px;font-weight:400}
+    #test .mobile-proposal{display:block;margin:16px 0 14px;font-family:var(--mono);font-size:11px;
+      color:var(--ink2);text-transform:uppercase}
+    #test .answer-prompt{display:block;margin:0 0 10px;font-family:var(--mono);font-size:11px;
+      color:var(--ink2);text-transform:uppercase}
+    /* Proposal C: turn the five-point scale into five labelled, tap-sized choices. */
+    #scale{display:grid;grid-template-columns:1fr;row-gap:14px;margin:0}
+    #scale::before{display:none}
+    #scale .dot,#scale .dot.big{width:auto;height:auto;min-height:52px;border-radius:0;
+      display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--panel);border:none;
+      font-size:14px;font-weight:500;text-align:left}
+    #scale .dot:hover{transform:none;background:var(--hover)}
+    #scale .dot[data-v="-2"],#scale .dot[data-v="2"]{border-left:3px solid #383835;font-size:15px}
+    #scale .dot[data-v="-1"],#scale .dot[data-v="1"]{margin-left:40px}
+    #scale .dot[data-v="0"]{margin-left:12px;background:var(--panel-hi)}
+    #scale .dot.sel{outline:2px solid var(--rel);outline-offset:-2px}
+    #test #scale .answer-label,#primer .mobile-primer-ballot .answer-label{display:block}
+    #scale .answer-badge,#primer .mobile-primer-ballot .answer-badge{display:flex;width:30px;height:30px;align-items:center;justify-content:center;
+      flex:none;border:1px solid #383835;border-radius:50%;background:transparent;color:var(--ink);font-family:var(--mono);font-size:11px}
+    #scale .dot[data-v="-2"] .answer-badge,#scale .dot[data-v="2"] .answer-badge,
+    #primer .primer-choice[data-v="-2"] .answer-badge,#primer .primer-choice[data-v="2"] .answer-badge{
+      border:none;background:#383835;color:var(--accent-ink)}
+    #scale .dot[data-v="0"] .answer-badge,#primer .primer-choice[data-v="0"] .answer-badge{border:none;background:var(--bg)}
+    #test .choice-help{display:block;margin:24px 0 0;color:var(--ink2)}
+    .choice-help b{display:block;margin-bottom:4px;font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase}
+    .choice-help p{margin:0;font-size:15px;line-height:1.4}
+    .keynums,.scalelabels{display:none}
+    #primer .scale.mini,#primer .minilbl{display:none}
+    #primer .mobile-primer-ballot{display:grid;row-gap:14px;margin:30px 0 8px}
+    #primer .primer-choice{display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 12px;background:var(--panel);font-size:14px;font-weight:500}
+    #primer .primer-choice[data-v="-2"],#primer .primer-choice[data-v="2"]{border-left:3px solid #383835;font-size:15px}
+    #primer .primer-choice[data-v="-1"],#primer .primer-choice[data-v="1"]{margin-left:40px}
+    #primer .primer-choice[data-v="0"]{margin-left:12px;background:var(--panel-hi)}
     /* keep Exit clear of the fixed language button */
     .topbar{padding-right:52px}
   }
+  .answer-label{display:none}
+  .stmt{position:relative}
+  .stmt-badge,.mobile-proposal,.answer-prompt,.choice-help,.answer-badge,.mobile-primer-ballot{display:none}
 
   /* ---------- results ---------- */
   #results{display:none;padding-top:26px}
@@ -277,6 +315,13 @@
       <span class="dot big"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot big"></span>
     </div>
     <div class="minilbl" id="pMini"></div>
+    <div class="mobile-primer-ballot" aria-hidden="true">
+      <span class="primer-choice" data-v="-2"><span class="answer-badge">A</span><span class="answer-label primer-answer-label"></span></span>
+      <span class="primer-choice" data-v="-1"><span class="answer-badge">A</span><span class="answer-label primer-answer-label"></span></span>
+      <span class="primer-choice" data-v="0"><span class="answer-badge">=</span><span class="answer-label primer-answer-label"></span></span>
+      <span class="primer-choice" data-v="1"><span class="answer-badge">B</span><span class="answer-label primer-answer-label"></span></span>
+      <span class="primer-choice" data-v="2"><span class="answer-badge">B</span><span class="answer-label primer-answer-label"></span></span>
+    </div>
     <button class="btn" id="primerBtn" style="margin-top:30px"></button>
   </section>
 
@@ -289,18 +334,21 @@
     <div class="progress"><i id="progBar"></i></div>
 
     <div class="teststage">
+      <div class="mobile-proposal" id="mobileProposal"></div>
       <div class="pair">
-        <div class="stmt" id="stmtA"></div>
-        <div class="stmt" id="stmtB"></div>
+        <div class="stmt" id="stmtA"><span class="stmt-badge" aria-hidden="true">A</span><span id="stmtAText"></span></div>
+        <div class="stmt" id="stmtB"><span class="stmt-badge" aria-hidden="true">B</span><span id="stmtBText"></span></div>
       </div>
 
-      <div class="scale" id="scale">
-        <button class="dot big" data-v="-2" aria-label="Strongly describes me — left statement"></button>
-        <button class="dot"     data-v="-1" aria-label="Describes me — left statement"></button>
-        <button class="dot"     data-v="0"  aria-label="Neutral"></button>
-        <button class="dot"     data-v="1"  aria-label="Describes me — right statement"></button>
-        <button class="dot big" data-v="2"  aria-label="Strongly describes me — right statement"></button>
+      <div class="answer-prompt" id="answerPrompt"></div>
+      <div class="scale" id="scale" role="group" aria-label="Choose the statement that describes you better">
+        <button class="dot big" data-v="-2"><span class="answer-badge">A</span><span class="answer-label"></span></button>
+        <button class="dot"     data-v="-1"><span class="answer-badge">A</span><span class="answer-label"></span></button>
+        <button class="dot"     data-v="0"><span class="answer-badge">=</span><span class="answer-label"></span></button>
+        <button class="dot"     data-v="1"><span class="answer-badge">B</span><span class="answer-label"></span></button>
+        <button class="dot big" data-v="2"><span class="answer-badge">B</span><span class="answer-label"></span></button>
       </div>
+      <div class="choice-help" id="choiceHelp"><b id="choiceHelpTitle"></b><p id="choiceHelpText"></p></div>
       <div class="keynums" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
       <div class="scalelabels">
         <span id="lblL">Strongly<br>describes me</span>
@@ -959,6 +1007,15 @@ en:{
   start:"Start the assessment", timerLbl:"20-second timer (original conditions)", resume:"Resume unfinished attempt",
   itemOf:(i,n)=>`Item ${i} of ${n}`, noTimer:"no timer",
   lblStrong:"Strongly<br>describes me", lblNeutral:"Neutral",
+  answerChoices:[
+    "A describes me much better", "A describes me a little better", "Both equally / neutral",
+    "B describes me a little better", "B describes me much better"
+  ],
+  answerGroup:"Choose the statement that describes you better",
+  mobileProposal:"Proposal C · explicit vertical ballot",
+  answerPrompt:"Which describes you better?",
+  choiceHelpTitle:"Why it works",
+  choiceHelpText:"Read both first, then choose from large, explicit tap targets. No spatial interpretation required.",
   attempt:"Attempt", answered:"answered", practice:"practice mode (no timer)",
   leadWith:d=>`You lead with ${d}.`,
   domBlurb:{exec:"Your strongest themes are about making things happen — turning ideas into completed work.",
@@ -982,7 +1039,7 @@ en:{
     title:"It's a tug-of-war, not two questions",
     items:[
       "The two statements are often completely unrelated — on purpose. They come from different talents.",
-      "The question is always the same: which of the two is more you? The far dot means confidently that side, the next one — “rather this side”, the center — an honest tie.",
+      "The question is always the same: which of the two is more you? Choose one of five clear options — much better, a little better, or an honest tie.",
       "Every choice gives one talent a point at the other's expense. 177 such duels build the ranking of all 34 talents — so you'll have to choose even when both statements feel like you.",
       "Neutral is only for a genuine tie: both equally you, or both equally not. Overusing it blurs your own profile.",
       "The 20 seconds exist so that your instinct answers — not your self-presentation."
@@ -1018,6 +1075,15 @@ ru:{
   start:"Начать тест", timerLbl:"Таймер 20 секунд (как в оригинале)", resume:"Продолжить незавершённую попытку",
   itemOf:(i,n)=>`Вопрос ${i} из ${n}`, noTimer:"без таймера",
   lblStrong:"Полностью<br>обо мне", lblNeutral:"Нейтрально",
+  answerChoices:[
+    "Утверждение A намного лучше описывает меня", "Утверждение A немного лучше описывает меня", "Оба одинаково / нейтрально",
+    "Утверждение B немного лучше описывает меня", "Утверждение B намного лучше описывает меня"
+  ],
+  answerGroup:"Выберите утверждение, которое лучше вас описывает",
+  mobileProposal:"Вариант C · явный вертикальный выбор",
+  answerPrompt:"Что лучше вас описывает?",
+  choiceHelpTitle:"Почему это удобно",
+  choiceHelpText:"Сначала прочитайте оба утверждения, затем выберите большой и понятный вариант. Не нужно соотносить ответ с положением на шкале.",
   attempt:"Попытка", answered:"отвечено", practice:"режим практики (без таймера)",
   leadWith:d=>`Ваш ведущий домен — ${d}.`,
   domBlurb:{exec:"Ваши сильнейшие таланты — о том, как доводить дела до результата.",
@@ -1041,7 +1107,7 @@ ru:{
     title:"Это перетягивание, а не два вопроса",
     items:[
       "Утверждения в паре часто вообще не связаны — это специально: они из разных талантов.",
-      "Вопрос всегда один: какое из двух больше про вас? Крайняя точка — уверенно эта сторона, соседняя — «скорее она», центр — честная ничья.",
+      "Вопрос всегда один: какое из двух больше про вас? Выберите один из пяти понятных вариантов: намного лучше, немного лучше или честная ничья.",
       "Каждый выбор — балл одному таланту за счёт другого. Из 177 таких дуэлей складывается рейтинг всех 34 талантов, поэтому выбирать придётся даже между двумя «своими» утверждениями.",
       "«Нейтрально» — только для настоящей ничьей: оба одинаково про вас или оба одинаково мимо. Частое нажатие размывает ваш же профиль.",
       "20 секунд нужны, чтобы отвечал инстинкт, а не самопрезентация."
@@ -1142,6 +1208,17 @@ const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),2200)}
 
+function applyAnswerChoices(){
+  const t=T(), buttons=[...document.querySelectorAll("#scale .dot")];
+  $("scale").setAttribute("aria-label",t.answerGroup);
+  buttons.forEach((button,i)=>{
+    const label=t.answerChoices[i];
+    button.querySelector(".answer-label").textContent=label;
+    button.setAttribute("aria-label",label);
+  });
+  document.querySelectorAll(".primer-answer-label").forEach((label,i)=>label.textContent=t.answerChoices[i]);
+}
+
 function newAttempt(){
   const order=[...PAIRS.keys()];
   for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
@@ -1165,8 +1242,8 @@ function showItem(){
   if(state.idx>=PAIRS.length){finish();return}
   locked=false;
   const pair=PAIRS[state.order[state.idx]];
-  $("stmtA").textContent=locTheme(pair[0].t).s[pair[0].s];
-  $("stmtB").textContent=locTheme(pair[1].t).s[pair[1].s];
+  $("stmtAText").textContent=locTheme(pair[0].t).s[pair[0].s];
+  $("stmtBText").textContent=locTheme(pair[1].t).s[pair[1].s];
   $("stmtA").classList.remove("picked","hot");$("stmtB").classList.remove("picked","hot");
   document.querySelectorAll(".dot").forEach(d=>d.classList.remove("sel"));
   $("counter").textContent=T().itemOf(state.idx+1,PAIRS.length);
@@ -1219,7 +1296,7 @@ $("scale").addEventListener("mouseleave",()=>{
   $("stmtA").classList.remove("hot");$("stmtB").classList.remove("hot");
 });
 document.addEventListener("keydown",e=>{
-  if($("test").style.display!=="block")return;
+  if($("test").style.display!=="flex")return;
   const map={"1":-2,"2":-1,"3":0,"4":1,"5":2};
   if(map[e.key]!==undefined)answer(map[e.key]);
 });
@@ -1465,14 +1542,17 @@ function applyLang(){
   $("pMini").innerHTML=`<span>${t.primer.miniL}</span><span>${t.primer.miniC}</span><span>${t.primer.miniR}</span>`;
   $("primerBtn").textContent=t.primer.btn;
   $("lblL").innerHTML=t.lblStrong; $("lblC").textContent=t.lblNeutral; $("lblR").innerHTML=t.lblStrong;
+  $("mobileProposal").textContent=t.mobileProposal; $("answerPrompt").textContent=t.answerPrompt;
+  $("choiceHelpTitle").textContent=t.choiceHelpTitle; $("choiceHelpText").textContent=t.choiceHelpText;
+  applyAnswerChoices();
   document.title = lang==="ru"
     ? "Профиль сильных сторон — тест в духе CliftonStrengths"
     : "Strengths Profiler — CliftonStrengths-style assessment";
   renderHistory();
   if($("test").style.display==="flex" && state && state.idx<PAIRS.length){
     const pair=PAIRS[state.order[state.idx]];
-    $("stmtA").textContent=locTheme(pair[0].t).s[pair[0].s];
-    $("stmtB").textContent=locTheme(pair[1].t).s[pair[1].s];
+    $("stmtAText").textContent=locTheme(pair[0].t).s[pair[0].s];
+    $("stmtBText").textContent=locTheme(pair[1].t).s[pair[1].s];
     $("counter").textContent=t.itemOf(state.idx+1,PAIRS.length);
     if(!state.timer)$("clockNum").textContent=t.noTimer;
   }
