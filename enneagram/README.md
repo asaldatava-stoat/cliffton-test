@@ -1,6 +1,6 @@
 # Enneagram Profiler
 
-An unofficial, self-hosted reconstruction of the **RHETI-style** Enneagram assessment. Not affiliated with the Enneagram Institute; all 144 + 18 statements are original text keyed to the publicly documented nine types and three instinctual variants.
+An unofficial, self-hosted **paired-statement Enneagram assessment**. Not affiliated with the Enneagram Institute; all 144 + 18 statements are original text keyed to the publicly documented nine types and three instinctual variants.
 
 ## What it replicates
 

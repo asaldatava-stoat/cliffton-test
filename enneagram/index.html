@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Enneagram Profiler — RHETI-style assessment</title>
+<title>Enneagram Profiler — paired-statement assessment</title>
 <style>
   :root{
     --bg:#FFFFFF; --ink:#000000; --ink2:rgba(0,0,0,.55);
@@ -370,7 +370,7 @@
 /* ============================================================
    DATA — 9 types, 3 centers, 16 original statements per type.
    Statements are original text keyed to the public Enneagram
-   type descriptions; RHETI items are not reproduced.
+   type descriptions; items from any commercial Enneagram test are not reproduced.
    Type numbers follow the standard circle: 9 at the top,
    1–8 clockwise. Wings, tritype and arrows are derived.
    ============================================================ */
@@ -1199,9 +1199,9 @@ ru:{lead:{body:"Вы встречаете мир телом: инстинкт, �
 
 const STR = {
 en:{
-  eyebrow:"Unofficial · RHETI-style Enneagram assessment",
+  eyebrow:"Unofficial · paired-statement Enneagram assessment",
   title:"Enneagram Profiler",
-  sub:"A reconstruction of the Enneagram Type Indicator mechanics — 144 paired statements, every type meeting every other type equally — with original statements keyed to the nine types. Adds a short instinct block. Not affiliated with the Enneagram Institute.",
+  sub:"A forced-choice Enneagram assessment — 144 paired statements, every type meeting every other type equally — with original statements keyed to the nine types. Adds a short instinct block. Not affiliated with the Enneagram Institute.",
   s1:"paired statements — pick the one that describes you better, and how strongly",
   s2:"pairs at the end for your instinctual variant (self-preservation / social / one-to-one)",
   s3:"ways back — every answer locks, like the original",
@@ -1269,9 +1269,9 @@ en:{
   }
 },
 ru:{
-  eyebrow:"Неофициальный тест эннеаграммы в духе RHETI",
+  eyebrow:"Неофициальный тест эннеаграммы на парных утверждениях",
   title:"Профиль эннеаграммы",
-  sub:"Реконструкция механики Enneagram Type Indicator — 144 парных утверждения, каждый тип встречается с каждым поровну — с оригинальными формулировками по девяти типам. Плюс короткий блок на инстинкт. Не связан с Enneagram Institute.",
+  sub:"Тест эннеаграммы с принудительным выбором — 144 парных утверждения, каждый тип встречается с каждым поровну — с оригинальными формулировками по девяти типам. Плюс короткий блок на инстинкт. Не связан с Enneagram Institute.",
   s1:"парных утверждений — выберите то, что больше о вас, и насколько",
   s2:"пар в конце — на инстинктивный подтип (самосохранение / социальный / один-на-один)",
   s3:"шагов назад — каждый ответ блокируется, как в оригинале",
@@ -1697,7 +1697,7 @@ function renderResults(attemptIdx){
   const res=$("results");res.innerHTML=html;res.style.display="block";res.dataset.attempt=attemptIdx;window.scrollTo(0,0);
 
   const exportObj=()=>({
-    tool:"Enneagram Profiler (unofficial RHETI-style)", uiLanguage:lang,
+    tool:"Enneagram Profiler (unofficial)", uiLanguage:lang,
     attempt:attemptIdx+1, finished:a.finished, answered:a.answered, skipped:a.skipped,
     type:{number:a.top,name:TYPE(a.top).en.name,wing:a.wing,code:typeCode(a),center:centerOf(a.top),
           stressPoint:STRESS[a.top],growthPoint:GROWTH[a.top]},
@@ -1750,7 +1750,7 @@ function applyLang(){
   $("answerPrompt").textContent=t.answerPrompt;
   $("choiceHelpTitle").textContent=t.choiceHelpTitle;$("choiceHelpText").textContent=t.choiceHelpText;
   applyAnswerChoices();
-  document.title= lang==="ru" ? "Профиль эннеаграммы — тест в духе RHETI" : "Enneagram Profiler — RHETI-style assessment";
+  document.title= lang==="ru" ? "Профиль эннеаграммы — тест на парных утверждениях" : "Enneagram Profiler — paired-statement assessment";
   renderHistory();
   if($("test").style.display==="flex" && state){
     if($("interlude").style.display==="flex")showInterlude(); else if(state.idx<NALL){locked=false;showItem()}

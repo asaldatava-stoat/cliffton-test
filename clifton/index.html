@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Strengths Profiler — CliftonStrengths-style assessment</title>
+<title>Strengths Profiler — talent themes assessment</title>
 <style>
   :root{
     --bg:#FFFFFF; --ink:#000000; --ink2:rgba(0,0,0,.55);
@@ -999,9 +999,9 @@ strat:"Домен «Стратегическое мышление» — ваш �
 
 const STR = {
 en:{
-  eyebrow:"Unofficial · CliftonStrengths-style assessment",
+  eyebrow:"Unofficial · forced-choice strengths assessment",
   title:"Strengths Profiler",
-  sub:"A reconstruction of the CliftonStrengths assessment mechanics — paired statements, a 20-second clock, no going back — with original statements keyed to the 34 talent themes. Not affiliated with Gallup.",
+  sub:"A forced-choice strengths assessment — paired statements, a 20-second clock, no going back — with original statements keyed to the 34 talent themes. Not affiliated with Gallup.",
   s1:"paired statements — pick the one that describes you better, and how strongly",
   s2:"per item; when time runs out, the test moves on",
   s3:"ways back — every answer locks, exactly like the original",
@@ -1068,9 +1068,9 @@ en:{
   }
 },
 ru:{
-  eyebrow:"Неофициальный тест в духе CliftonStrengths",
+  eyebrow:"Неофициальный тест сильных сторон с принудительным выбором",
   title:"Профиль сильных сторон",
-  sub:"Реконструкция механики теста CliftonStrengths — парные утверждения, 20 секунд на ответ, без возврата назад — с оригинальными формулировками, привязанными к 34 талантам. Не связан с Gallup.",
+  sub:"Тест сильных сторон с принудительным выбором — парные утверждения, 20 секунд на ответ, без возврата назад — с оригинальными формулировками, привязанными к 34 талантам. Не связан с Gallup.",
   s1:"парных утверждений — выберите то, что больше о вас, и насколько",
   s2:"на вопрос; когда время выходит, тест идёт дальше",
   s3:"шагов назад — каждый ответ блокируется, как в оригинале",
@@ -1507,7 +1507,7 @@ function renderResults(attemptIdx){
   window.scrollTo(0,0);
 
   const exportObj=()=>({
-    tool:"Strengths Profiler (unofficial CliftonStrengths-style)",
+    tool:"Strengths Profiler (unofficial)",
     uiLanguage:lang,
     attempt:attemptIdx+1, finished:a.finished, timerUsed:a.timer,
     answered:a.answered, skipped:a.skipped,
@@ -1586,8 +1586,8 @@ function applyLang(){
   $("choiceHelpTitle").textContent=t.choiceHelpTitle; $("choiceHelpText").textContent=t.choiceHelpText;
   applyAnswerChoices();
   document.title = lang==="ru"
-    ? "Профиль сильных сторон — тест в духе CliftonStrengths"
-    : "Strengths Profiler — CliftonStrengths-style assessment";
+    ? "Профиль сильных сторон — тест талантов"
+    : "Strengths Profiler — talent themes assessment";
   renderHistory();
   if($("test").style.display==="flex" && state && state.idx<PAIRS.length){
     const pair=PAIRS[state.order[state.idx]];
