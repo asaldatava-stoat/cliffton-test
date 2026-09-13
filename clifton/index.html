@@ -244,6 +244,9 @@
   .langbtn{position:fixed;top:14px;right:14px;z-index:10;background:var(--ink);color:var(--accent-ink);
     border:none;border-radius:0;padding:8px 14px;font-family:var(--mono);font-size:13px;font-weight:400}
   .langbtn:hover{background:rgba(0,0,0,.8)}
+  .backlink{font-family:var(--mono);font-size:12px;text-transform:uppercase;color:var(--ink);text-decoration:none;
+    border:1px solid var(--ink);padding:6px 10px;line-height:1}
+  .backlink:hover{background:var(--ink);color:var(--accent-ink)}
   .exitbtn{background:none;border:none;padding:0;font-family:var(--mono);font-size:12px;
     text-transform:uppercase;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
   .exitbtn:hover{color:var(--danger)}
@@ -277,7 +280,7 @@
   <!-- ============ INTRO ============ -->
   <section id="intro">
     <header class="masthead hero">
-      <div class="topline"><span class="brandchip">SP 26</span></div>
+      <div class="topline"><div style="display:flex;gap:10px;align-items:center"><a class="backlink" id="backLink" href="../">← All tests</a><span class="brandchip">SP 26</span></div></div>
       <div class="brand" id="iEyebrow"></div>
       <h1 id="iTitle">Strengths Profiler</h1>
       <p class="sub" id="iSub"></p>
@@ -1030,6 +1033,7 @@ en:{
   fullRanking:"Theme sequence — all 34",
   copy:"Copy results for analysis", dl:"Download JSON", pdf:"Download PDF", again:"Take it again", home:"Home",
   copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep interpretation of theme combinations, domain balance and changes between attempts.",
+  back:"← All tests", histExport:"Download history", histImport:"Load history", histNote:"Attempts are stored in this browser and only for this web address. Changed the address or the browser? Download the history where your attempts are, then load the file here — duplicates are skipped.", histImported:n=>`Added attempts: ${n}`, histBad:"This file is not a history from this test",
   past:"Past attempts", top:"Top", view:"View",
   toastCopied:"Copied — paste it to Claude for analysis", toastFail:"Copy failed — use Download instead",
   toastNothing:"Nothing to resume", locale:"en-US",
@@ -1098,6 +1102,7 @@ ru:{
   fullRanking:"Последовательность — все 34 таланта",
   copy:"Скопировать для анализа", dl:"Скачать JSON", pdf:"Скачать PDF", again:"Пройти ещё раз", home:"На главную",
   copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокой интерпретации сочетаний талантов, баланса доменов и динамики между попытками.",
+  back:"← Все тесты", histExport:"Скачать историю", histImport:"Загрузить историю", histNote:"Попытки хранятся в этом браузере и только для этого адреса сайта. Сменили адрес или браузер — скачайте историю там, где попытки есть, и загрузите файл здесь. Повторы не дублируются.", histImported:n=>`Добавлено попыток: ${n}`, histBad:"Этот файл не похож на историю этого теста",
   past:"Прошлые попытки", top:"Топ", view:"Открыть",
   toastCopied:"Скопировано — вставьте в чат с Claude", toastFail:"Не удалось скопировать — используйте «Скачать»",
   toastNothing:"Нечего продолжать", locale:"ru-RU",
@@ -1204,6 +1209,39 @@ const fitBleed=()=>document.documentElement.style.setProperty("--sbw",
 fitBleed();window.addEventListener("resize",fitBleed);
 const load=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}};
 const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const HIST={tool:"strengths",ok:a=>!!(a&&a.finished&&Array.isArray(a.ranking))};
+/* History export/import — attempts live in localStorage, which is per web address.
+   After a domain change the old attempts stay behind; this moves them across. */
+function historyTools(attempts){
+  const t=T();
+  return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+    ${attempts.length?`<button class="btn2" id="histExport">${t.histExport}</button>`:""}
+    <button class="btn2" id="histImport">${t.histImport}</button>
+    <input type="file" id="histFile" accept="application/json,.json" hidden></div>
+    <p class="muted" style="font-size:13px;max-width:60ch;margin:10px 0 0">${t.histNote}</p>`;
+}
+function wireHistoryTools(){
+  const ex=$("histExport");
+  if(ex)ex.onclick=()=>{
+    const data={tool:HIST.tool,exported:new Date().toISOString(),attempts:load(LS_ATTEMPTS)||[]};
+    const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const u=URL.createObjectURL(b),l=document.createElement("a");
+    l.href=u;l.download=`${HIST.tool}-history-${new Date().toISOString().slice(0,10)}.json`;l.click();URL.revokeObjectURL(u);
+  };
+  $("histImport").onclick=()=>$("histFile").click();
+  $("histFile").onchange=e=>{
+    const f=e.target.files[0]; if(!f)return;
+    f.text().then(txt=>{
+      const d=JSON.parse(txt), incoming=Array.isArray(d)?d:d&&d.attempts;
+      if((d.tool&&d.tool!==HIST.tool)||!Array.isArray(incoming)||!incoming.every(HIST.ok))throw new Error("bad file");
+      const cur=load(LS_ATTEMPTS)||[], seen=new Set(cur.map(a=>String(a.finished)));
+      const add=incoming.filter(a=>!seen.has(String(a.finished)));
+      save(LS_ATTEMPTS,cur.concat(add).sort((x,y)=>new Date(x.finished)-new Date(y.finished)));
+      renderHistory(); toast(T().histImported(add.length));
+    }).catch(()=>toast(T().histBad)).finally(()=>{e.target.value=""});
+  };
+}
+
 
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),2200)}
@@ -1505,7 +1543,7 @@ function renderResults(attemptIdx){
 function renderHistory(){
   const attempts=load(LS_ATTEMPTS)||[];
   const h=$("history");
-  if(!attempts.length){h.innerHTML="";return}
+  if(!attempts.length){h.innerHTML=historyTools(attempts);wireHistoryTools();return}
   let html=`<div class="eyebrow" style="margin-bottom:10px">${T().past}</div><div style="display:grid;gap:8px">`;
   attempts.forEach((a,i)=>{
     const top3=a.ranking.slice(0,3).map(r=>locThemeById(r.id).name).join(" · ");
@@ -1515,9 +1553,10 @@ function renderHistory(){
         <span class="muted" style="font-size:13px">${T().top}: ${top3}</span></div>
       <button class="btn2" data-i="${i}">${T().view}</button></div>`;
   });
-  html+=`</div>`;
+  html+=`</div>`+historyTools(attempts);
   h.innerHTML=html;
-  h.querySelectorAll("button").forEach(b=>b.onclick=()=>renderResults(parseInt(b.dataset.i,10)));
+  h.querySelectorAll("button[data-i]").forEach(b=>b.onclick=()=>renderResults(parseInt(b.dataset.i,10)));
+  wireHistoryTools();
 }
 
 /* ============================================================
@@ -1528,6 +1567,7 @@ function applyLang(){
   const t=T();
   document.documentElement.lang=lang;
   $("langBtn").textContent = lang==="en" ? "RU" : "EN";
+  $("backLink").textContent=T().back;
   $("iEyebrow").textContent=t.eyebrow; $("iTitle").textContent=t.title; $("iSub").textContent=t.sub;
   $("iS1").textContent=t.s1; $("iS2").textContent=t.s2; $("iS3").textContent=t.s3; $("iS4").textContent=t.s4;
   $("iNote").textContent=t.note;
