@@ -222,12 +222,18 @@
   .verdict{background:var(--ink);color:var(--accent-ink);padding:26px 28px;font-size:16px;line-height:1.55;letter-spacing:-.01em}
   .verdict p{margin:0 0 15px}
   .verdict p:last-child{margin:0}
+  .path3{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:6px}
+  .path3>div{background:var(--bg);padding:10px 12px}
+  .path3 .pl{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--ink2)}
+  .path3 .pv{display:block;font-weight:500;font-size:17px;letter-spacing:-.02em;margin-top:3px}
+  .type-card ul.beliefs{margin:4px 0 0;padding-left:18px}
+  .type-card ul.beliefs li{margin:2px 0}
   @media (max-width:560px){
     .headline{grid-template-columns:1fr}
     .ennea{justify-self:start}
     .rankrow{grid-template-columns:28px 130px 1fr 40px}
     .rankrow .delta{display:none}
-    .cols2,.kv,.arrows{grid-template-columns:1fr}
+    .cols2,.kv,.arrows,.path3{grid-template-columns:1fr}
     .cols3{grid-template-columns:1fr}
     .strand i{height:28px}
   }
@@ -1016,6 +1022,163 @@ ru:{
  "7-9":"Оба оптимистичны, оба избегают боли. Семёрка избегает движением; Девятка — оседанием. Спросите: когда неудобно, вы уходите или затихаете?",
  "8-9":"Соседи по крылу; оба заземлённые телесные типы с гневом внутри. Восьмёрка его выражает; Девятка отрицает. Спросите: ваш гнев выходит быстро — или как упрямство?"}
 };
+/* Path of development, subtypes, relationships, center practice.
+   Ichazo–Naranjo model as presented in H. K. Makani, “Enneagram: Your Path of Personal Development”.
+   All wording is original — keep it that way when editing. */
+const PATH = {
+1:{en:{passion:"Anger",fixation:"Judgment",gift:"Serenity",state:"Perfection",
+  notice:"The inner critic’s running commentary — the verdict ‘this is wrong’ that arrives before you have properly looked.",
+  practice:"Let a feeling be there without grading it. Anger felt as anger passes; anger routed through ‘correct’ hardens into resentment.",
+  beliefs:["There is a right way, and it is my job to know it.","Rest comes after the work is done — properly.","Being loved depends on being good."],
+  love:"A partner gets someone reliable, competent and drily funny — and someone who would rather do the job themselves than watch it done wrong. Unmet needs tend to surface as criticism. What helps: say what you need before it turns into a correction; a partner who owns a mistake quickly defuses most of the tension.",
+  sub:{sp:["Worry","The standard points at survival: health, money, order at home, doing things safely. The pull between wanting something and doing it right shows up as a low hum of anxiety — for yourself and for the people you look after. Edge: allowing some risk and pleasure without a justification."],
+       so:["Crusader","The standard is channelled into a cause, a method or a group that has it right. Belonging to the right side is a relief; the price is less patience with people who see it differently, including your own camp. Edge: holding two reasonable views at once."],
+       sx:["Jealousy","The standard is aimed at the closest bonds: a partner and friends who should share your ideals. Loyalty matters enormously, and a perceived threat to the bond can turn into jealousy and checking. Edge: letting a partner be imperfect without it meaning betrayal."]}},
+ ru:{passion:"Гнев",fixation:"Осуждение",gift:"Спокойствие",state:"Совершенство",
+  notice:"Непрерывный комментарий внутреннего критика — вердикт «это неправильно», который приходит раньше, чем вы успели толком посмотреть.",
+  practice:"Позволяйте чувству быть, не выставляя ему оценку. Гнев, прожитый как гнев, проходит; гнев, пропущенный через «как правильно», застывает в обиду.",
+  beliefs:["Есть правильный способ, и моя задача — его знать.","Отдых — после того, как работа сделана. Как следует.","Любовь зависит от того, насколько я хорош."],
+  love:"Партнёр получает надёжного, компетентного человека с суховатым юмором — и того, кто скорее сделает сам, чем будет смотреть, как делают неправильно. Неудовлетворённые потребности выходят наружу критикой. Что помогает: называть свою потребность раньше, чем она превратится в замечание; партнёр, который быстро признаёт ошибку, снимает большую часть напряжения.",
+  sub:{sp:["Тревога","Планка направлена на выживание: здоровье, деньги, порядок дома, безопасность. Конфликт между «хочу» и «надо правильно» звучит как фоновая тревога — за себя и за тех, о ком вы заботитесь. Точка роста: позволять себе риск и удовольствие без оправданий."],
+       so:["Крестоносец","Планка уходит в идею, метод или группу, которые «правы». Быть на правильной стороне — облегчение; цена — меньше терпения к тем, кто думает иначе, включая своих. Точка роста: удерживать два разумных взгляда одновременно."],
+       sx:["Ревность","Планка направлена на самые близкие связи: партнёр и друзья должны разделять ваши идеалы. Верность очень важна, и угроза связи легко переходит в ревность и проверки. Точка роста: позволить партнёру быть неидеальным — и не считать это предательством."]}}},
+2:{en:{passion:"Pride",fixation:"Seeking appreciation",gift:"Humility",state:"Freedom",
+  notice:"The quick scan of what someone else needs — and the unspoken ledger of how much you have already given.",
+  practice:"Humility here means admitting you have needs too, and asking for them directly instead of earning them by giving.",
+  beliefs:["I am loved for what I give.","My needs are smaller than other people’s.","If I stop helping, I stop mattering."],
+  love:"You want to matter centrally in a partner’s life and invest a great deal of warmth and attention. When help is not wanted, or not noticed, hurt turns into anger fast. What helps: a partner who turns the attention back to your own wishes — and says plainly that your warmth is valued.",
+  sub:{sp:["Privilege","You give so that you will be looked after in return, often through small special treatments that prove the investment was seen. There is a quiet account of giving and receiving, and you prefer to stay the one who gave more. Edge: receiving without having pre-paid."],
+       so:["Ambition","Influence comes indirectly — through knowing the right people, being close to those who lead, being the connector. Status arrives through the circle rather than your own achievement. Edge: stating your ambition in your own name."],
+       sx:["Seduction","Attention is poured into one person until they feel like the centre of the world, sometimes at the cost of your own tastes — and you can pursue the person you want quite directly. Edge: keeping your own interests alive inside the relationship."]}},
+ ru:{passion:"Гордыня",fixation:"Жажда признательности",gift:"Скромность",state:"Свобода",
+  notice:"Быстрое сканирование того, что нужно другому, — и негласный учёт того, сколько вы уже дали.",
+  practice:"Скромность здесь — признать, что у вас тоже есть потребности, и просить о них прямо, а не зарабатывать их помощью.",
+  beliefs:["Меня любят за то, что я даю.","Мои потребности меньше, чем у других.","Если я перестану помогать, я перестану быть важным."],
+  love:"Вам важно быть центральной фигурой в жизни партнёра, и вы вкладываете много тепла и внимания. Когда помощь не нужна или её не замечают, обида быстро становится злостью. Что помогает: партнёр, который возвращает внимание к вашим собственным желаниям — и прямо говорит, что ценит ваше тепло.",
+  sub:{sp:["Привилегии","Вы даёте, чтобы о вас позаботились в ответ, — часто через маленькие особые условия, которые подтверждают, что вклад заметили. Внутри ведётся тихий счёт, и вам важно оставаться тем, кто дал больше. Точка роста: получать, не заплатив заранее."],
+       so:["Амбиция","Влияние приходит косвенно: через знакомство с нужными людьми, близость к тем, кто ведёт, роль связующего звена. Статус даёт круг, а не собственные достижения. Точка роста: заявлять о своих амбициях от своего имени."],
+       sx:["Соблазнение","Всё внимание направляется на одного человека, пока он не почувствует себя центром мира, — иногда ценой собственных вкусов; того, кто нужен, вы добиваетесь довольно напористо. Точка роста: сохранять свои интересы внутри отношений."]}}},
+3:{en:{passion:"Self-deception",fixation:"Vanity",gift:"Truthfulness",state:"Hope",
+  notice:"The instant shift into the role that will work best with this audience.",
+  practice:"Truthfulness here means telling yourself what you actually feel before deciding what to show — and letting some of it be seen.",
+  beliefs:["I am valued for what I achieve, not for who I am.","Feelings slow things down; they can wait.","Failure would reveal there is nothing underneath."],
+  love:"A relationship easily becomes one more project to succeed at — being the ideal partner, fixing a partner’s bad mood with action. The heart often belongs to work. What helps: time together with no goal, and learning that a feeling does not need a solution.",
+  sub:{sp:["Security","Worth is measured in material stability: solid income, a secure position, something in reserve. You work the hardest of the three and keep postponing rest until the next raise. Edge: rest that does not wait for a milestone."],
+       so:["Prestige","You want a recognised place — titles, credentials, the right network — and adapt easily to whatever circle confers status. Being unknown is the quiet dread. Edge: doing something valuable that nobody will credit to you."],
+       sx:["Attractiveness","You become what a partner finds desirable and present yourself as a catch. Keeping that image polished in a long relationship is tiring, and the fear of not living up to it can strain the bond. Edge: letting a partner see the unpolished version early."]}},
+ ru:{passion:"(Само)обман",fixation:"Тщеславие",gift:"Честность",state:"Надежда",
+  notice:"Мгновенное переключение в роль, которая лучше всего сработает перед этой аудиторией.",
+  practice:"Честность здесь — сначала сказать себе, что вы на самом деле чувствуете, и только потом решать, что показать. И позволить части этого быть увиденной.",
+  beliefs:["Меня ценят за результат, а не за то, кто я.","Чувства тормозят; они подождут.","Провал покажет, что за фасадом ничего нет."],
+  love:"Отношения легко становятся ещё одним проектом, в котором надо преуспеть: быть идеальным партнёром, исправлять плохое настроение действиями. Сердце часто отдано работе. Что помогает: время вместе без цели — и понимание, что чувству не нужно решение.",
+  sub:{sp:["Надёжность","Ценность измеряется материальной стабильностью: доход, прочное положение, запас. Вы работаете больше всех трёх подтипов и откладываете отдых до следующего повышения. Точка роста: отдых, который не ждёт этапа."],
+       so:["Престиж","Важно признанное место: звания, регалии, правильные связи; вы легко подстраиваетесь под круг, который даёт статус. Тихий страх — остаться неизвестным. Точка роста: сделать что-то ценное, что никто вам не припишет."],
+       sx:["Привлекательность","Вы становитесь тем, что партнёр находит желанным, и подаёте себя как ценный «приз». Держать образ в долгих отношениях утомительно, а страх не соответствовать ему может расшатать связь. Точка роста: рано показать партнёру неотполированную версию."]}}},
+4:{en:{passion:"Envy",fixation:"Longing",gift:"Equanimity",state:"Oneness",
+  notice:"Comparison — the automatic measuring of what others have against what seems to be missing in you.",
+  practice:"Equanimity is not flatness: it is letting feelings rise and fall without amplifying them, and finding worth in what is already here.",
+  beliefs:["Something essential is missing in me.","Ordinary life is not enough.","If I am understood deeply enough, I will finally feel whole."],
+  love:"Closeness with you means depth, intensity and fast shifts of mood; ordinary days can feel flat next to the ideal, and a push–pull pattern protects against being left. What helps: understanding offered before advice, and noticing what is good in the everyday version of the relationship.",
+  sub:{sp:["Recklessness","Suffering is carried more quietly and feeling drives action: risks with money, health or safety can feel like being true to yourself and briefly quiet the envy. Edge: separating depth of feeling from the size of the risk."],
+       so:["Shame","You want to belong to the circle that matters and feel your flaws are visible to everyone in it. You read minds — usually projecting your own harsh self-view — and can seem aloof out of fear of rejection. Edge: checking the story with the actual person."],
+       sx:["Competition","Envy turns outward into drive: comparing yourself with rivals and pushing to equal or surpass them in love and recognition. Admiration, longing and resentment can coexist. Edge: being glad of someone else’s success without it costing you."]}},
+ ru:{passion:"Зависть",fixation:"Тоска",gift:"Уравновешенность",state:"Единение",
+  notice:"Сравнение — автоматическое измерение того, что есть у других, против того, чего будто не хватает вам.",
+  practice:"Уравновешенность — не безэмоциональность: это позволять чувствам подниматься и уходить, не раздувая их, и находить ценность в том, что уже есть.",
+  beliefs:["Во мне не хватает чего-то важного.","Обычной жизни недостаточно.","Если меня поймут достаточно глубоко, я наконец почувствую себя целым."],
+  love:"Близость с вами — это глубина, интенсивность и быстрые перепады настроения; обычные дни на фоне идеала кажутся пресными, а паттерн «притянуть — оттолкнуть» защищает от того, чтобы вас бросили. Что помогает: понимание раньше советов — и умение видеть хорошее в будничной версии отношений.",
+  sub:{sp:["Безрассудство","Страдание переносится тише, а действиями управляет чувство: риск деньгами, здоровьем или безопасностью ощущается как верность себе и ненадолго глушит зависть. Точка роста: отделять глубину чувства от размера риска."],
+       so:["Стыд","Хочется принадлежать к кругу, который важен, и кажется, что ваши недостатки видны всем. Вы «читаете мысли» — обычно проецируя собственную жёсткую оценку — и из страха отвержения можете казаться отстранённым. Точка роста: сверять историю с живым человеком."],
+       sx:["Соперничество","Зависть превращается во внешний драйв: сравнивать себя с соперниками и добиваться того же или большего в любви и признании. Восхищение, тоска и неприязнь могут жить одновременно. Точка роста: радоваться чужому успеху так, чтобы он ничего у вас не отнимал."]}}},
+5:{en:{passion:"Avarice",fixation:"Detachment",gift:"Generosity",state:"Omniscience",
+  notice:"The step back — watching instead of joining, conserving time and energy before anyone has asked for them.",
+  practice:"Generosity here means sharing what you know and feel while it is still in motion, and trusting that it replenishes rather than runs out.",
+  beliefs:["The world asks for more than I can afford to give.","I need less from people than they need from me.","I have to understand before I can act."],
+  love:"You are rarely jealous and can support a partner with real clarity, but demands, ‘you should’ and pressure for an instant emotional response make you withdraw. Warmth shows in actions more than words. What helps: naming a problem calmly and leaving you time to think it over.",
+  sub:{sp:["Castle","You need a physical retreat — a room, a home others rarely enter — and keep material needs low to stay independent. Edge: inviting someone into the space."],
+       so:["Specialist","You seek circles of people with rare knowledge and become the expert; expertise answers the fear of being inadequate. Taken far, knowledge drifts away from any real use. Edge: asking what the knowledge is for, and whom it serves."],
+       sx:["Confidant","Your private world opens to a very few trusted people, and those bonds are treasured and replayed in memory. A betrayal of that trust is hard to forgive. Edge: widening the circle by one."]}},
+ ru:{passion:"Скупость",fixation:"Отстранение",gift:"Щедрость",state:"Всеведение",
+  notice:"Шаг назад — наблюдать вместо того, чтобы участвовать, и экономить время и силы раньше, чем кто-то о них попросил.",
+  practice:"Щедрость здесь — делиться тем, что знаете и чувствуете, пока это ещё живое, и доверять, что от этого прибывает, а не убывает.",
+  beliefs:["Мир требует больше, чем я могу себе позволить отдать.","Мне люди нужны меньше, чем я им.","Сначала надо понять — потом действовать."],
+  love:"Вы редко ревнуете и умеете поддерживать партнёра очень трезво, но требования, «ты должен» и давление немедленно отреагировать эмоционально заставляют вас отстраниться. Тепло видно больше в поступках, чем в словах. Что помогает: спокойно обозначить проблему и дать вам время её обдумать.",
+  sub:{sp:["Крепость","Нужно физическое убежище — комната, дом, куда редко заходят другие, — а материальные потребности держатся минимальными ради независимости. Точка роста: пригласить кого-то в это пространство."],
+       so:["Специалист","Вы ищете круги людей с редким знанием и становитесь экспертом; экспертиза отвечает на страх оказаться некомпетентным. Если зайти далеко, знание отрывается от реальной пользы. Точка роста: спрашивать, для чего это знание и кому оно служит."],
+       sx:["Доверие","Свой мир вы открываете очень немногим, и эти связи — сокровище, к которому возвращаетесь в мыслях. Предательство такого доверия трудно простить. Точка роста: расширить круг ещё на одного человека."]}}},
+6:{en:{passion:"Fear",fixation:"Doubt",gift:"Courage",state:"Faith",
+  notice:"The ‘what if’ loop — and the search for a hidden motive behind reassurance.",
+  practice:"Courage is acting while the doubt is still there, and building trust in your own inner authority rather than waiting for certainty from outside.",
+  beliefs:["The world is risky; it is better to be prepared.","Authority can’t be fully trusted — but I need something to lean on.","If I relax, something will go wrong."],
+  love:"A loyal ‘us against the world’ ally who carries much of the household’s security. Supporting comes easier than being supported, and reassurance tends to raise new questions. What helps: consistency over time — trust grows from a track record, not a single declaration.",
+  sub:{sp:["Warmth","You secure a stable base — bills paid, roof fixed, things insured — and disarm others with genuine warmth, while taking a long time to truly trust. Edge: letting someone help you."],
+       so:["Duty","Safety comes from a group’s rules and cause, and you can work tirelessly for it; the doubt that stalls personal decisions eases when you act from duty. Edge: forming your own view before checking the group’s."],
+       sx:["Strength / beauty","Fear is countered by becoming strong, attractive or intellectually formidable; you are the most likely Six to confront authority head-on. Edge: noticing when boldness is a reaction to fear rather than a choice."]}},
+ ru:{passion:"Страх",fixation:"Сомнение",gift:"Смелость",state:"Вера",
+  notice:"Петля «а что если» — и поиск скрытого мотива за словами поддержки.",
+  practice:"Смелость — действовать, пока сомнение ещё здесь, и опираться на внутренний авторитет, а не ждать уверенности извне.",
+  beliefs:["Мир рискован; лучше быть готовым.","Авторитетам нельзя доверять полностью — но опора мне нужна.","Стоит расслабиться — и что-то пойдёт не так."],
+  love:"Преданный союзник по принципу «мы против всего мира», который берёт на себя большую часть безопасности семьи. Поддерживать легче, чем принимать поддержку, а заверения часто рождают новые вопросы. Что помогает: последовательность во времени — доверие растёт из опыта, а не из одного признания.",
+  sub:{sp:["Теплота","Вы обеспечиваете прочную базу — счета оплачены, крыша починена, всё застраховано — и обезоруживаете людей искренним теплом, хотя по-настоящему доверяете нескоро. Точка роста: позволить кому-то помочь вам."],
+       so:["Долг","Безопасность дают правила и дело группы, ради которых вы готовы много работать; сомнения, тормозящие личные решения, стихают, когда действуете из долга. Точка роста: сформировать своё мнение до того, как узнаете мнение группы."],
+       sx:["Сила / красота","Страх уравновешивается тем, чтобы стать сильным, привлекательным или интеллектуально мощным; этот подтип чаще других идёт на открытую конфронтацию с авторитетом. Точка роста: замечать, когда смелость — реакция на страх, а не выбор."]}}},
+7:{en:{passion:"Gluttony",fixation:"Planning",gift:"Sobriety",state:"Presence",
+  notice:"The jump to the next plan the moment the present turns dull or painful.",
+  practice:"Sobriety is enough-ness: staying with one experience fully, including the uncomfortable part, instead of adding another.",
+  beliefs:["Something better is always around the corner.","Pain is something to get out of, fast.","Commitments limit freedom."],
+  love:"Life with you is lively and full of plans — many of which stay plans. You back a partner’s dreams as long as your freedom is not threatened, and dislike being pulled back to earth. What helps: a partner who shares the play, and talks about heavy things that do not feel like a trap.",
+  sub:{sp:["Freedom","You secure the good life — trips, good deals, treats — and surround yourself with upbeat people and few obligations. Edge: staying through someone else’s bad day."],
+       so:["Shared cause","You look more serious than other Sevens, postponing your own pleasure for a big vision shared with like-minded people, and experiencing that as a sacrifice. Groups without a fixed hierarchy suit you best. Edge: saying out loud what you want for yourself."],
+       sx:["Fascination","New people and ideas captivate you, and you are hard to resist when captivated; you idealise, then feel let down and move on. Edge: staying curious about a person after the shine wears off."]}},
+ ru:{passion:"Обжорство",fixation:"Планирование",gift:"Трезвость",state:"Присутствие",
+  notice:"Прыжок к следующему плану в тот момент, когда настоящее становится скучным или болезненным.",
+  practice:"Трезвость — это чувство «достаточно»: полностью остаться в одном опыте, включая неприятную часть, вместо того чтобы добавить ещё один.",
+  beliefs:["За углом всегда есть что-то получше.","Из боли надо выбираться, и быстро.","Обязательства ограничивают свободу."],
+  love:"Жизнь с вами живая и полна планов — многие из которых так и остаются планами. Вы поддерживаете мечты партнёра, пока они не угрожают вашей свободе, и не любите, когда вас «спускают с небес». Что помогает: партнёр, который разделяет игру, и разговоры о тяжёлом, которые не ощущаются ловушкой.",
+  sub:{sp:["Свобода","Вы обеспечиваете себе хорошую жизнь — поездки, выгодные находки, приятные мелочи — и окружаете себя позитивными людьми без тяжёлых обязательств. Точка роста: остаться рядом, когда у другого плохой день."],
+       so:["Общее дело","Вы серьёзнее других Семёрок: откладываете своё удовольствие ради большой мечты, разделённой с единомышленниками, и переживаете это как жертву. Лучше всего — группы без жёсткой иерархии. Точка роста: вслух назвать, чего хотите для себя."],
+       sx:["Очарование","Новые люди и идеи захватывают вас, и в этом состоянии вам трудно сопротивляться; вы идеализируете, разочаровываетесь и переключаетесь. Точка роста: сохранять интерес к человеку, когда первый блеск прошёл."]}}},
+8:{en:{passion:"Lust",fixation:"Justice-seeking",gift:"Innocence",state:"Truth",
+  notice:"Sizing up who holds power in the room — and the urge to take control before anyone can control you.",
+  practice:"Innocence means meeting each situation fresh and unarmoured: letting yourself be affected, and showing the softer side usually kept locked away.",
+  beliefs:["Vulnerability will be used against me.","The strong protect; the weak get hurt.","If I am not in control, someone else will be."],
+  love:"Being with you feels protected and safe, and you say what you think. The difficulty is control: you want a say in everything and react fast to anything that feels like encroachment. What helps: letting the steam out without the partner arguing back in the moment — the real conversation lands better later.",
+  sub:{sp:["Survival","You make sure the essentials are covered — a well-stocked home, your own things, the final say over your space — and feel needs as urgent. Edge: noticing when stockpiling control stands in for feeling safe."],
+       so:["Friendship","You build a loyal crew, organise the gatherings, look after everyone in it and prefer doing business with people who have proved trustworthy — betrayal is not easily forgiven. Edge: letting others in the group lead."],
+       sx:["Possession / surrender","You are possessive and want a hand in a partner’s decisions — and, once fully sure of someone strong enough, you surrender control entirely. Edge: trust that needs neither total control nor total surrender."]}},
+ ru:{passion:"Вожделение",fixation:"Справедливость",gift:"Невинность",state:"Истина",
+  notice:"Оценка того, у кого в комнате власть, — и порыв взять контроль раньше, чем кто-то возьмёт его над вами.",
+  practice:"Невинность — встречать каждую ситуацию заново и без брони: позволять себя затронуть и показывать мягкую сторону, которую обычно держите под замком.",
+  beliefs:["Уязвимость используют против меня.","Сильные защищают; слабым достаётся.","Если контролирую не я — контролирует кто-то другой."],
+  love:"Рядом с вами безопасно и надёжно, и вы прямо говорите, что думаете. Сложность — контроль: хочется участвовать во всех решениях, и вы резко реагируете на всё, что похоже на вторжение. Что помогает: дать выпустить пар, не споря в моменте, — настоящий разговор лучше ляжет позже.",
+  sub:{sp:["Выживание","Вы гарантируете, что базовое обеспечено: полный дом, свои вещи, последнее слово о своём пространстве, — и потребности ощущаются как срочные. Точка роста: замечать, когда запас контроля подменяет чувство безопасности."],
+       so:["Дружба","Вы собираете преданную команду, организуете встречи, заботитесь обо всех в ней и предпочитаете вести дела с проверенными людьми — предательство прощается нелегко. Точка роста: позволять вести другим."],
+       sx:["Обладание / отдача","Вы собственнически относитесь к партнёру и хотите участвовать в его решениях — а убедившись, что он достаточно силён, полностью отдаёте контроль. Точка роста: доверие, которому не нужны ни полный контроль, ни полная сдача."]}}},
+9:{en:{passion:"Sloth",fixation:"Comfort",gift:"Energy",state:"Love",
+  notice:"Sliding into a small, comfortable task — or into someone else’s agenda — at the exact moment your own priority needs attention.",
+  practice:"Energy here means showing up for your own life: asking ‘what do I think?’ and acting on it before the moment passes.",
+  beliefs:["My opinion matters less than other people’s.","Conflict breaks the connection.","There is plenty of time; it can wait."],
+  love:"People feel accepted and loved as they are with you. What frustrates partners is avoidance: important topics get replaced by small ones, and you rarely say what is going on inside. You can find yourself in situations you never actively chose. What helps: a partner taking the first step — and asking for your view, then waiting for it.",
+  sub:{sp:["Simple comforts","You settle into simple pleasures — a favourite show, good food, the sofa — which quietly stand in for real goals and can numb feelings. Edge: one uncomfortable, meaningful thing before the comfort."],
+       so:["Participation","You belong by taking part in groups with clear goals and work hard for their harmony, while your own thoughts are often elsewhere and group decisions spare you your own. Edge: casting a dissenting vote."],
+       sx:["Fusion","You merge with a partner until it is hard to tell whose opinions are whose, and tend to idealise the people closest to you. Edge: keeping an ‘I’ inside the ‘we’."]}},
+ ru:{passion:"Лень",fixation:"Комфорт",gift:"Энергия",state:"Любовь",
+  notice:"Соскальзывание в маленькое уютное дело — или в чужую повестку — ровно в тот момент, когда своё приоритетное требует внимания.",
+  practice:"Энергия здесь — присутствовать в собственной жизни: спрашивать себя «а что думаю я?» и действовать, пока момент не ушёл.",
+  beliefs:["Моё мнение значит меньше, чем мнение других.","Конфликт разрушает связь.","Времени достаточно; это может подождать."],
+  love:"Рядом с вами люди чувствуют, что их принимают и любят такими, какие они есть. Партнёров расстраивает избегание: важные темы подменяются мелкими, и вы редко говорите, что происходит внутри. Можно обнаружить себя в ситуации, которую вы активно не выбирали. Что помогает: партнёр делает первый шаг — спрашивает ваше мнение и дожидается его.",
+  sub:{sp:["Простые радости","Вы устраиваетесь в простых удовольствиях — любимый сериал, вкусная еда, диван, — которые тихо подменяют настоящие цели и приглушают чувства. Точка роста: одно неудобное, но важное дело — до уюта."],
+       so:["Участие","Вы принадлежите через участие в группах с понятными целями и много делаете для их гармонии, но мыслями часто не здесь, а групповые решения избавляют от собственных. Точка роста: проголосовать «против»."],
+       sx:["Слияние","Вы сливаетесь с партнёром так, что трудно понять, где чьё мнение, и склонны идеализировать самых близких. Точка роста: сохранять «я» внутри «мы»."]}}}
+};
+const CENTER_PRACTICE = {
+en:{body:"A practice for it: a few minutes of grounding — feet heavy on the floor, attention on breath and on where your skin meets the air — whenever you feel knocked off balance.",
+    heart:"A practice for it: when a difficult feeling arrives, drop the story, find where it sits in the body and breathe through it without feeding it or pushing it away.",
+    head:"A practice for it: a few minutes a day of watching thoughts, labelling each one (‘plan’, ‘memory’, ‘worry’) and letting it go — the gaps between them are where your own answers turn up."},
+ru:{body:"Практика для него: несколько минут заземления — ступни тяжелеют на полу, внимание на дыхании и на границе, где кожа касается воздуха, — каждый раз, когда выбивает из равновесия.",
+    heart:"Практика для него: когда приходит трудное чувство, отпустите историю, найдите, где оно живёт в теле, и дышите сквозь него, не подпитывая и не отталкивая.",
+    head:"Практика для него: несколько минут в день наблюдать мысли, помечать каждую («план», «воспоминание», «тревога») и отпускать — в промежутках между ними и появляются ваши собственные ответы."}
+};
 const CENTER_TXT = {
 en:{lead:{body:"You meet the world through the body: instinct, boundaries, action. The theme of this center is anger — where it goes matters more than whether it is there.",
           heart:"You meet the world through the heart: identity, image, connection. The theme of this center is shame — the question of whether you are worth something as you are.",
@@ -1075,6 +1238,8 @@ en:{
   arrowsHdr:"Arrows — where you go", stressLbl:"Under stress → Type", growthLbl:"In growth → Type",
   instinctHdr:"Instinctual variant", coreHdr:"Your type in detail", alsoHdr:"Also strong",
   fear:"Core fear", desire:"Core desire", coreHow:"How it works", outside:"How others experience it", mislabel:"What you probably call it", useIt:"One lever", wingHdr:"Your wing", vsHdr:"versus",
+  subHdr:"Your subtype", pathHdr:"Path of development", passionLbl:"Passion", pathNotice:"Notice — fixation", pathGift:"Develop — gift", pathState:"Leads toward", beliefsHdr:"Beliefs that keep the pattern running", loveHdr:"In close relationships",
+  source:"Subtypes, passions, gifts and the path of development follow the Ichazo–Naranjo model as presented in Helena Kongsbak Makani’s “Enneagram: Your Path of Personal Development”. All wording here is original.",
   fullRanking:"All nine types", rankWord:"rank", strongPicks:"strong picks",
   copy:"Copy results for analysis", dl:"Download JSON", pdf:"Download PDF", again:"Take it again", home:"Home",
   copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep read of your type, wing, tritype and instinct, and of what changed between attempts.",
@@ -1082,6 +1247,8 @@ en:{
   locale:"en-US",
   v:{
     hdr:"Closing summary",
+    sub:(code,name)=>`Your subtype is ${code}, “${name}”. `,
+    path:(passion,fix,gift,state)=>`The work starts with noticing the fixation — ${fix}, the thought habit that feeds ${passion}. Its counterweight is ${gift}; practised, it opens toward ${state}.`,
     lead:(n,name,code,inst)=>`Your profile points to Type ${n}, ${name} — ${code}, with the ${inst} instinct leading.`,
     diffClose:(a,b,pa,pb)=>`Types ${a} and ${b} are close (${pa}% vs ${pb}%), so the distinction matters. `,
     diffClear:(a,b,gap)=>`Type ${a} leads by a clear margin (${gap} points over Type ${b}), but the runner-up shapes the picture. `,
@@ -1140,6 +1307,8 @@ ru:{
   arrowsHdr:"Стрелки — куда вы движетесь", stressLbl:"В стрессе → тип", growthLbl:"В росте → тип",
   instinctHdr:"Инстинктивный подтип", coreHdr:"Ваш тип подробно", alsoHdr:"Также сильны",
   fear:"Базовый страх", desire:"Базовое желание", coreHow:"Как это устроено", outside:"Как это видят другие", mislabel:"Как вы, скорее всего, это называете", useIt:"Один рычаг", wingHdr:"Ваше крыло", vsHdr:"против",
+  subHdr:"Ваш подтип", pathHdr:"Путь развития", passionLbl:"Страсть", pathNotice:"Замечать — фиксация", pathGift:"Развивать — особый дар", pathState:"Ведёт к состоянию", beliefsHdr:"Убеждения, на которых держится паттерн", loveHdr:"В близких отношениях",
+  source:"Подтипы, страсти, особые дары и путь развития описаны по модели Ичазо–Наранхо в изложении Хелены Конгсбах Макани («Эннеаграмма: ваш путь личностного развития»). Все формулировки здесь — собственные.",
   fullRanking:"Все девять типов", rankWord:"ранг", strongPicks:"уверенных выборов",
   copy:"Скопировать для анализа", dl:"Скачать JSON", pdf:"Скачать PDF", again:"Пройти ещё раз", home:"На главную",
   copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокого разбора типа, крыла, тритипа и инстинкта, а также динамики между попытками.",
@@ -1147,6 +1316,8 @@ ru:{
   locale:"ru-RU",
   v:{
     hdr:"Заключение",
+    sub:(code,name)=>`Ваш подтип — ${code}, «${name}». `,
+    path:(passion,fix,gift,state)=>`Работа начинается с того, чтобы замечать фиксацию — ${fix}: мыслительную привычку, которая питает страсть (${passion}). Её противовес — ${gift}; в практике он ведёт к состоянию «${state}».`,
     lead:(n,name,code,inst)=>`Ваш профиль указывает на тип ${n}, «${name}» — ${code}, с ведущим инстинктом «${inst}».`,
     diffClose:(a,b,pa,pb)=>`Типы ${a} и ${b} близки (${pa}% против ${pb}%), поэтому различие важно. `,
     diffClear:(a,b,gap)=>`Тип ${a} ведёт с заметным отрывом (${gap} пунктов от типа ${b}), но второй тип окрашивает картину. `,
@@ -1377,6 +1548,7 @@ function renderResults(attemptIdx){
   const t=T(), top=TYPE(a.top), TL=L(top), C=CENTERS[centerOf(a.top)];
   const wingKey=a.wing?`${a.top}w${a.wing}`:null, wing=wingKey?WINGS[lang][wingKey]:null;
   const instCode=a.insts.slice(0,2).map(i=>i.id).join("/");
+  const P=PATH[a.top][lang], sid=a.insts[0].id, SUB=P.sub[sid], subCode=`${instShort(sid)}${a.top}`;
 
   const diffKey=(x,y)=>Math.min(x,y)+"-"+Math.max(x,y);
   const D=DIFF[lang];
@@ -1388,7 +1560,17 @@ function renderResults(attemptIdx){
          <div class="kv"><div class="blk"><b>${t.fear}</b>${X.fear}</div><div class="blk"><b>${t.desire}</b>${X.desire}</div></div>
          <div class="blk"><b>${t.outside}</b>${esc(X.outside)}</div>
          <div class="blk"><b>${t.mislabel}</b>${esc(X.mislabel)}</div>
+         <div class="blk"><b>${t.subHdr} · ${subCode} · ${esc(SUB[0])}</b>${esc(SUB[1])}</div>
          <div class="blk"><b>${t.useIt}</b>${X.lever.map(esc).join("<br>")}</div>
+         <div class="blk"><b>${t.pathHdr}</b>
+           <div class="path3">
+             <div><span class="pl">${t.pathNotice}</span><span class="pv">${esc(P.fixation)}</span><span class="pl" style="margin-top:4px">${t.passionLbl}: ${esc(P.passion)}</span></div>
+             <div><span class="pl">${t.pathGift}</span><span class="pv">${esc(P.gift)}</span></div>
+             <div><span class="pl">${t.pathState}</span><span class="pv">${esc(P.state)}</span></div>
+           </div>
+           <p style="margin:8px 0 0">${esc(P.notice)} ${esc(P.practice)}</p></div>
+         <div class="blk"><b>${t.beliefsHdr}</b><ul class="beliefs">${P.beliefs.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+         <div class="blk"><b>${t.loveHdr}</b>${esc(P.love)}</div>
          ${wing?`<div class="blk"><b>${t.wingHdr} · ${wingKey} · ${wing[0]}</b>${wing[1]}</div>`:`<div class="blk"><b>${t.wingHdr}</b>${t.balanced}</div>`}`;
     return `<div class="type-card ${minor?'minor':''}" style="--dc:var(${CC.css})">
       <span class="chip">${cName(centerOf(r.n))} · ${t.rankWord} ${i+1} · ${r.pct.toFixed(0)}% · ${t.strongPicks}: ${r.strong}</span>
@@ -1452,10 +1634,12 @@ function renderResults(attemptIdx){
   const n2=a.types[1].n, n3=a.types[2].n, CT=CENTER_TXT[lang];
   const paras=[
     V.lead(a.top,TL.name,typeCode(a),instName(a.insts[0].id))+" "+TL.core,
+    V.sub(subCode,SUB[0])+SUB[1],
     (gap<6 ? V.diffClose(a.top,n2,a.types[0].pct.toFixed(0),a.types[1].pct.toFixed(0)) : V.diffClear(a.top,n2,gap.toFixed(0)))+D[diffKey(a.top,n2)],
     V.adds(n2,n3)+L(TYPE(n2)).adds+" "+L(TYPE(n3)).adds,
-    CT.lead[a.centers[0].c]+" "+CT.low[a.centers[2].c]+" "+V.tritype(a.tri.map(x=>x.n).join("")),
+    CT.lead[a.centers[0].c]+" "+CT.low[a.centers[2].c]+" "+CENTER_PRACTICE[lang][a.centers[2].c]+" "+V.tritype(a.tri.map(x=>x.n).join("")),
     V.arrows(a.top,STRESS[a.top],TL.stress,GROWTH[a.top],TL.growth),
+    V.path(P.passion.toLowerCase(),P.fixation.toLowerCase(),P.gift.toLowerCase(),P.state.toLowerCase())+" "+P.practice,
     V.inst(instName(a.insts[0].id),instName(a.insts[1].id),instName(a.insts[2].id)),
     neutral<=a.answered*0.15 ? V.confident(neutral,a.answered,strongTotal) : V.unsure(neutral)
   ];
@@ -1468,7 +1652,8 @@ function renderResults(attemptIdx){
       <button class="btn2" id="againBtn">${t.again}</button>
       <button class="btn2" id="homeBtn">${t.home}</button>
     </div>
-    <p class="muted" style="font-size:13px;max-width:60ch">${t.copyNote}</p>`;
+    <p class="muted" style="font-size:13px;max-width:60ch">${t.copyNote}</p>
+    <p class="muted" style="font-size:12px;max-width:70ch;margin-top:22px">${t.source}</p>`;
 
   $("test").style.display="none";$("intro").style.display="none";document.body.classList.remove("testing");
   const res=$("results");res.innerHTML=html;res.style.display="block";res.dataset.attempt=attemptIdx;window.scrollTo(0,0);
@@ -1478,6 +1663,8 @@ function renderResults(attemptIdx){
     attempt:attemptIdx+1, finished:a.finished, answered:a.answered, skipped:a.skipped,
     type:{number:a.top,name:TYPE(a.top).en.name,wing:a.wing,code:typeCode(a),center:centerOf(a.top),
           stressPoint:STRESS[a.top],growthPoint:GROWTH[a.top]},
+    subtype:{code:subCode.toLowerCase(),name:PATH[a.top].en.sub[sid][0]},
+    path:{passion:PATH[a.top].en.passion,fixation:PATH[a.top].en.fixation,gift:PATH[a.top].en.gift,essence:PATH[a.top].en.state},
     tritype:a.tri.map(x=>x.n).join(""),
     instinctStack:a.insts.map(i=>({instinct:i.id,pct:i.pct})),
     centers:Object.fromEntries(a.centers.map(c=>[c.c,c.share])),
