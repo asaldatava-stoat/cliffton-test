@@ -4,7 +4,8 @@ An unofficial, self-hosted **paired-statement Enneagram assessment**. Not affili
 
 ## What it replicates
 
-- **144 paired statements** — two self-descriptors per screen, choose which describes you better on a 5-point scale (Strongly / Describes me / Neutral / Describes me / Strongly)
+- **Adaptive length, 72–144 paired statements** — the 144 type pairs come in 4 rounds (every type meets every other once per round). Rounds 1–2 (72 pairs) are shown first; after 72 and after 108 the type part ends early if the leading type is ahead of the runner-up by ≥ 8 points, otherwise one more round is added. A Monte Carlo check on this exact pair matrix gave ~96% agreement with the full-144 top type at ~90 pairs on average. Attempts started before this change (no `adaptive` flag) resume and finish as full 144-pair runs; all attempts use the same pairs and seed, so they stay comparable.
+- **Two self-descriptors per screen**, choose which describes you better on a 5-point scale (Strongly / Describes me / Neutral / Describes me / Strongly)
 - **Perfectly balanced matrix** — every one of the 36 type pairs meets exactly 4 times; each type appears 32 times; each of its 16 statements is used exactly twice; no statement pair repeats
 - **+18 pairs for the instinctual variant** (self-preservation / social / one-to-one) in a short second part
 - **No going back** — answered items lock; no timer (the original has none)

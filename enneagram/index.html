@@ -283,10 +283,10 @@
     <div class="strand" id="iStrand" aria-hidden="true"></div>
 
     <dl class="spec">
-      <div><dt>144</dt><dd id="iS1"></dd></div>
+      <div><dt>72–144</dt><dd id="iS1"></dd></div>
       <div><dt>+18</dt><dd id="iS2"></dd></div>
       <div><dt>0</dt><dd id="iS3"></dd></div>
-      <div><dt>~35</dt><dd id="iS4"></dd></div>
+      <div><dt>15–35</dt><dd id="iS4"></dd></div>
     </dl>
     <p class="note" id="iNote"></p>
     <div class="domline" id="iDomLine"></div>
@@ -323,7 +323,7 @@
   <!-- ============ TEST ============ -->
   <section id="test">
     <div class="topbar">
-      <span class="eyebrow" id="counter">Item 1 of 144</span>
+      <span class="eyebrow" id="counter">Item 1 of 72–144</span>
       <button class="exitbtn" id="exitBtn">Exit</button>
     </div>
     <div class="progress"><i id="progBar"></i></div>
@@ -1201,7 +1201,7 @@ const STR = {
 en:{
   eyebrow:"Unofficial · paired-statement Enneagram assessment",
   title:"Enneagram Profiler",
-  sub:"A forced-choice Enneagram assessment — 144 paired statements, every type meeting every other type equally — with original statements keyed to the nine types. Adds a short instinct block. Not affiliated with the Enneagram Institute.",
+  sub:"A forced-choice Enneagram assessment — 72 to 144 paired statements (it stops early once your type is clear), every type meeting every other type equally — with original statements keyed to the nine types. Adds a short instinct block. Not affiliated with the Enneagram Institute.",
   s1:"paired statements — pick the one that describes you better, and how strongly",
   s2:"pairs at the end for your instinctual variant (self-preservation / social / one-to-one)",
   s3:"ways back — every answer locks, like the original",
@@ -1219,6 +1219,7 @@ en:{
   choiceHelpTitle:"How to read this",
   choiceHelpText:"Read both statements first, then pick one of the five options. Nothing to interpret from position on a scale.",
   attempt:"Attempt", answered:"answered",
+  extend:"Not clear yet — one more round of 36 pairs", adaptiveNote:n=>n<144?`type settled after ${n} of 144 pairs`:`all 144 type pairs`, confirmDiscard:"You have an unfinished attempt. Start over and discard it?",
   exit:"Exit", toastExit:"Progress saved — resume anytime", toastNothing:"Nothing to resume",
   primer:{
     eyebrow:"How to answer",
@@ -1226,9 +1227,9 @@ en:{
     items:[
       "Each pair comes from two different types. Often neither statement is 'about' the other — that's intended.",
       "The question is always the same: which of the two is more you? Choose one of five clear options — much better, a little better, or an honest tie.",
-      "Every choice gives one type a point at the other's expense. 144 such duels rank all nine types; every type meets every other exactly four times.",
+      "Every choice gives one type a point at the other's expense. Pairs come in rounds where every type meets every other once. After two rounds (72 pairs) the test checks whether your leading type is clear, and adds a round only if it isn't — up to 144.",
       "Neutral is only for a genuine tie: both equally you, or both equally not. Overusing it blurs your own profile.",
-      "After the 144, a short second part (18 pairs) ranks your three instincts — self-preservation, social, one-to-one."
+      "After the type part, a short second part (18 pairs) ranks your three instincts — self-preservation, social, one-to-one."
     ],
     miniL:"confidently left", miniC:"tie", miniR:"confidently right",
     btn:"Got it — start"
@@ -1271,7 +1272,7 @@ en:{
 ru:{
   eyebrow:"Неофициальный тест эннеаграммы на парных утверждениях",
   title:"Профиль эннеаграммы",
-  sub:"Тест эннеаграммы с принудительным выбором — 144 парных утверждения, каждый тип встречается с каждым поровну — с оригинальными формулировками по девяти типам. Плюс короткий блок на инстинкт. Не связан с Enneagram Institute.",
+  sub:"Тест эннеаграммы с принудительным выбором — от 72 до 144 парных утверждений (тест останавливается раньше, когда тип ясен), каждый тип встречается с каждым поровну — с оригинальными формулировками по девяти типам. Плюс короткий блок на инстинкт. Не связан с Enneagram Institute.",
   s1:"парных утверждений — выберите то, что больше о вас, и насколько",
   s2:"пар в конце — на инстинктивный подтип (самосохранение / социальный / один-на-один)",
   s3:"шагов назад — каждый ответ блокируется, как в оригинале",
@@ -1289,6 +1290,7 @@ ru:{
   choiceHelpTitle:"Как отвечать",
   choiceHelpText:"Сначала прочитайте оба утверждения, затем выберите один из пяти вариантов. Ничего не нужно соотносить с положением на шкале.",
   attempt:"Попытка", answered:"отвечено",
+  extend:"Пока не однозначно — ещё один круг из 36 пар", adaptiveNote:n=>n<144?`тип определился после ${n} из 144 пар`:`все 144 пары`, confirmDiscard:"Есть незавершённая попытка. Начать заново и удалить её?",
   exit:"Выйти", toastExit:"Прогресс сохранён — можно продолжить позже", toastNothing:"Нечего продолжать",
   primer:{
     eyebrow:"Как отвечать",
@@ -1296,9 +1298,9 @@ ru:{
     items:[
       "Каждая пара — из двух разных типов. Часто утверждения никак не связаны друг с другом — так задумано.",
       "Вопрос всегда один: какое из двух больше про вас? Выберите один из пяти понятных вариантов: намного лучше, немного лучше или честная ничья.",
-      "Каждый выбор — балл одному типу за счёт другого. 144 таких дуэли ранжируют все девять типов; каждый тип встречается с каждым ровно четыре раза.",
+      "Каждый выбор — балл одному типу за счёт другого. Пары идут кругами: в каждом круге каждый тип встречается с каждым один раз. После двух кругов (72 пары) тест проверяет, ясен ли ведущий тип, и добавляет круг, только если нет — максимум до 144.",
       "«Нейтрально» — только для настоящей ничьей: оба одинаково про вас или оба одинаково мимо. Частое нажатие размывает ваш же профиль.",
-      "После 144 пар — короткая вторая часть (18 пар), которая ранжирует три инстинкта: самосохранение, социальный, один-на-один."
+      "После части про типы — короткая вторая часть (18 пар), которая ранжирует три инстинкта: самосохранение, социальный, один-на-один."
     ],
     miniL:"уверенно левое", miniC:"ничья", miniR:"уверенно правое",
     btn:"Понятно — начать"
@@ -1388,6 +1390,12 @@ function buildBlock(nItems, nStmts, meetings, seed){
 const TYPE_PAIRS = buildBlock(9,16,4,20260903);          // 144 — t is 0-based type index
 const INST_PAIRS = buildBlock(3,6,6,20260904);            // 18  — t is instinct index
 const N1=TYPE_PAIRS.length, N2=INST_PAIRS.length, NALL=N1+N2;
+/* Adaptive length. Type pairs come in rounds: every type combo meets once per round (4 rounds = 144).
+   Rounds 1–2 (72 pairs) go first, then round 3, then round 4. At 72 and 108 the type part stops early
+   if the leader is clear. The pair set and seed are unchanged, so old full attempts stay comparable. */
+const ROUND = (()=>{const c={};return TYPE_PAIRS.map(p=>{const k=Math.min(p[0].t,p[1].t)+"-"+Math.max(p[0].t,p[1].t);c[k]=c[k]||0;return c[k]++})})();
+const ROUND_LEN=36, FIRST_STOP=72, STOP_GAP=8;   // STOP_GAP: lead over 2nd type, in % points
+const typeIsClear = answers => {const r=scoreBlock(TYPE_PAIRS,answers,0,9);return r[0].pct-r[1].pct>=STOP_GAP};
 const pairAt = i => i<N1 ? {kind:"type",pair:TYPE_PAIRS[i]} : {kind:"inst",pair:INST_PAIRS[i-N1]};
 const stmtText = (kind,slot) => kind==="type" ? L(TYPES[slot.t]).s[slot.s] : L(INSTINCTS[slot.t]).s[slot.s];
 
@@ -1450,9 +1458,11 @@ function applyAnswerChoices(){
 
 function newAttempt(){
   const rng=Math.random;
-  const o1=shuffle([...Array(N1).keys()],rng), o2=shuffle([...Array(N2).keys()].map(i=>i+N1),rng);
+  const round=r=>[...Array(N1).keys()].filter(i=>ROUND[i]===r);
+  const o1=[...shuffle([...round(0),...round(1)],rng),...shuffle(round(2),rng),...shuffle(round(3),rng)];
+  const o2=shuffle([...Array(N2).keys()].map(i=>i+N1),rng);
   return {order:[...o1,...o2], answers:new Array(NALL).fill(undefined), idx:0, interludeSeen:false,
-          started:new Date().toISOString()};
+          started:new Date().toISOString(), adaptive:true, typeEnd:FIRST_STOP};
 }
 
 /* ============================================================
@@ -1467,6 +1477,11 @@ function startTest(resume){
 }
 function showItem(){
   if(!state)return;
+  if(state.adaptive && state.idx===state.typeEnd && state.typeEnd<N1){
+    if(typeIsClear(state.answers)) state.idx=N1;                    // leader is clear — skip remaining rounds
+    else {state.typeEnd+=ROUND_LEN; toast(T().extend)}
+    save(LS_PROGRESS,state);
+  }
   if(state.idx>=NALL){finish();return}
   if(state.idx===N1 && !state.interludeSeen){showInterlude();return}
   locked=false;
@@ -1477,9 +1492,15 @@ function showItem(){
   $("stmtAText").textContent=stmtText(kind,pair[0]);$("stmtBText").textContent=stmtText(kind,pair[1]);
   $("stmtA").classList.remove("picked","hot");$("stmtB").classList.remove("picked","hot");
   document.querySelectorAll(".dot").forEach(d=>d.classList.remove("sel"));
-  const i = kind==="type" ? state.idx+1 : state.idx-N1+1, n = kind==="type" ? N1 : N2;
+  const typeN = state.adaptive && state.typeEnd<N1 ? `${state.typeEnd}–${N1}` : N1;
+  const i = kind==="type" ? state.idx+1 : state.idx-N1+1, n = kind==="type" ? typeN : N2;
   $("counter").textContent=T().itemOf(i,n);
-  $("progBar").style.width=(state.idx/NALL*100)+"%";
+  $("progBar").style.width=progress()+"%";
+}
+function progress(){
+  if(!state.adaptive)return state.idx/NALL*100;
+  const total=state.typeEnd+N2, done=state.idx<N1 ? state.idx : state.typeEnd+(state.idx-N1);
+  return done/total*100;
 }
 function showInterlude(){
   const t=T().interlude;
@@ -1487,7 +1508,7 @@ function showInterlude(){
   $("ilEyebrow").textContent=t.eyebrow;$("ilTitle").textContent=t.title;
   $("ilP1").textContent=t.p1;$("ilP2").textContent=t.p2;$("ilBtn").textContent=t.btn;
   $("counter").textContent=T().part2;
-  $("progBar").style.width=(N1/NALL*100)+"%";
+  $("progBar").style.width=progress()+"%";
 }
 $("ilBtn").onclick=()=>{state.interludeSeen=true;save(LS_PROGRESS,state);showItem()};
 
@@ -1540,7 +1561,9 @@ function analyze(answers){
 
 function finish(){
   const answered=state.answers.filter(v=>v!==null&&v!==undefined).length;
+  const typePairs=state.answers.slice(0,N1).filter(v=>v!==null&&v!==undefined).length;
   const a={finished:new Date().toISOString(),started:state.started,answered,skipped:NALL-answered,
+           adaptive:!!state.adaptive,typePairs,
            ...analyze(state.answers),responses:state.answers};
   const attempts=load(LS_ATTEMPTS)||[]; attempts.push(a); save(LS_ATTEMPTS,attempts);
   lsDel(LS_PROGRESS); state=null; document.body.classList.remove("part2");
@@ -1618,7 +1641,7 @@ function renderResults(attemptIdx){
     </div>`};
 
   let html=`
-    <div class="eyebrow">${t.attempt} ${attemptIdx+1} · ${new Date(a.finished).toLocaleString(t.locale)} · ${a.answered}/${NALL} ${t.answered}</div>
+    <div class="eyebrow">${t.attempt} ${attemptIdx+1} · ${new Date(a.finished).toLocaleString(t.locale)} · ${a.adaptive ? `${a.answered} ${t.answered} · ${t.adaptiveNote(a.typePairs)}` : `${a.answered}/${NALL} ${t.answered}`}</div>
     <div class="headline">
       <div>
         <h2>${t.yourType(a.top)}<br>${TL.name}</h2>
@@ -1703,6 +1726,7 @@ function renderResults(attemptIdx){
           stressPoint:STRESS[a.top],growthPoint:GROWTH[a.top]},
     subtype:{code:subCode.toLowerCase(),name:PATH[a.top].en.sub[sid][0]},
     path:{passion:PATH[a.top].en.passion,fixation:PATH[a.top].en.fixation,gift:PATH[a.top].en.gift,essence:PATH[a.top].en.state},
+    typePairsUsed:a.typePairs ?? (a.responses||[]).slice(0,N1).filter(v=>v!==null&&v!==undefined).length, adaptive:!!a.adaptive,
     tritype:a.tri.map(x=>x.n).join(""),
     instinctStack:a.insts.map(i=>({instinct:i.id,pct:i.pct})),
     centers:Object.fromEntries(a.centers.map(c=>[c.c,c.share])),
@@ -1714,7 +1738,7 @@ function renderResults(attemptIdx){
   $("dlBtn").onclick=()=>{const b=new Blob([JSON.stringify(exportObj(),null,2)],{type:"application/json"});
     const u=URL.createObjectURL(b),l=document.createElement("a");l.href=u;l.download=`enneagram-attempt-${attemptIdx+1}.json`;l.click();URL.revokeObjectURL(u)};
   $("pdfBtn").onclick=()=>window.print();
-  $("againBtn").onclick=()=>{lsDel(LS_PROGRESS);startTest(false)};
+  $("againBtn").onclick=()=>{if(load(LS_PROGRESS)&&!confirm(T().confirmDiscard))return;lsDel(LS_PROGRESS);startTest(false)};
   $("homeBtn").onclick=()=>{res.style.display="none";$("intro").style.display="block";renderHistory()};
 }
 
@@ -1764,7 +1788,7 @@ $("exitBtn").onclick=()=>{
   $("test").style.display="none";$("intro").style.display="block";document.body.classList.remove("testing","part2");
   $("resumeBox").style.display="block";renderHistory();window.scrollTo(0,0);toast(T().toastExit);
 };
-$("startBtn").onclick=()=>{lsDel(LS_PROGRESS);$("intro").style.display="none";$("results").style.display="none";$("primer").style.display="block";window.scrollTo(0,0)};
+$("startBtn").onclick=()=>{if(load(LS_PROGRESS)&&!confirm(T().confirmDiscard))return;lsDel(LS_PROGRESS);$("intro").style.display="none";$("results").style.display="none";$("primer").style.display="block";window.scrollTo(0,0)};
 $("primerBtn").onclick=()=>startTest(false);
 $("resumeBtn").onclick=()=>startTest(true);
 if(load(LS_PROGRESS))$("resumeBox").style.display="block";
