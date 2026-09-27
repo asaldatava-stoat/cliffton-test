@@ -6,7 +6,8 @@ An unofficial, self-hosted **forced-choice strengths assessment**. Not affiliate
 
 ## What it replicates
 
-- **177 paired statements** — two self-descriptors per screen, choose which describes you better on a 5-point scale (Strongly / Describes me / Neutral / Describes me / Strongly)
+- **Adaptive length, 133–177 paired statements** — the 177 pairs are split into a balanced first block of 133 (each theme keeps 6–8 of its ~10 duels there) and a 44-pair remainder. After 133 the test ends early only if the 5th theme leads the 6th by ≥ 6 points — the boundary the top-5 report rests on; otherwise it runs the full 177. Monte Carlo on this pair matrix: stops early ~40% of the time, ~159 pairs on average, top-5 agreement with the full test ~94%. Shortening costs more here than in the Enneagram (34 themes × ~10 duels each vs 9 types × 32), which is why the first block is 75% of the test rather than 50%. Attempts started before this change (no `adaptive` flag) resume and finish as full 177-pair runs.
+- **Paired statements** — two self-descriptors per screen, choose which describes you better on a 5-point scale (Strongly / Describes me / Neutral / Describes me / Strongly)
 - **20-second timer per item** — expires → item skipped, test moves on (toggleable "practice mode" without timer)
 - **No going back** — answered or expired items are locked
 - **Ranked output of all 34 themes** across the four domains (Executing, Influencing, Relationship Building, Strategic Thinking), with the Top 5 "signature themes" interpreted in detail (description, blind spots, actions)

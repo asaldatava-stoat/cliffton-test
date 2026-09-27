@@ -6,7 +6,7 @@ Self-hosted, unofficial reconstructions of personality assessments — each a si
 
 | Test | Folder | Mechanics |
 |---|---|---|
-| Strengths Profiler | [`clifton/`](clifton/) | Forced-choice strengths — 177 paired statements, 20 s timer, 34 themes / 4 domains |
+| Strengths Profiler | [`clifton/`](clifton/) | Forced-choice strengths — adaptive 133–177 paired statements, 20 s timer, 34 themes / 4 domains |
 | Enneagram Profiler | [`enneagram/`](enneagram/) | Forced-choice Enneagram — adaptive 72–144 balanced pairs, 9 types, +18 instinct pairs, wing / tritype / arrows |
 
 The root `index.html` is the landing page. Each test has its own README with mechanics and scoring details.
