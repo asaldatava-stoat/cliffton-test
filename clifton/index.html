@@ -221,6 +221,10 @@
   .numlist .rk{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums;
     color:var(--ink2);min-width:22px;text-align:right;flex:none}
   .numlist .top .nm{font-weight:700;letter-spacing:-.02em}
+  .numlist .it.shaky .nm{border-bottom:1px dashed var(--ink2)}
+  .zonenote{border:1px solid var(--line);padding:14px 16px;margin:16px 0 0;font-size:14px;max-width:70ch}
+  .zonenote b{display:block;font-family:var(--mono);font-weight:400;font-size:11px;
+    text-transform:uppercase;color:var(--ink2);margin-bottom:4px}
   .domgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
   .domgrid .dcol{display:grid;gap:6px;align-content:start}
   .domgrid .colhdr{font-family:var(--mono);font-size:10px;font-weight:400;text-transform:uppercase;
@@ -1027,6 +1031,9 @@ en:{
     strat:"Your strongest themes are about absorbing and analyzing information to make better decisions."},
   strengthen:"Strengthen — your top 10", navigate:"Navigate — themes 11–34",
   top10Hdr:"Your top 10 in detail",
+  zoneHdr:"The edge of your top 5", zoneTag:"contested", andMore:n=>` and ${n} more`,
+  zoneNote:(names,m)=>`${names} all sit within ${m} points of 5th place. Talents this close swap across the top-5 line on roughly one retake in three, so read them as one cluster rather than a strict order — the cut at five is a reporting convention, not a finding.`,
+  zoneClear:g=>`Your 5th talent leads the 6th by ${g} points, which is a wide margin here — the top-5 boundary is unusually stable for you.`,
   byDomain:"Themes by domain",
   rankWord:"rank", strongPicks:"strong picks",
   watchOut:"Watch out", useIt:"Use it",
@@ -1097,6 +1104,9 @@ ru:{
     strat:"Ваши сильнейшие таланты — о том, как впитывать и анализировать информацию для сильных решений."},
   strengthen:"Развивать — ваш топ-10", navigate:"Ориентироваться — таланты 11–34",
   top10Hdr:"Ваш топ-10 подробно",
+  zoneHdr:"Граница вашего топ-5", zoneTag:"спорная зона", andMore:n=>` и ещё ${n}`,
+  zoneNote:(names,m)=>`${names} — все они расходятся с пятым местом меньше чем на ${m} пунктов. Таланты, стоящие так близко, при повторном прохождении перескакивают через границу топ-5 примерно в каждом третьем случае. Читайте их как одну группу, а не как строгий порядок: отсечка на пятом месте — соглашение отчёта, а не вывод теста.`,
+  zoneClear:g=>`Ваш пятый талант опережает шестой на ${g} пунктов — для этого теста это большой отрыв: граница топ-5 у вас необычно устойчива.`,
   byDomain:"Таланты по доменам",
   rankWord:"ранг", strongPicks:"уверенных выборов",
   watchOut:"Осторожно", useIt:"Как использовать",
@@ -1205,7 +1215,8 @@ const ADAPT_BLOCK=(()=>{const c=Array(THEMES.length).fill(0);
   return PAIRS.map(p=>{const a=p[0].t,b=p[1].t;
     if(c[a]<8&&c[b]<8){c[a]++;c[b]++;return 0} return 1})})();
 const FIRST_STOP=ADAPT_BLOCK.filter(x=>x===0).length;   // 133 of 177
-const STOP_GAP=0.06;                                    // 5th vs 6th theme, share of max points
+const STOP_GAP=0.06;
+const CONTESTED_MARGIN=8;   // report marks talents within this many points of 5th place                                    // 5th vs 6th theme, share of max points
 const top5IsClear=answers=>{const r=score(answers);return r[4].pct-r[5].pct>=STOP_GAP};
 
 /* ============================================================
@@ -1425,8 +1436,15 @@ function renderResults(attemptIdx){
     return `${i===10?'<i class="gap"></i>':''}<i class="${i<10?'':'dim'}" style="--sc:var(${D.css})" title="${i+1}. ${locThemeById(r.id).name}"></i>`;
   }).join("");
 
+  /* Contested zone: the top-5 cut is a 5th-vs-6th call, and talents within CONTESTED_MARGIN
+     points of 5th place swap across that line on about one retake in three. Mark them instead
+     of pretending the boundary is exact. */
+  const pct5=a.ranking[4].pct;
+  const contested=new Set(a.ranking.filter(r=>Math.abs(r.pct-pct5)<=CONTESTED_MARGIN).map(r=>r.id));
+  const contestedNames=a.ranking.filter(r=>contested.has(r.id)).map(r=>locThemeById(r.id).name);
+  const gap56=+(a.ranking[4].pct-a.ranking[5].pct).toFixed(1);
   const numItem=(r,i)=>{const t=locThemeById(r.id),D=DOMAINS[t.dom];
-    return `<div class="it ${i<10?'top':''}" style="--dc:var(${D.css})">
+    return `<div class="it ${i<10?'top':''} ${contested.has(r.id)?'shaky':''}" style="--dc:var(${D.css})">
       <span class="rk">${i+1}</span><span class="nm">${t.name}</span></div>`};
 
   let html=`
@@ -1445,6 +1463,10 @@ function renderResults(attemptIdx){
         <div class="numlist">${a.ranking.slice(10).map((r,i)=>numItem(r,i+10)).join("")}</div></div>
     </div>
 
+    <div class="zonenote"><b>${T().zoneHdr}</b>${contestedNames.length>1
+      ? T().zoneNote(contestedNames.slice(0,6).join(", ")+(contestedNames.length>6?T().andMore(contestedNames.length-6):""),CONTESTED_MARGIN)
+      : T().zoneClear(gap56)}</div>
+
     <div class="sect"><span class="eyebrow">${T().top10Hdr}</span>
     <div class="top5">`;
 
@@ -1454,7 +1476,7 @@ function renderResults(attemptIdx){
     <div class="theme-card" style="--dc:var(${D.css});--dbg:var(${D.soft})">
       <span class="chip">${domName(t.dom)}</span>
       <h3>${i+1}. ${t.name}</h3>
-      <div class="statline">${T().rankWord} ${i+1} · ${r.pct.toFixed(0)}% · ${T().strongPicks}: ${r.strong}</div>
+      <div class="statline">${T().rankWord} ${i+1} · ${r.pct.toFixed(0)}% · ${T().strongPicks}: ${r.strong}${contested.has(r.id)?" · "+T().zoneTag:""}</div>
       <p style="margin:9px 0 0;font-size:15px">${esc(t.desc)}</p>
       <div class="blk"><b>${T().watchOut}</b><br>${esc(t.blind)}</div>
       <div class="blk"><b>${T().useIt}</b><br>${t.act.map(esc).join("<br>")}</div>
@@ -1537,6 +1559,7 @@ function renderResults(attemptIdx){
     report:{
       leadDomain:DOMAINS[lead].name,
       domainDistribution:Object.fromEntries(domOrder.map(d=>[DOMAINS[d].name,+(w[d]/wTot*100).toFixed(1)])),
+      contestedZone:{marginPoints:CONTESTED_MARGIN, talents:a.ranking.filter(r=>contested.has(r.id)).map(r=>themeById(r.id).name)},
       strengthen:a.ranking.slice(0,10).map(r=>themeById(r.id).name),
       navigate:a.ranking.slice(10).map(r=>themeById(r.id).name)
     },
