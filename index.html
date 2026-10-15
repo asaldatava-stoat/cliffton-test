@@ -94,18 +94,24 @@
   .test+.test{border-left:1px solid var(--ink)}
   .test.org{background-color:var(--b-org)}
   .test.lav{background-color:var(--b-lav)}
-  .test .tbody{display:flex;flex-direction:column;flex:1;padding:clamp(28px,5vh,52px) 0 clamp(32px,5vh,48px)}
-  .test .tart{width:min(82%,440px);margin:0 auto clamp(18px,4vh,40px) calc(100% / var(--cols) * .5)}
-  .test.lav .tart{width:min(74%,380px)}
-  .test .ttext{padding:0 calc(100% / var(--cols) * .5 + 0px) 0 calc(100% / var(--cols) * .5)}
+  .test .tbody{display:flex;flex-direction:column;flex:1;padding-top:clamp(28px,5vh,52px)}
+  .test .tart{width:min(80%,440px);margin:0 0 clamp(18px,4vh,40px) calc(100% / var(--cols))}
+  .test.lav .tart{width:min(70%,380px)}
+  /* text starts on the first column line and sits 14px inside it */
+  .test .ttext{padding:0 calc(100% / var(--cols)) 0 14px}
   .test h2{font-size:clamp(38px,4.6vw,72px);line-height:.92;letter-spacing:-.055em;font-weight:500;margin:0 0 16px}
   .test p{margin:0;max-width:38ch;font-size:clamp(15px,1.2vw,17px);line-height:1.4}
-  .test dl{display:grid;grid-template-columns:repeat(3,1fr);margin:28px 0 0;border-top:1px solid var(--ink)}
-  .test dl>div{padding:14px 12px 0 0}
-  .test dl>div+div{padding-left:12px;border-left:1px solid var(--ink)}
-  .test dt{font-size:clamp(28px,2.8vw,42px);letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
-  .test dd{margin:6px 0 0;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;line-height:1.35}
-  .test .go{display:inline-block;margin-top:30px;background:var(--ink);color:var(--paper);padding:15px 26px;font-size:15px}
+  /* stats = three grid cells: each two columns wide, exactly one row tall, sitting on grid lines.
+     The card height is rounded to whole rows in JS so this strip lands on a line. */
+  .test .stats{display:grid;grid-template-columns:repeat(3,1fr);height:var(--row);margin:28px 0 0;margin-top:auto;
+    border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+  .test .stats>div{display:flex;flex-direction:column;justify-content:space-between;padding:12px 14px 11px}
+  .test .stats>div+div{border-left:1px solid var(--ink)}
+  .test dt{font-size:clamp(28px,2.8vw,42px);letter-spacing:-.045em;line-height:.9;font-variant-numeric:tabular-nums}
+  .test dd{margin:0;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;line-height:1.2}
+  .test .gorow{height:var(--row);display:flex;align-items:center;padding:0 14px}
+  .test .go{display:inline-block;background:var(--ink);color:var(--paper);padding:15px 26px;font-size:15px}
+  .test .ttext p{margin-bottom:28px}
   .test:hover .go{background:#222}
 
   .cells .span2{grid-column:span 2}
@@ -121,8 +127,8 @@
   }
   @media (max-width:700px){
     .pair{grid-template-columns:1fr}.pair .p2{padding:10px 0;flex-direction:row}
-    .test .tart{margin-left:var(--gut);width:min(80%,360px)}
-    .test .ttext{padding:0 var(--gut)}
+    .test .tart{margin-left:calc(100% / var(--cols));width:min(78%,340px)}
+    .test .ttext{padding:0 14px}
   }
 </style>
 </head>
@@ -156,9 +162,9 @@
       <div class="ttext">
         <h2 data-h="c1t"></h2>
         <p data-i="c1p"></p>
-        <dl><div><dt>34</dt><dd data-i="c1a"></dd></div><div><dt>4</dt><dd data-i="c1b"></dd></div><div><dt>5</dt><dd data-i="c1c"></dd></div></dl>
-        <span class="go" data-i="go1"></span>
       </div>
+      <dl class="stats"><div><dt>34</dt><dd data-i="c1a"></dd></div><div><dt>4</dt><dd data-i="c1b"></dd></div><div><dt>5</dt><dd data-i="c1c"></dd></div></dl>
+      <div class="gorow"><span class="go" data-i="go1"></span></div>
     </div>
   </a>
   <a class="test lav gridbg" href="enneagram/">
@@ -168,9 +174,9 @@
       <div class="ttext">
         <h2 data-h="c2t"></h2>
         <p data-i="c2p"></p>
-        <dl><div><dt>9</dt><dd data-i="c2a"></dd></div><div><dt>3</dt><dd data-i="c2b"></dd></div><div><dt>1</dt><dd data-i="c2c"></dd></div></dl>
-        <span class="go" data-i="go2"></span>
       </div>
+      <dl class="stats"><div><dt>9</dt><dd data-i="c2a"></dd></div><div><dt>3</dt><dd data-i="c2b"></dd></div><div><dt>1</dt><dd data-i="c2c"></dd></div></dl>
+      <div class="gorow"><span class="go" data-i="go2"></span></div>
     </div>
   </a>
 </main>
@@ -218,8 +224,18 @@ function apply(){const t=STR[lang];document.documentElement.lang=lang;
   document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t[e.dataset.i]);
   document.querySelectorAll("[data-h]").forEach(e=>e.innerHTML=t[e.dataset.h]);
   document.title=t.doc}
-document.getElementById("langBtn").onclick=()=>{lang=lang==="en"?"ru":"en";try{localStorage.setItem("pt_lang",lang)}catch(e){}apply()};
-apply();
+/* keep the stats strip on a grid line: card height = whole number of grid rows */
+function snapCards(){
+  const cards=[...document.querySelectorAll(".test")]; if(!cards.length)return;
+  cards.forEach(c=>c.style.minHeight="");
+  const row=parseFloat(getComputedStyle(cards[0]).getPropertyValue("--row"))||92;
+  cards.forEach(c=>{const h=c.getBoundingClientRect().height;c.style.minHeight=Math.ceil(h/row-.01)*row+"px"});
+}
+document.getElementById("langBtn").onclick=()=>{lang=lang==="en"?"ru":"en";try{localStorage.setItem("pt_lang",lang)}catch(e){}apply();snapCards()};
+apply();snapCards();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(snapCards);
+addEventListener("load",snapCards);
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(snapCards,80)});
 </script>
 </body>
 </html>
