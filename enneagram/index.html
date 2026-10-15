@@ -335,6 +335,62 @@
     .heroart{grid-column:1/-1;padding:30px var(--gut) 0;max-width:420px}
     .hero .cells .m1{grid-column:span 1}
   }
+
+  /* ---------- brand v2: start button in the hero ---------- */
+  .heroact{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:32px}
+  .hero .btn.xl{font-size:18px;padding:22px 38px;border-radius:0}
+  .hero #resumeBtn{font-size:16px;padding:21px 26px;border:1px solid var(--ink);background:transparent;border-radius:0}
+  .hero #resumeBtn:hover{background:rgba(0,0,0,.06)}
+  .timerlbl{display:flex;gap:8px;align-items:center;margin-top:14px;font-family:var(--b-mono);font-size:11px;
+    text-transform:uppercase;cursor:pointer}
+  .timerlbl input{margin:0;accent-color:var(--ink)}
+
+  /* ---------- brand v2: everything under the hero sits on a 56px grid ---------- */
+  #intro>.igrid{padding-left:0;padding-right:0}
+  #intro{margin-bottom:-90px}
+  .igrid{--row:56px;background-color:var(--bg)}
+  .igrid .istats{display:grid;grid-template-columns:repeat(3,1fr);height:calc(var(--row) * 2);margin:0;
+    border-bottom:1px solid var(--ink)}
+  .igrid .istats>div{display:flex;flex-direction:column;justify-content:space-between;padding:12px 14px 11px;min-width:0}
+  .igrid .istats>div+div{border-left:1px solid var(--ink)}
+  .igrid .istats dt{font-size:clamp(34px,3.6vw,54px);letter-spacing:-.045em;line-height:.9;margin:0;font-variant-numeric:tabular-nums}
+  .igrid .istats dd{margin:0;font-family:var(--b-mono);font-size:11px;text-transform:uppercase;color:var(--ink2);line-height:1.3;max-width:36ch}
+  .ilegend{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:var(--row)}
+  /* inset rule instead of a border, so the legend stays exactly one row tall */
+  .ilegend>span{display:flex;align-items:center;padding:0 14px;font-size:13px;line-height:1.2;min-width:0;box-shadow:inset 0 -1px 0 var(--ink)}
+  .ilegend .lbl{font-family:var(--b-mono);font-size:11px;text-transform:uppercase}
+  .ilegend .lbl.s2{grid-column:span 2}.ilegend .lbl.s3{grid-column:span 3}
+  .ilegend .c{border-left:1px solid var(--ink)}
+  #history{margin:0}
+  #history .hhead{height:var(--row);display:flex;align-items:center;padding:0 14px;font-family:var(--b-mono);font-size:11px;
+    text-transform:uppercase;border-bottom:1px solid var(--ink)}
+  #history .histrow{display:grid;grid-template-columns:repeat(6,1fr);height:var(--row);align-items:center;padding:0;
+    border-bottom:1px solid var(--gl)}
+  #history .histrow>div{grid-column:1/6;display:flex;flex-wrap:wrap;gap:2px 16px;align-items:baseline;padding:0 14px;min-width:0}
+  #history .histrow br{display:none}
+  #history .histrow>button{grid-column:6;justify-self:start;margin-left:14px}
+  #history .htools{display:grid;grid-template-columns:repeat(6,1fr);min-height:var(--row);align-items:center;box-shadow:inset 0 -1px 0 var(--gl)}
+  #history .hbtns{grid-column:1/3;display:flex;gap:8px;padding:0 14px}
+  #history .hnote{grid-column:3/7;margin:0;padding:0 14px;font-size:13px;line-height:1.35;color:var(--ink2);max-width:62ch}
+  .ifoot{height:var(--row);display:flex;align-items:center;padding:0 14px;font-family:var(--b-mono);font-size:11px;
+    text-transform:uppercase;color:var(--ink2)}
+  @media (max-width:700px){
+    .igrid .istats dt{font-size:24px;white-space:nowrap}
+    .igrid .istats dd{font-size:10px}
+    .igrid .istats>div{padding:10px 10px 9px}
+    .ilegend{grid-template-columns:repeat(3,1fr)}
+    .ilegend .lbl.s3{grid-column:1/-1}.ilegend .lbl.s2{grid-column:span 2}
+    .ilegend>span{padding:0 10px;font-size:12px}
+    .ilegend .c:nth-child(3n+1){border-left:none}
+    /* on phones a history row is exactly two grid rows, so the lines never cut through text */
+    #history .histrow{grid-template-columns:repeat(3,1fr);height:calc(var(--row) * 2)}
+    #history .histrow>div{grid-column:1/3}
+    #history .histrow>button{grid-column:3;margin-left:10px}
+    #history .htools{grid-template-columns:1fr;grid-template-rows:var(--row) calc(var(--row) * 2)}
+    #history .hbtns,#history .hnote{grid-column:1/-1;padding:0 14px}
+    #history .hnote{align-self:center}
+    .ifoot{padding:0 14px}
+  }
 </style>
 </head>
 <body>
@@ -350,30 +406,17 @@
           <div class="brand" id="iEyebrow"></div>
           <h1 id="iTitle"></h1>
           <p class="sub" id="iSub"></p>
+          <div class="heroact"><button class="btn xl" id="startBtn"></button><span id="resumeBox" style="display:none"><button class="btn2" id="resumeBtn"></button></span></div>
         </div>
         <figure class="heroart"><svg class="art" viewBox="0 0 340 330" role="img" aria-label="The Enneagram figure, one point circled"><circle cx="170" cy="168" r="118" fill="none" stroke="currentColor" stroke-width="1"/><g stroke="currentColor" stroke-width="1" opacity=".55"><line x1="245.8" y1="77.6" x2="210.4" y2="278.9"/><line x1="210.4" y1="278.9" x2="286.2" y2="147.5"/><line x1="286.2" y1="147.5" x2="94.2" y2="77.6"/><line x1="94.2" y1="77.6" x2="129.6" y2="278.9"/><line x1="129.6" y1="278.9" x2="53.8" y2="147.5"/><line x1="53.8" y1="147.5" x2="245.8" y2="77.6"/><line x1="272.2" y1="227.0" x2="67.8" y2="227.0"/><line x1="67.8" y1="227.0" x2="170.0" y2="50.0"/><line x1="170.0" y1="50.0" x2="272.2" y2="227.0"/></g><circle cx="245.8" cy="77.6" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><circle cx="286.2" cy="147.5" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="272.2" cy="227.0" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="210.4" cy="278.9" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="129.6" cy="278.9" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="67.8" cy="227.0" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="53.8" cy="147.5" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="94.2" cy="77.6" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><circle cx="170.0" cy="50.0" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><text class="num" x="262.6" y="61.7" text-anchor="middle">1</text><text class="num" x="311.8" y="147.0" text-anchor="middle">2</text><text class="num" x="294.7" y="244.0" text-anchor="middle">3</text><text class="num" x="219.3" y="307.3" text-anchor="middle">4</text><text class="num" x="120.7" y="307.3" text-anchor="middle">5</text><text class="num" x="45.3" y="244.0" text-anchor="middle">6</text><text class="num" x="28.2" y="147.0" text-anchor="middle">7</text><text class="num" x="77.4" y="61.7" text-anchor="middle">8</text><text class="num" x="170.0" y="28.0" text-anchor="middle">9</text><g class="sc draw"><path d="M166 18 C200 16 204 62 178 72 C148 80 134 46 146 28 C156 16 176 14 188 22"/><path d="M260 28 C242 20 224 20 208 28"/><path d="M214 18 L207 28 L219 33"/></g><text class="note" x="266" y="34" id="iArtNote">you?</text></svg></figure>
       </div>
     </header>
-    <div class="strand" id="iStrand" aria-hidden="true"></div>
-
-    <dl class="spec">
-      <div><dt>72–144</dt><dd id="iS1"></dd></div>
-      <div><dt>+18</dt><dd id="iS2"></dd></div>
-      <div><dt>0</dt><dd id="iS3"></dd></div>
-      <div><dt>15–35</dt><dd id="iS4"></dd></div>
-    </dl>
-    <p class="note" id="iNote"></p>
-    <p class="legal" id="iLegal"></p>
-    <div class="domline" id="iDomLine"></div>
-
-    <div class="row" style="margin-top:34px">
-      <button class="btn" id="startBtn">Start the assessment</button>
+    <div class="igrid gridbg">
+      <dl class="istats"><div><dt>72–144</dt><dd id="iS1"></dd></div><div><dt>+18</dt><dd id="iS2"></dd></div><div><dt>15–35</dt><dd id="iS4"></dd></div></dl>
+      <div class="ilegend" id="iDomLine"></div>
+      <div id="history"></div>
+      <div class="ifoot"><span id="iLegal"></span></div>
     </div>
-    <div id="resumeBox" style="display:none;margin-top:14px">
-      <button class="btn2" id="resumeBtn">Resume unfinished attempt</button>
-    </div>
-
-    <div id="history"></div>
   </section>
 
   <!-- ============ PRIMER ============ -->
@@ -1279,11 +1322,11 @@ en:{
   title:'Not what you do.<br><span class="acc">Why</span> you do it.',
   sub:"Nine types — one of them is yours. Meet the fear that drives you, the habit it built, and where you go under stress and in growth.",
   s1:"quick choices between two statements",
-  s2:"choices about your instinct: safety, belonging or intensity",
+  s2:"choices about your instinct",
   s3:"ways back",
   s4:"minutes. Leave anytime — we’ll keep your place",
   note:"Answer as you are, not as you’d like to be. When both sound like you, choose anyway — that’s where the insight is.",
-  start:"Start the test", resume:"Resume unfinished attempt",
+  start:"Start the test", resume:"Resume your attempt",
   itemOf:(i,n)=>`Item ${i} of ${n}`, part1:"Part 1 · Type", part2:"Part 2 · Instinct",
   lblStrong:"Strongly<br>describes me", lblNeutral:"Neutral",
   answerChoices:[
@@ -1351,11 +1394,11 @@ ru:{
   title:'Не что вы делаете,<br>а <span class="acc">почему.</span>',
   sub:"Девять типов — и один из них ваш. Узнайте, какой страх вами движет, какую привычку он построил и куда вас уводит стресс, а куда — рост.",
   s1:"быстрых выборов между двумя утверждениями",
-  s2:"выборов про инстинкт: безопасность, принадлежность или интенсивность",
+  s2:"выборов про ваш инстинкт",
   s3:"шагов назад",
   s4:"минут. Можно уйти — место сохранится",
   note:"Отвечайте как есть, а не как хотелось бы. Если оба утверждения про вас — всё равно выбирайте: самое интересное именно там.",
-  start:"Начать тест", resume:"Продолжить незавершённую попытку",
+  start:"Начать тест", resume:"Продолжить попытку",
   itemOf:(i,n)=>`Вопрос ${i} из ${n}`, part1:"Часть 1 · Тип", part2:"Часть 2 · Инстинкт",
   lblStrong:"Полностью<br>обо мне", lblNeutral:"Нейтрально",
   answerChoices:[
@@ -1492,11 +1535,11 @@ const HIST={tool:"enneagram",ok:a=>!!(a&&a.finished&&Array.isArray(a.types)&&a.t
    After a domain change the old attempts stay behind; this moves them across. */
 function historyTools(attempts){
   const t=T();
-  return `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+  return `<div class="htools"><div class="hbtns">
     ${attempts.length?`<button class="btn2" id="histExport">${t.histExport}</button>`:""}
     <button class="btn2" id="histImport">${t.histImport}</button>
     <input type="file" id="histFile" accept="application/json,.json" hidden></div>
-    <p class="muted" style="font-size:13px;max-width:60ch;margin:10px 0 0">${t.histNote}</p>`;
+    <p class="hnote">${t.histNote}</p></div>`;
 }
 function wireHistoryTools(){
   const ex=$("histExport");
@@ -1825,7 +1868,7 @@ function renderResults(attemptIdx){
 function renderHistory(){
   const attempts=load(LS_ATTEMPTS)||[], h=$("history");
   if(!attempts.length){h.innerHTML=historyTools(attempts);wireHistoryTools();return}
-  let html=`<div class="eyebrow" style="margin-bottom:10px">${T().past}</div><div style="display:grid;gap:8px">`;
+  let html=`<div class="hhead">${T().past}</div><div class="hlist">`;
   attempts.forEach((a,i)=>{
     html+=`<div class="histrow"><div><b>${T().attempt} ${i+1}</b> <span class="muted" style="font-size:13px">· ${new Date(a.finished).toLocaleDateString(T().locale)}</span><br>
       <span class="muted" style="font-size:13px">${typeCode(a)} · ${L(TYPE(a.top)).name} · ${a.insts.slice(0,2).map(x=>x.id).join("/")}</span></div>
@@ -1840,8 +1883,9 @@ function applyLang(){
   $("langBtn").textContent= lang==="en"?"RU":"EN";
   $("backLink").textContent=T().back;
   $("iEyebrow").textContent=t.eyebrow;$("iTitle").innerHTML=t.title;$("iCell").textContent=t.cell;$("iCellTime").textContent=t.cellTime;$("iArtNote").textContent=t.artNote;$("iLegal").textContent=t.legal;$("iSub").textContent=t.sub;
-  $("iS1").textContent=t.s1;$("iS2").textContent=t.s2;$("iS3").textContent=t.s3;$("iS4").textContent=t.s4;$("iNote").textContent=t.note;
-  $("iDomLine").innerHTML=Object.keys(CENTERS).map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c].css})"></span>${cName(c)} · ${CENTERS[c].types.join(" ")}</span>`).join("");
+  $("iS1").textContent=t.s1;$("iS2").textContent=t.s2;$("iS4").textContent=t.s4;
+  $("iDomLine").innerHTML=`<span class="lbl s3">${lang==="ru"?"Три центра — три цвета в отчёте":"Three centres — three colours in your report"}</span>`+
+    Object.keys(CENTERS).map(c=>`<span class="c" style="background:var(${CENTERS[c].css})">${cName(c)} · ${CENTERS[c].types.join(" ")}</span>`).join("");
   $("startBtn").textContent=t.start;$("resumeBtn").textContent=t.resume;$("exitBtn").textContent=t.exit;
   $("pEyebrow").textContent=t.primer.eyebrow;$("pTitle").innerHTML=t.primer.title;
   $("pList").innerHTML=t.primer.items.map((x,i)=>`<div class="prule"><span class="n">0${i+1}</span><span>${x}</span></div>`).join("");
@@ -1869,7 +1913,6 @@ $("startBtn").onclick=()=>{if(load(LS_PROGRESS)&&!confirm(T().confirmDiscard))re
 $("primerBtn").onclick=()=>startTest(false);
 $("resumeBtn").onclick=()=>startTest(true);
 if(load(LS_PROGRESS))$("resumeBox").style.display="block";
-$("iStrand").innerHTML=[8,9,1,2,3,4,5,6,7].map(n=>`<i style="--sc:var(${CENTERS[centerOf(n)].css})" title="${n}"></i>`).join("");
 applyLang();
 </script>
 </body>
