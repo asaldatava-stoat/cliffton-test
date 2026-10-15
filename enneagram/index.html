@@ -3,7 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Enneagram Profiler — paired-statement assessment</title>
+<title>Enneagram Profiler — not what you do, why you do it</title>
+<!-- BRAND:START v2 — keep identical across pages; see /brand/ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<style id="brand-kit">
+  :root{
+    --b-ink:#000000; --b-paper:#FFFFFF; --b-graphite:#262626;
+    --b-org:#FE7445; --b-lav:#CDABFE; --b-blu:#33AAFF; --b-sage:#D1DDD3;
+    --b-org-soft:#FFE9E0; --b-lav-soft:#F3ECFF; --b-blu-soft:#E3F2FF; --b-sage-soft:#EDF2EE;
+    --b-grot:"Helvetica Neue",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    --b-accent:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+    --b-hand:"Caveat","Bradley Hand","Segoe Print",cursive;
+    --b-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --gl:rgba(0,0,0,.22); --cols:6; --row:92px;
+  }
+  .on-dark{--gl:rgba(255,255,255,.18)}
+  /* one italic accent word per headline */
+  .acc{font-family:var(--b-accent);font-style:italic;font-weight:500;letter-spacing:-.02em;font-size:1.13em;line-height:.8}
+  /* margin notes — at most one per screen */
+  .hand{font-family:var(--b-hand);font-weight:500;letter-spacing:0;text-transform:none;line-height:1}
+  /* the visible grid */
+  .gridbg{background-image:linear-gradient(to right,var(--gl) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--gl) 1px,transparent 1px);background-size:calc(100% / var(--cols)) var(--row)}
+  .cells{display:grid;grid-template-columns:repeat(var(--cols),1fr);min-height:48px;border-bottom:1px solid var(--gl);
+    font-family:var(--b-mono);font-size:11px;font-weight:400;letter-spacing:0;text-transform:uppercase}
+  .cells>*{display:flex;align-items:center;padding:0 12px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cells a{color:inherit;text-decoration:none}
+  .cells a:hover{text-decoration:underline;text-underline-offset:3px}
+  /* hand-drawn marks */
+  .sc{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  /* draw-in: lengths are measured by the script below; without JS the marks are simply shown */
+  .b-anim .draw path{animation:b-draw 1.15s .35s cubic-bezier(.65,.05,.3,1) forwards}
+  .b-anim .draw path+path{animation-delay:1.35s;animation-duration:.35s}
+  @keyframes b-draw{to{stroke-dashoffset:0}}
+  .art{display:block;width:100%;height:auto;color:var(--b-ink);overflow:visible}
+  .art .num{font-family:var(--b-mono);font-size:12px;fill:currentColor}
+  .art .note{font-family:var(--b-hand);font-size:25px;font-weight:600;fill:currentColor}
+  @media (max-width:700px){
+    :root{--cols:3;--row:76px}
+    .cells>:nth-child(2),.cells>:nth-child(4),.cells>:nth-child(5){display:none}
+  }
+</style>
+<script>document.addEventListener("DOMContentLoaded",function(){
+  if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  document.querySelectorAll(".draw path").forEach(function(p){var L=Math.ceil(p.getTotalLength())+2;
+    p.style.strokeDasharray=L;p.style.strokeDashoffset=L});
+  document.documentElement.classList.add("b-anim");
+});</script>
+<!-- BRAND:END -->
 <style>
   :root{
     --bg:#FFFFFF; --ink:#000000; --ink2:rgba(0,0,0,.55);
@@ -44,7 +93,6 @@
   #intro{margin:0 calc(50% - 50vw + var(--sbw,0px)/2);width:calc(100vw - var(--sbw,0px))}
   #intro>*:not(.hero){padding-left:max(var(--gut),calc(50% - 760px));
     padding-right:max(var(--gut),calc(50% - 760px))}
-  .hero{background:var(--heart);padding:18px max(var(--gut),calc(50% - 760px)) 60px}
   .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(60px,14vh,130px)}
   .brandchip{background:var(--ink);color:var(--accent-ink);font-family:var(--grot);
     font-weight:700;font-size:20px;letter-spacing:-.03em;padding:4px 10px 6px}
@@ -266,6 +314,27 @@
     .type-card,.verdict,.rankrow,.stackbar,.stacklegend,.tile,.arrow,.headline{break-inside:avoid}
     .strand i{height:26px}
   }
+
+  /* ---------- brand v2: intro hero on the visible grid ---------- */
+  .hero{background-color:var(--b-lav);padding:0;color:var(--ink)}
+  .hero .cells .backlink{border:none;padding:0 12px;background:none;font-family:var(--b-mono);font-size:11px}
+  .hero .cells .backlink:hover{background:none;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  .hero .cells .c2{grid-column:span 2}
+  .herogrid{display:grid;grid-template-columns:repeat(var(--cols),1fr);align-items:center;
+    padding:clamp(44px,9vh,100px) 0 clamp(40px,7vh,84px)}
+  .herotext{grid-column:2/5;padding:0 14px;min-width:0}
+  .heroart{grid-column:5/7;margin:0;padding:0 30px 0 14px}
+  .masthead .brand{font-family:var(--b-mono);font-size:12px}
+  #intro h1{font-size:clamp(46px,7vw,112px);line-height:.9;margin:16px 0 26px;letter-spacing:-.058em}
+  #intro .sub{max-width:40ch}
+  .legal{font-family:var(--b-mono);font-size:11px;text-transform:uppercase;color:var(--ink2);margin:10px 0 0}
+  #pTitle .acc,#intro h1 .acc{font-weight:500}
+  @media (max-width:1100px){.herotext{grid-column:1/5;padding-left:var(--gut)}}
+  @media (max-width:700px){
+    .herotext{grid-column:1/-1;padding:0 var(--gut)}
+    .heroart{grid-column:1/-1;padding:30px var(--gut) 0;max-width:420px}
+    .hero .cells .m1{grid-column:span 1}
+  }
 </style>
 </head>
 <body>
@@ -274,11 +343,16 @@
 
   <!-- ============ INTRO ============ -->
   <section id="intro">
-    <header class="masthead hero">
-      <div class="topline"><div style="display:flex;gap:10px;align-items:center"><a class="backlink" id="backLink" href="../">← All tests</a><span class="brandchip">EP 26</span></div></div>
-      <div class="brand" id="iEyebrow"></div>
-      <h1 id="iTitle">Enneagram Profiler</h1>
-      <p class="sub" id="iSub"></p>
+    <header class="masthead hero gridbg">
+      <nav class="cells"><a class="backlink" id="backLink" href="../">← All tests</a><span>Psych Tests</span><span class="c2 m1" id="iCell"></span><span id="iCellTime"></span><span></span></nav>
+      <div class="herogrid">
+        <div class="herotext">
+          <div class="brand" id="iEyebrow"></div>
+          <h1 id="iTitle"></h1>
+          <p class="sub" id="iSub"></p>
+        </div>
+        <figure class="heroart"><svg class="art" viewBox="0 0 340 330" role="img" aria-label="The Enneagram figure, one point circled"><circle cx="170" cy="168" r="118" fill="none" stroke="currentColor" stroke-width="1"/><g stroke="currentColor" stroke-width="1" opacity=".55"><line x1="245.8" y1="77.6" x2="210.4" y2="278.9"/><line x1="210.4" y1="278.9" x2="286.2" y2="147.5"/><line x1="286.2" y1="147.5" x2="94.2" y2="77.6"/><line x1="94.2" y1="77.6" x2="129.6" y2="278.9"/><line x1="129.6" y1="278.9" x2="53.8" y2="147.5"/><line x1="53.8" y1="147.5" x2="245.8" y2="77.6"/><line x1="272.2" y1="227.0" x2="67.8" y2="227.0"/><line x1="67.8" y1="227.0" x2="170.0" y2="50.0"/><line x1="170.0" y1="50.0" x2="272.2" y2="227.0"/></g><circle cx="245.8" cy="77.6" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><circle cx="286.2" cy="147.5" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="272.2" cy="227.0" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="210.4" cy="278.9" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="129.6" cy="278.9" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="67.8" cy="227.0" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="53.8" cy="147.5" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="94.2" cy="77.6" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><circle cx="170.0" cy="50.0" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><text class="num" x="262.6" y="61.7" text-anchor="middle">1</text><text class="num" x="311.8" y="147.0" text-anchor="middle">2</text><text class="num" x="294.7" y="244.0" text-anchor="middle">3</text><text class="num" x="219.3" y="307.3" text-anchor="middle">4</text><text class="num" x="120.7" y="307.3" text-anchor="middle">5</text><text class="num" x="45.3" y="244.0" text-anchor="middle">6</text><text class="num" x="28.2" y="147.0" text-anchor="middle">7</text><text class="num" x="77.4" y="61.7" text-anchor="middle">8</text><text class="num" x="170.0" y="28.0" text-anchor="middle">9</text><g class="sc draw"><path d="M166 18 C200 16 204 62 178 72 C148 80 134 46 146 28 C156 16 176 14 188 22"/><path d="M260 28 C242 20 224 20 208 28"/><path d="M214 18 L207 28 L219 33"/></g><text class="note" x="266" y="34" id="iArtNote">you?</text></svg></figure>
+      </div>
     </header>
     <div class="strand" id="iStrand" aria-hidden="true"></div>
 
@@ -289,6 +363,7 @@
       <div><dt>15–35</dt><dd id="iS4"></dd></div>
     </dl>
     <p class="note" id="iNote"></p>
+    <p class="legal" id="iLegal"></p>
     <div class="domline" id="iDomLine"></div>
 
     <div class="row" style="margin-top:34px">
@@ -1199,15 +1274,16 @@ ru:{lead:{body:"Вы встречаете мир телом: инстинкт, �
 
 const STR = {
 en:{
-  eyebrow:"Unofficial · paired-statement Enneagram assessment",
-  title:"Enneagram Profiler",
-  sub:"A forced-choice Enneagram assessment — 72 to 144 paired statements (it stops early once your type is clear), every type meeting every other type equally — with original statements keyed to the nine types. Adds a short instinct block. Not affiliated with the Enneagram Institute.",
-  s1:"paired statements — pick the one that describes you better, and how strongly",
-  s2:"pairs at the end for your instinctual variant (self-preservation / social / one-to-one)",
-  s3:"ways back — every answer locks, like the original",
-  s4:"minutes in one sitting; progress autosaves if you leave",
-  note:"Answer as you actually are, not as you'd like to be. The forced choice is the method — it makes the profile honest even when both statements feel like you.",
-  start:"Start the assessment", resume:"Resume unfinished attempt",
+  eyebrow:"Test 02 · Enneagram Profiler",
+  cell:"Test 02 · Enneagram", cellTime:"15–35 min", artNote:"you?", legal:"Independent project · not affiliated with the Enneagram Institute",
+  title:'Not what you do.<br><span class="acc">Why</span> you do it.',
+  sub:"Nine types — one of them is yours. Meet the fear that drives you, the habit it built, and where you go under stress and in growth.",
+  s1:"quick choices between two statements",
+  s2:"choices about your instinct: safety, belonging or intensity",
+  s3:"ways back",
+  s4:"minutes. Leave anytime — we’ll keep your place",
+  note:"Answer as you are, not as you’d like to be. When both sound like you, choose anyway — that’s where the insight is.",
+  start:"Start the test", resume:"Resume unfinished attempt",
   itemOf:(i,n)=>`Item ${i} of ${n}`, part1:"Part 1 · Type", part2:"Part 2 · Instinct",
   lblStrong:"Strongly<br>describes me", lblNeutral:"Neutral",
   answerChoices:[
@@ -1223,11 +1299,11 @@ en:{
   exit:"Exit", toastExit:"Progress saved — resume anytime", toastNothing:"Nothing to resume",
   primer:{
     eyebrow:"How to answer",
-    title:"Two statements, one question: which is more you?",
+    title:'Two statements.<br>One question: <span class="acc">which is more you?</span>',
     items:[
       "Each pair comes from two different types. Often neither statement is 'about' the other — that's intended.",
       "The question is always the same: which of the two is more you? Choose one of five clear options — much better, a little better, or an honest tie.",
-      "Every choice gives one type a point at the other's expense. Pairs come in rounds where every type meets every other once. After two rounds (72 pairs) the test checks whether your leading type is clear, and adds a round only if it isn't — up to 144.",
+      "Every choice gives one type a point at the other’s expense. The test ends as soon as your type is clear — often well before 144.",
       "Neutral is only for a genuine tie: both equally you, or both equally not. Overusing it blurs your own profile.",
       "After the type part, a short second part (18 pairs) ranks your three instincts — self-preservation, social, one-to-one."
     ],
@@ -1246,8 +1322,8 @@ en:{
   source:"Subtypes, passions, gifts and the path of development follow the Ichazo–Naranjo model as presented in Helena Kongsbak Makani’s “Enneagram: Your Path of Personal Development”. All wording here is original.",
   fullRanking:"All nine types", rankWord:"rank", strongPicks:"strong picks",
   copy:"Copy results for analysis", dl:"Download JSON", pdf:"Download PDF", again:"Take it again", home:"Home",
-  copyNote:"“Copy results” puts a JSON summary on your clipboard — paste it to Claude for a deep read of your type, wing, tritype and instinct, and of what changed between attempts.",
-  back:"← All tests", histExport:"Download history", histImport:"Load history", histNote:"Attempts are stored in this browser and only for this web address. Changed the address or the browser? Download the history where your attempts are, then load the file here — duplicates are skipped.", histImported:n=>`Added attempts: ${n}`, histBad:"This file is not a history from this test",
+  copyNote:"Want to go deeper? “Copy results” gives you a summary to paste into Claude for a personal read of your type, wing, tritype and instinct — and how they shift between attempts.",
+  back:"← All tests", histExport:"Download history", histImport:"Load history", histNote:"Your results live only in this browser. Switching devices or browsers? Download your history there and load it here.", histImported:n=>`Added attempts: ${n}`, histBad:"This file is not a history from this test",
   past:"Past attempts", view:"View", toastCopied:"Copied — paste it to Claude for analysis", toastFail:"Copy failed — use Download instead",
   locale:"en-US",
   v:{
@@ -1270,14 +1346,15 @@ en:{
   }
 },
 ru:{
-  eyebrow:"Неофициальный тест эннеаграммы на парных утверждениях",
-  title:"Профиль эннеаграммы",
-  sub:"Тест эннеаграммы с принудительным выбором — от 72 до 144 парных утверждений (тест останавливается раньше, когда тип ясен), каждый тип встречается с каждым поровну — с оригинальными формулировками по девяти типам. Плюс короткий блок на инстинкт. Не связан с Enneagram Institute.",
-  s1:"парных утверждений — выберите то, что больше о вас, и насколько",
-  s2:"пар в конце — на инстинктивный подтип (самосохранение / социальный / один-на-один)",
-  s3:"шагов назад — каждый ответ блокируется, как в оригинале",
-  s4:"минут за один присест; прогресс сохраняется автоматически",
-  note:"Отвечайте как есть, а не как хотелось бы. Принудительный выбор — это и есть метод: он делает профиль честным даже там, где оба утверждения про вас.",
+  eyebrow:"Тест 02 · Профиль эннеаграммы",
+  cell:"Тест 02 · Эннеаграмма", cellTime:"15–35 мин", artNote:"это вы?", legal:"Независимый проект · не связан с Enneagram Institute",
+  title:'Не что вы делаете,<br>а <span class="acc">почему.</span>',
+  sub:"Девять типов — и один из них ваш. Узнайте, какой страх вами движет, какую привычку он построил и куда вас уводит стресс, а куда — рост.",
+  s1:"быстрых выборов между двумя утверждениями",
+  s2:"выборов про инстинкт: безопасность, принадлежность или интенсивность",
+  s3:"шагов назад",
+  s4:"минут. Можно уйти — место сохранится",
+  note:"Отвечайте как есть, а не как хотелось бы. Если оба утверждения про вас — всё равно выбирайте: самое интересное именно там.",
   start:"Начать тест", resume:"Продолжить незавершённую попытку",
   itemOf:(i,n)=>`Вопрос ${i} из ${n}`, part1:"Часть 1 · Тип", part2:"Часть 2 · Инстинкт",
   lblStrong:"Полностью<br>обо мне", lblNeutral:"Нейтрально",
@@ -1294,11 +1371,11 @@ ru:{
   exit:"Выйти", toastExit:"Прогресс сохранён — можно продолжить позже", toastNothing:"Нечего продолжать",
   primer:{
     eyebrow:"Как отвечать",
-    title:"Два утверждения, один вопрос: что больше про вас?",
+    title:'Два утверждения.<br>Один вопрос: <span class="acc">что больше про вас?</span>',
     items:[
       "Каждая пара — из двух разных типов. Часто утверждения никак не связаны друг с другом — так задумано.",
       "Вопрос всегда один: какое из двух больше про вас? Выберите один из пяти понятных вариантов: намного лучше, немного лучше или честная ничья.",
-      "Каждый выбор — балл одному типу за счёт другого. Пары идут кругами: в каждом круге каждый тип встречается с каждым один раз. После двух кругов (72 пары) тест проверяет, ясен ли ведущий тип, и добавляет круг, только если нет — максимум до 144.",
+      "Каждый выбор — балл одному типу за счёт другого. Тест заканчивается, как только ваш тип становится ясен, — часто задолго до 144.",
       "«Нейтрально» — только для настоящей ничьей: оба одинаково про вас или оба одинаково мимо. Частое нажатие размывает ваш же профиль.",
       "После части про типы — короткая вторая часть (18 пар), которая ранжирует три инстинкта: самосохранение, социальный, один-на-один."
     ],
@@ -1317,8 +1394,8 @@ ru:{
   source:"Подтипы, страсти, особые дары и путь развития описаны по модели Ичазо–Наранхо в изложении Хелены Конгсбах Макани («Эннеаграмма: ваш путь личностного развития»). Все формулировки здесь — собственные.",
   fullRanking:"Все девять типов", rankWord:"ранг", strongPicks:"уверенных выборов",
   copy:"Скопировать для анализа", dl:"Скачать JSON", pdf:"Скачать PDF", again:"Пройти ещё раз", home:"На главную",
-  copyNote:"«Скопировать для анализа» помещает JSON-сводку в буфер обмена — вставьте её в чат с Claude для глубокого разбора типа, крыла, тритипа и инстинкта, а также динамики между попытками.",
-  back:"← Все тесты", histExport:"Скачать историю", histImport:"Загрузить историю", histNote:"Попытки хранятся в этом браузере и только для этого адреса сайта. Сменили адрес или браузер — скачайте историю там, где попытки есть, и загрузите файл здесь. Повторы не дублируются.", histImported:n=>`Добавлено попыток: ${n}`, histBad:"Этот файл не похож на историю этого теста",
+  copyNote:"Хотите глубже? «Скопировать для анализа» даст сводку — вставьте её в чат с Claude и получите личный разбор типа, крыла, тритипа и инстинкта, а также того, как они меняются от попытки к попытке.",
+  back:"← Все тесты", histExport:"Скачать историю", histImport:"Загрузить историю", histNote:"Результаты хранятся только в этом браузере. Меняете устройство или браузер — скачайте историю там и загрузите здесь.", histImported:n=>`Добавлено попыток: ${n}`, histBad:"Этот файл не похож на историю этого теста",
   past:"Прошлые попытки", view:"Открыть", toastCopied:"Скопировано — вставьте в чат с Claude", toastFail:"Не удалось скопировать — используйте «Скачать»",
   locale:"ru-RU",
   v:{
@@ -1762,11 +1839,11 @@ function applyLang(){
   const t=T(); document.documentElement.lang=lang;
   $("langBtn").textContent= lang==="en"?"RU":"EN";
   $("backLink").textContent=T().back;
-  $("iEyebrow").textContent=t.eyebrow;$("iTitle").textContent=t.title;$("iSub").textContent=t.sub;
+  $("iEyebrow").textContent=t.eyebrow;$("iTitle").innerHTML=t.title;$("iCell").textContent=t.cell;$("iCellTime").textContent=t.cellTime;$("iArtNote").textContent=t.artNote;$("iLegal").textContent=t.legal;$("iSub").textContent=t.sub;
   $("iS1").textContent=t.s1;$("iS2").textContent=t.s2;$("iS3").textContent=t.s3;$("iS4").textContent=t.s4;$("iNote").textContent=t.note;
   $("iDomLine").innerHTML=Object.keys(CENTERS).map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c].css})"></span>${cName(c)} · ${CENTERS[c].types.join(" ")}</span>`).join("");
   $("startBtn").textContent=t.start;$("resumeBtn").textContent=t.resume;$("exitBtn").textContent=t.exit;
-  $("pEyebrow").textContent=t.primer.eyebrow;$("pTitle").textContent=t.primer.title;
+  $("pEyebrow").textContent=t.primer.eyebrow;$("pTitle").innerHTML=t.primer.title;
   $("pList").innerHTML=t.primer.items.map((x,i)=>`<div class="prule"><span class="n">0${i+1}</span><span>${x}</span></div>`).join("");
   $("pMini").innerHTML=`<span>${t.primer.miniL}</span><span>${t.primer.miniC}</span><span>${t.primer.miniR}</span>`;
   $("primerBtn").textContent=t.primer.btn;
@@ -1774,7 +1851,7 @@ function applyLang(){
   $("answerPrompt").textContent=t.answerPrompt;
   $("choiceHelpTitle").textContent=t.choiceHelpTitle;$("choiceHelpText").textContent=t.choiceHelpText;
   applyAnswerChoices();
-  document.title= lang==="ru" ? "Профиль эннеаграммы — тест на парных утверждениях" : "Enneagram Profiler — paired-statement assessment";
+  document.title= lang==="ru" ? "Профиль эннеаграммы — не что вы делаете, а почему" : "Enneagram Profiler — not what you do, why you do it";
   renderHistory();
   if($("test").style.display==="flex" && state){
     if($("interlude").style.display==="flex")showInterlude(); else if(state.idx<NALL){locked=false;showItem()}

@@ -1,6 +1,6 @@
 # Psych Tests
 
-**Live:** https://asaldatava-stoat.github.io/cliffton-test/
+**Live:** https://ana-psy-tests.vercel.app/ (mirror: https://asaldatava-stoat.github.io/cliffton-test/)
 
 Self-hosted, unofficial reconstructions of personality assessments — each a single self-contained HTML file, bilingual EN/RU, results stored only in your browser, JSON export for analysis with Claude.
 
@@ -9,7 +9,7 @@ Self-hosted, unofficial reconstructions of personality assessments — each a si
 | Strengths Profiler | [`clifton/`](clifton/) | Forced-choice strengths — adaptive 133–177 paired statements, 20 s timer, 34 themes / 4 domains |
 | Enneagram Profiler | [`enneagram/`](enneagram/) | Forced-choice Enneagram — adaptive 72–144 balanced pairs, 9 types, +18 instinct pairs, wing / tritype / arrows |
 
-The root `index.html` is the landing page. Each test has its own README with mechanics and scoring details.
+The root `index.html` is the landing page. `brand/` holds the brand guidelines (colours, type, grid, hand marks, illustrations, tone of voice); the shared brand-kit block is kept identical across pages with `python3 brand/sync-kit.py`. Each test has its own README with mechanics and scoring details.
 
 Not affiliated with Gallup or the Enneagram Institute; all statements are original text.
 

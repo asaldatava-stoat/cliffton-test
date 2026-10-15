@@ -3,102 +3,221 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Psych Tests — self-hosted personality assessments</title>
-<style>
+<title>Psych Tests — see how you're wired</title>
+<meta name="description" content="Two free personality tests: your five signature strengths and your Enneagram type. No sign-up; answers stay in your browser.">
+<!-- BRAND:START v2 — keep identical across pages; see /brand/ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+<style id="brand-kit">
   :root{
-    --bg:#FFFFFF; --ink:#000000; --ink2:rgba(0,0,0,.55); --line:#000000; --line2:rgba(0,0,0,.14);
-    --soft:rgba(0,0,0,.05); --gut:clamp(20px,5vw,64px);
-    --lav:#CDABFE; --org:#FE7445; --blu:#33AAFF; --sage:#D1DDD3;
-    --grot:"Helvetica Neue",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-    --mono:"Geist Mono",ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --b-ink:#000000; --b-paper:#FFFFFF; --b-graphite:#262626;
+    --b-org:#FE7445; --b-lav:#CDABFE; --b-blu:#33AAFF; --b-sage:#D1DDD3;
+    --b-org-soft:#FFE9E0; --b-lav-soft:#F3ECFF; --b-blu-soft:#E3F2FF; --b-sage-soft:#EDF2EE;
+    --b-grot:"Helvetica Neue",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    --b-accent:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+    --b-hand:"Caveat","Bradley Hand","Segoe Print",cursive;
+    --b-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --gl:rgba(0,0,0,.22); --cols:6; --row:92px;
   }
+  .on-dark{--gl:rgba(255,255,255,.18)}
+  /* one italic accent word per headline */
+  .acc{font-family:var(--b-accent);font-style:italic;font-weight:500;letter-spacing:-.02em;font-size:1.13em;line-height:.8}
+  /* margin notes — at most one per screen */
+  .hand{font-family:var(--b-hand);font-weight:500;letter-spacing:0;text-transform:none;line-height:1}
+  /* the visible grid */
+  .gridbg{background-image:linear-gradient(to right,var(--gl) 1px,transparent 1px),
+    linear-gradient(to bottom,var(--gl) 1px,transparent 1px);background-size:calc(100% / var(--cols)) var(--row)}
+  .cells{display:grid;grid-template-columns:repeat(var(--cols),1fr);min-height:48px;border-bottom:1px solid var(--gl);
+    font-family:var(--b-mono);font-size:11px;font-weight:400;letter-spacing:0;text-transform:uppercase}
+  .cells>*{display:flex;align-items:center;padding:0 12px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cells a{color:inherit;text-decoration:none}
+  .cells a:hover{text-decoration:underline;text-underline-offset:3px}
+  /* hand-drawn marks */
+  .sc{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+  /* draw-in: lengths are measured by the script below; without JS the marks are simply shown */
+  .b-anim .draw path{animation:b-draw 1.15s .35s cubic-bezier(.65,.05,.3,1) forwards}
+  .b-anim .draw path+path{animation-delay:1.35s;animation-duration:.35s}
+  @keyframes b-draw{to{stroke-dashoffset:0}}
+  .art{display:block;width:100%;height:auto;color:var(--b-ink);overflow:visible}
+  .art .num{font-family:var(--b-mono);font-size:12px;fill:currentColor}
+  .art .note{font-family:var(--b-hand);font-size:25px;font-weight:600;fill:currentColor}
+  @media (max-width:700px){
+    :root{--cols:3;--row:76px}
+    .cells>:nth-child(2),.cells>:nth-child(4),.cells>:nth-child(5){display:none}
+  }
+</style>
+<script>document.addEventListener("DOMContentLoaded",function(){
+  if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+  document.querySelectorAll(".draw path").forEach(function(p){var L=Math.ceil(p.getTotalLength())+2;
+    p.style.strokeDasharray=L;p.style.strokeDashoffset=L});
+  document.documentElement.classList.add("b-anim");
+});</script>
+<!-- BRAND:END -->
+<style>
+  :root{--ink:#000;--paper:#fff;--ink2:rgba(0,0,0,.6);--gut:clamp(20px,4vw,48px)}
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);font-family:var(--grot);font-weight:500;letter-spacing:-.01em;
-    line-height:1.5;-webkit-font-smoothing:antialiased}
+  body{background:var(--paper);color:var(--ink);font-family:var(--b-grot);font-weight:500;letter-spacing:-.01em;
+    line-height:1.45;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  .eyebrow{font-family:var(--mono);font-size:12px;text-transform:uppercase;font-weight:400;letter-spacing:0}
-  .hero{background:var(--ink);color:#fff;padding:18px var(--gut) 64px}
-  .topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:clamp(60px,16vh,150px)}
-  .brandchip{background:#fff;color:var(--ink);font-weight:700;font-size:20px;letter-spacing:-.03em;padding:4px 10px 6px}
-  .langbtn{background:#fff;color:var(--ink);border:none;padding:8px 14px;font-family:var(--mono);font-size:13px;cursor:pointer}
-  h1{font-size:clamp(44px,11vw,140px);line-height:.9;margin:12px 0 26px;letter-spacing:-.055em;font-weight:500;text-wrap:balance}
-  .sub{font-size:clamp(16px,1.5vw,20px);max-width:56ch;margin:0;line-height:1.35}
-  .grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
-  .card{display:flex;flex-direction:column;padding:34px var(--gut) 40px;min-height:min(60vh,560px);position:relative;
-    transition:filter .15s}
-  .card+.card{border-left:1px solid var(--line)}
-  .card:hover{filter:brightness(.96)}
-  .card .eyebrow{display:flex;justify-content:space-between}
-  .card h2{font-size:clamp(34px,5vw,64px);letter-spacing:-.05em;line-height:.95;margin:clamp(40px,8vh,90px) 0 16px;font-weight:500}
-  .card p{margin:0;max-width:44ch;font-size:15px;line-height:1.45}
-  .card dl{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:auto 0 0;padding-top:34px}
-  .card dt{font-size:clamp(26px,3vw,40px);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
-  .card dd{margin:6px 0 0;font-family:var(--mono);font-size:10px;text-transform:uppercase;color:rgba(0,0,0,.6);line-height:1.4}
-  .card .go{margin-top:28px;display:inline-block;background:var(--ink);color:#fff;padding:14px 26px;font-size:15px;align-self:flex-start}
-  .card.clifton{background:var(--lav)}
-  .card.ennea{background:var(--sage)}
-  .strand{display:flex;gap:2px;height:14px}
-  .strand i{flex:1;display:block}
-  .foot{padding:26px var(--gut) 60px;font-size:14px;color:var(--ink2);max-width:70ch}
-  .foot a{text-decoration:underline;text-underline-offset:3px}
-  @media (max-width:700px){.grid{grid-template-columns:1fr}.card+.card{border-left:none;border-top:1px solid var(--line)}}
+  .eyebrow{font-family:var(--b-mono);font-size:12px;font-weight:400;letter-spacing:0;text-transform:uppercase}
+  .langbtn{position:fixed;top:9px;right:12px;z-index:10;background:var(--paper);color:var(--ink);border:none;
+    padding:8px 13px;font-family:var(--b-mono);font-size:12px;cursor:pointer}
+  .langbtn:focus-visible,.test:focus-visible{outline:3px solid var(--b-blu);outline-offset:-3px}
+
+  /* hero */
+  .hero{background-color:var(--b-ink);color:var(--paper)}
+  .herogrid{display:grid;grid-template-columns:repeat(var(--cols),1fr);padding:clamp(56px,11vh,120px) 0 clamp(48px,8vh,88px);position:relative}
+  .herotext{grid-column:2/6;padding:0 14px}
+  h1{font-size:clamp(52px,9.6vw,150px);line-height:.88;letter-spacing:-.06em;font-weight:500;margin:18px 0 30px}
+  h1 .acc{color:var(--b-lav)}
+  .sub{font-size:clamp(17px,1.6vw,22px);line-height:1.32;max-width:34ch;margin:0}
+  .meta{margin:22px 0 0;color:rgba(255,255,255,.6)}
+  .herohand{position:absolute;right:calc(100% / var(--cols) * .55);bottom:clamp(30px,6vh,64px);width:clamp(90px,10vw,150px);
+    color:var(--b-org);transform:rotate(78deg)}
+
+  /* "+" band — the two tests side by side */
+  .pair{display:grid;grid-template-columns:1fr auto 1fr;border-bottom:1px solid var(--ink)}
+  .pair>div{padding:18px var(--gut);display:flex;flex-direction:column;justify-content:center}
+  .pair b{font-size:clamp(20px,2.2vw,30px);letter-spacing:-.03em;font-weight:500;line-height:1.05}
+  .pair span{font-family:var(--b-mono);font-size:11px;text-transform:uppercase;margin-top:6px}
+  .pair .p1{background:var(--paper)}
+  .pair .p2{background:var(--b-org);color:var(--ink);align-items:center;padding:0 clamp(18px,3vw,34px)}
+  .pair .p2 svg{width:clamp(30px,3vw,46px);color:var(--ink)}
+  .pair .p3{background:var(--b-ink);color:var(--paper)}
+
+  /* the two tests */
+  .tests{display:grid;grid-template-columns:1fr 1fr}
+  .test{position:relative;display:flex;flex-direction:column;min-height:clamp(620px,92vh,860px);transition:filter .15s}
+  .test:hover{filter:brightness(.97)}
+  .test+.test{border-left:1px solid var(--ink)}
+  .test.org{background-color:var(--b-org)}
+  .test.lav{background-color:var(--b-lav)}
+  .test .tbody{display:flex;flex-direction:column;flex:1;padding:clamp(28px,5vh,52px) 0 clamp(32px,5vh,48px)}
+  .test .tart{width:min(82%,440px);margin:0 auto clamp(18px,4vh,40px) calc(100% / var(--cols) * .5)}
+  .test.lav .tart{width:min(74%,380px)}
+  .test .ttext{padding:0 calc(100% / var(--cols) * .5 + 0px) 0 calc(100% / var(--cols) * .5)}
+  .test h2{font-size:clamp(38px,4.6vw,72px);line-height:.92;letter-spacing:-.055em;font-weight:500;margin:0 0 16px}
+  .test p{margin:0;max-width:38ch;font-size:clamp(15px,1.2vw,17px);line-height:1.4}
+  .test dl{display:grid;grid-template-columns:repeat(3,1fr);margin:28px 0 0;border-top:1px solid var(--ink)}
+  .test dl>div{padding:14px 12px 0 0}
+  .test dl>div+div{padding-left:12px;border-left:1px solid var(--ink)}
+  .test dt{font-size:clamp(28px,2.8vw,42px);letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
+  .test dd{margin:6px 0 0;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;line-height:1.35}
+  .test .go{display:inline-block;margin-top:30px;background:var(--ink);color:var(--paper);padding:15px 26px;font-size:15px}
+  .test:hover .go{background:#222}
+
+  .cells .span2{grid-column:span 2}
+  @media (max-width:700px){.cells .span2{grid-column:span 2}}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 30px;padding:22px var(--gut) 50px;
+    border-top:1px solid var(--ink);color:var(--ink2);font-size:13px}
+  .foot a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+  @media (max-width:1000px){.herotext{grid-column:1/-1;padding:0 var(--gut)}.herohand{display:none}}
+  @media (max-width:860px){
+    .tests{grid-template-columns:1fr}.test+.test{border-left:none;border-top:1px solid var(--ink)}
+    .test{min-height:0}
+  }
+  @media (max-width:700px){
+    .pair{grid-template-columns:1fr}.pair .p2{padding:10px 0;flex-direction:row}
+    .test .tart{margin-left:var(--gut);width:min(80%,360px)}
+    .test .ttext{padding:0 var(--gut)}
+  }
 </style>
 </head>
 <body>
-<header class="hero">
-  <div class="topline"><span class="brandchip">PT 26</span><button class="langbtn" id="langBtn">RU</button></div>
-  <div class="eyebrow" data-i="eyebrow"></div>
-  <h1 data-i="title"></h1>
-  <p class="sub" data-i="sub"></p>
+<button class="langbtn" id="langBtn" aria-label="Switch language">RU</button>
+
+<header class="hero gridbg on-dark">
+  <nav class="cells"><span>Psych Tests</span><span data-i="cell2"></span><span data-i="cell3"></span><span data-i="cell4"></span><span></span><span></span></nav>
+  <div class="herogrid">
+    <div class="herotext">
+      <div class="eyebrow" data-i="eyebrow"></div>
+      <h1 data-h="title"></h1>
+      <p class="sub" data-i="sub"></p>
+      <p class="meta eyebrow" data-i="meta"></p>
+    </div>
+    <svg class="sc draw herohand" viewBox="0 0 110 46" aria-hidden="true" style=""><path d="M4 40 C26 10 62 4 104 14"/><path d="M90 4 L105 14 L92 26"/></svg>
+  </div>
 </header>
 
-<div class="grid">
-  <a class="card clifton" href="clifton/">
-    <div class="eyebrow"><span data-i="c1e"></span><span>01</span></div>
-    <h2 data-i="c1t"></h2>
-    <p data-i="c1p"></p>
-    <dl><div><dt>177</dt><dd data-i="c1a"></dd></div><div><dt>34</dt><dd data-i="c1b"></dd></div><div><dt>20s</dt><dd data-i="c1c"></dd></div></dl>
-    <span class="go" data-i="go"></span>
-  </a>
-  <a class="card ennea" href="enneagram/">
-    <div class="eyebrow"><span data-i="c2e"></span><span>02</span></div>
-    <h2 data-i="c2t"></h2>
-    <p data-i="c2p"></p>
-    <dl><div><dt>144</dt><dd data-i="c2a"></dd></div><div><dt>9</dt><dd data-i="c2b"></dd></div><div><dt>+18</dt><dd data-i="c2c"></dd></div></dl>
-    <span class="go" data-i="go"></span>
-  </a>
+<div class="pair">
+  <div class="p1"><b data-i="p1"></b><span data-i="p1s"></span></div>
+  <div class="p2"><svg class="sc draw" viewBox="0 0 62 62" aria-hidden="true" style=""><path d="M30 4 C31 22 30 40 31 58"/><path d="M4 31 C22 30 40 31 58 30"/></svg></div>
+  <div class="p3"><b data-i="p2"></b><span data-i="p2s"></span></div>
 </div>
-<div class="strand" aria-hidden="true"><i style="background:var(--lav)"></i><i style="background:var(--org)"></i><i style="background:var(--blu)"></i><i style="background:var(--sage)"></i></div>
-<p class="foot" data-i="foot"></p>
+
+<main class="tests">
+  <a class="test org gridbg" href="clifton/">
+    <div class="cells"><span class="span2" data-i="c1k"></span><span data-i="c1m"></span><span></span><span></span><span>01</span></div>
+    <div class="tbody">
+      <div class="tart"><svg class="art" viewBox="-14 0 372 236" role="img" aria-label="34 talents ranked, top five circled"><line x1="0" y1="214.5" x2="356" y2="214.5" stroke="currentColor" stroke-width="1"/><rect x="12" y="29.0" width="6.4" height="185.0" fill="currentColor"/><rect x="22" y="40.3" width="6.4" height="173.7" fill="currentColor"/><rect x="32" y="40.5" width="6.4" height="173.5" fill="currentColor"/><rect x="42" y="53.6" width="6.4" height="160.4" fill="currentColor"/><rect x="52" y="54.8" width="6.4" height="159.2" fill="currentColor"/><rect x="62" y="87.4" width="6.4" height="126.6" fill="currentColor" opacity=".3"/><rect x="72" y="88.3" width="6.4" height="125.7" fill="currentColor" opacity=".3"/><rect x="82" y="91.7" width="6.4" height="122.3" fill="currentColor" opacity=".3"/><rect x="92" y="101.1" width="6.4" height="112.9" fill="currentColor" opacity=".3"/><rect x="102" y="102.6" width="6.4" height="111.4" fill="currentColor" opacity=".3"/><rect x="112" y="111.9" width="6.4" height="102.1" fill="currentColor" opacity=".3"/><rect x="122" y="113.4" width="6.4" height="100.6" fill="currentColor" opacity=".3"/><rect x="132" y="117.4" width="6.4" height="96.6" fill="currentColor" opacity=".3"/><rect x="142" y="124.8" width="6.4" height="89.2" fill="currentColor" opacity=".3"/><rect x="152" y="126.1" width="6.4" height="87.9" fill="currentColor" opacity=".3"/><rect x="162" y="135.0" width="6.4" height="79.0" fill="currentColor" opacity=".3"/><rect x="172" y="137.1" width="6.4" height="76.9" fill="currentColor" opacity=".3"/><rect x="182" y="144.2" width="6.4" height="69.8" fill="currentColor" opacity=".3"/><rect x="192" y="145.2" width="6.4" height="68.8" fill="currentColor" opacity=".3"/><rect x="202" y="152.2" width="6.4" height="61.8" fill="currentColor" opacity=".3"/><rect x="212" y="154.8" width="6.4" height="59.2" fill="currentColor" opacity=".3"/><rect x="222" y="161.6" width="6.4" height="52.4" fill="currentColor" opacity=".3"/><rect x="232" y="162.4" width="6.4" height="51.6" fill="currentColor" opacity=".3"/><rect x="242" y="169.0" width="6.4" height="45.0" fill="currentColor" opacity=".3"/><rect x="252" y="171.2" width="6.4" height="42.8" fill="currentColor" opacity=".3"/><rect x="262" y="176.8" width="6.4" height="37.2" fill="currentColor" opacity=".3"/><rect x="272" y="178.0" width="6.4" height="36.0" fill="currentColor" opacity=".3"/><rect x="282" y="184.2" width="6.4" height="29.8" fill="currentColor" opacity=".3"/><rect x="292" y="185.9" width="6.4" height="28.1" fill="currentColor" opacity=".3"/><rect x="302" y="190.9" width="6.4" height="23.1" fill="currentColor" opacity=".3"/><rect x="312" y="192.3" width="6.4" height="21.7" fill="currentColor" opacity=".3"/><rect x="322" y="195.9" width="6.4" height="18.1" fill="currentColor" opacity=".3"/><rect x="332" y="197.6" width="6.4" height="16.4" fill="currentColor" opacity=".3"/><rect x="342" y="200.2" width="6.4" height="13.8" fill="currentColor" opacity=".3"/><g class="sc draw"><path d="M30 10 C66 6 74 52 72 112 C70 172 66 226 34 226 C4 226 -4 176 -2 114 C0 54 6 14 46 14"/><path d="M150 46 C122 40 102 48 84 64"/><path d="M92 54 L83 65 L97 68"/></g><text class="note" x="156" y="54" data-i="c1n">your top 5</text></svg></div>
+      <div class="ttext">
+        <h2 data-h="c1t"></h2>
+        <p data-i="c1p"></p>
+        <dl><div><dt>34</dt><dd data-i="c1a"></dd></div><div><dt>4</dt><dd data-i="c1b"></dd></div><div><dt>5</dt><dd data-i="c1c"></dd></div></dl>
+        <span class="go" data-i="go1"></span>
+      </div>
+    </div>
+  </a>
+  <a class="test lav gridbg" href="enneagram/">
+    <div class="cells"><span class="span2" data-i="c2k"></span><span data-i="c2m"></span><span></span><span></span><span>02</span></div>
+    <div class="tbody">
+      <div class="tart"><svg class="art" viewBox="0 0 340 330" role="img" aria-label="The Enneagram figure, one point circled"><circle cx="170" cy="168" r="118" fill="none" stroke="currentColor" stroke-width="1"/><g stroke="currentColor" stroke-width="1" opacity=".55"><line x1="245.8" y1="77.6" x2="210.4" y2="278.9"/><line x1="210.4" y1="278.9" x2="286.2" y2="147.5"/><line x1="286.2" y1="147.5" x2="94.2" y2="77.6"/><line x1="94.2" y1="77.6" x2="129.6" y2="278.9"/><line x1="129.6" y1="278.9" x2="53.8" y2="147.5"/><line x1="53.8" y1="147.5" x2="245.8" y2="77.6"/><line x1="272.2" y1="227.0" x2="67.8" y2="227.0"/><line x1="67.8" y1="227.0" x2="170.0" y2="50.0"/><line x1="170.0" y1="50.0" x2="272.2" y2="227.0"/></g><circle cx="245.8" cy="77.6" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><circle cx="286.2" cy="147.5" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="272.2" cy="227.0" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="210.4" cy="278.9" r="10" fill="var(--b-paper)" stroke="currentColor" stroke-width="1.5"/><circle cx="129.6" cy="278.9" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="67.8" cy="227.0" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="53.8" cy="147.5" r="10" fill="var(--b-blu)" stroke="currentColor" stroke-width="1.5"/><circle cx="94.2" cy="77.6" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><circle cx="170.0" cy="50.0" r="10" fill="var(--b-org)" stroke="currentColor" stroke-width="1.5"/><text class="num" x="262.6" y="61.7" text-anchor="middle">1</text><text class="num" x="311.8" y="147.0" text-anchor="middle">2</text><text class="num" x="294.7" y="244.0" text-anchor="middle">3</text><text class="num" x="219.3" y="307.3" text-anchor="middle">4</text><text class="num" x="120.7" y="307.3" text-anchor="middle">5</text><text class="num" x="45.3" y="244.0" text-anchor="middle">6</text><text class="num" x="28.2" y="147.0" text-anchor="middle">7</text><text class="num" x="77.4" y="61.7" text-anchor="middle">8</text><text class="num" x="170.0" y="28.0" text-anchor="middle">9</text><g class="sc draw"><path d="M166 18 C200 16 204 62 178 72 C148 80 134 46 146 28 C156 16 176 14 188 22"/><path d="M260 28 C242 20 224 20 208 28"/><path d="M214 18 L207 28 L219 33"/></g><text class="note" x="266" y="34" data-i="c2n">you?</text></svg></div>
+      <div class="ttext">
+        <h2 data-h="c2t"></h2>
+        <p data-i="c2p"></p>
+        <dl><div><dt>9</dt><dd data-i="c2a"></dd></div><div><dt>3</dt><dd data-i="c2b"></dd></div><div><dt>1</dt><dd data-i="c2c"></dd></div></dl>
+        <span class="go" data-i="go2"></span>
+      </div>
+    </div>
+  </a>
+</main>
+
+<footer class="foot"><span data-i="foot"></span><a href="brand/" data-i="brand"></a></footer>
 
 <script>
 const STR={
-en:{eyebrow:"Self-hosted · unofficial reconstructions",title:"Psych Tests",
-  sub:"Personality assessments rebuilt from their public mechanics, with original statements. Results stay in your browser; export JSON to analyse with Claude.",
-  c1e:"34 talent themes",c1t:"Strengths Profiler",
-  c1p:"Paired statements under a 20-second clock rank all 34 talent themes across four domains. Top-10 in detail, domain balance, composed closing summary.",
-  c1a:"paired statements",c1b:"talent themes",c1c:"per item",
-  c2e:"9 types · instincts",c2t:"Enneagram Profiler",
-  c2p:"144 balanced pairs rank the nine types; a short second part ranks your instincts. Type, wing, tritype, stress and growth arrows, instinct stack.",
-  c2a:"paired statements",c2b:"types",c2c:"instinct pairs",
-  go:"Open the test →",
-  foot:"Not affiliated with Gallup or the Enneagram Institute. Everything runs locally in a single HTML file per test; attempts are stored in your browser only."},
-ru:{eyebrow:"Самостоятельный хостинг · неофициальные реконструкции",title:"Психологические тесты",
-  sub:"Личностные тесты, воссозданные по открытой механике, с оригинальными формулировками. Результаты остаются в браузере; JSON можно выгрузить для разбора с Claude.",
-  c1e:"34 таланта",c1t:"Профиль сильных сторон",
-  c1p:"Парные утверждения с таймером 20 секунд ранжируют все 34 таланта по четырём доменам. Топ-10 подробно, баланс доменов, собранное заключение.",
-  c1a:"парных утверждений",c1b:"таланта",c1c:"на вопрос",
-  c2e:"9 типов · инстинкты",c2t:"Профиль эннеаграммы",
-  c2p:"144 сбалансированные пары ранжируют девять типов; короткая вторая часть — инстинкты. Тип, крыло, тритип, стрелки стресса и роста, стек инстинктов.",
-  c2a:"парных утверждения",c2b:"типов",c2c:"пар на инстинкт",
-  go:"Открыть тест →",
-  foot:"Не связано с Gallup и Enneagram Institute. Всё работает локально, один HTML-файл на тест; попытки хранятся только в вашем браузере."}};
+en:{cell2:"Two tests",cell3:"Free",cell4:"No sign-up",
+  eyebrow:"Two free tests · about 25 minutes each",
+  title:'See how<br>you’re <span class="acc">wired.</span>',
+  sub:"Two tests that make you choose — and in choosing, show what you actually lean on at work and in life.",
+  meta:"No sign-up · Your answers never leave this browser",
+  p1:"Strengths",p1s:"what you’re best at",p2:"Enneagram",p2s:"why you do what you do",
+  c1k:"Test 01 · Strengths",c1m:"22–30 min",c1n:"your top 5",
+  c1t:'Strengths <span class="acc">Profiler</span>',
+  c1p:"Find the five talents you lean on without noticing — and the price each one quietly charges.",
+  c1a:"talents",c1b:"domains",c1c:"that define you",go1:"Take the strengths test →",
+  c2k:"Test 02 · Personality",c2m:"15–35 min",c2n:"you?",
+  c2t:'Enneagram <span class="acc">Profiler</span>',
+  c2p:"Not what you do — why you do it. Your type, the fear that drives it, and where you go under stress.",
+  c2a:"types",c2b:"instincts",c2c:"that is yours",go2:"Take the Enneagram test →",
+  foot:"Independent project · not affiliated with Gallup or the Enneagram Institute",brand:"Brand guidelines",
+  doc:"Psych Tests — see how you’re wired"},
+ru:{cell2:"Два теста",cell3:"Бесплатно",cell4:"Без регистрации",
+  eyebrow:"Два бесплатных теста · около 25 минут каждый",
+  title:'Узнайте,<br>как вы <span class="acc">устроены.</span>',
+  sub:"Два теста, в которых нужно выбирать, — и именно выбор показывает, на что вы на самом деле опираетесь в работе и жизни.",
+  meta:"Без регистрации · Ответы не покидают ваш браузер",
+  p1:"Сильные стороны",p1s:"в чём вы лучше всего",p2:"Эннеаграмма",p2s:"почему вы так поступаете",
+  c1k:"Тест 01 · Сильные стороны",c1m:"22–30 мин",c1n:"ваш топ-5",
+  c1t:'Профиль <span class="acc">сильных сторон</span>',
+  c1p:"Найдите пять талантов, на которые вы опираетесь не замечая, — и цену, которую каждый из них тихо берёт.",
+  c1a:"талантов",c1b:"домена",c1c:"главных — ваши",go1:"Пройти тест сильных сторон →",
+  c2k:"Тест 02 · Личность",c2m:"15–35 мин",c2n:"это вы?",
+  c2t:'Профиль <span class="acc">эннеаграммы</span>',
+  c2p:"Не что вы делаете, а почему. Ваш тип, страх, который им движет, и куда вас уводит стресс.",
+  c2a:"типов",c2b:"инстинкта",c2c:"из них — ваш",go2:"Пройти тест по эннеаграмме →",
+  foot:"Независимый проект · не связан с Gallup и Enneagram Institute",brand:"Брендбук",
+  doc:"Psych Tests — узнайте, как вы устроены"}};
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 let lang=lsGet("pt_lang")||((navigator.language||"").startsWith("ru")?"ru":"en");
-function apply(){document.documentElement.lang=lang;document.getElementById("langBtn").textContent=lang==="en"?"RU":"EN";
-  document.querySelectorAll("[data-i]").forEach(e=>e.textContent=STR[lang][e.dataset.i]);
-  document.title=lang==="ru"?"Психологические тесты":"Psych Tests — self-hosted personality assessments"}
+function apply(){const t=STR[lang];document.documentElement.lang=lang;
+  document.getElementById("langBtn").textContent=lang==="en"?"RU":"EN";
+  document.querySelectorAll("[data-i]").forEach(e=>e.textContent=t[e.dataset.i]);
+  document.querySelectorAll("[data-h]").forEach(e=>e.innerHTML=t[e.dataset.h]);
+  document.title=t.doc}
 document.getElementById("langBtn").onclick=()=>{lang=lang==="en"?"ru":"en";try{localStorage.setItem("pt_lang",lang)}catch(e){}apply()};
 apply();
 </script>
