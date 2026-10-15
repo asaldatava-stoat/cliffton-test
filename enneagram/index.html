@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Enneagram Profiler — not what you do, why you do it</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <!-- BRAND:START v2 — keep identical across pages; see /brand/ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -319,7 +322,7 @@
   .hero{background-color:var(--b-lav);padding:0;color:var(--ink)}
   .hero .cells .backlink{border:none;padding:0 12px;background:none;font-family:var(--b-mono);font-size:11px}
   .hero .cells .backlink:hover{background:none;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
-  .hero .cells .c2{grid-column:span 2}
+  .cells .c2{grid-column:span 2}
   .herogrid{display:grid;grid-template-columns:repeat(var(--cols),1fr);align-items:center;
     padding:clamp(44px,9vh,100px) 0 clamp(40px,7vh,84px)}
   .herotext{grid-column:2/5;padding:0 14px;min-width:0}
@@ -333,7 +336,7 @@
   @media (max-width:700px){
     .herotext{grid-column:1/-1;padding:0 var(--gut)}
     .heroart{grid-column:1/-1;padding:30px var(--gut) 0;max-width:420px}
-    .hero .cells .m1{grid-column:span 1}
+    .cells .m1{grid-column:span 1}
   }
 
   /* ---------- brand v2: start button in the hero ---------- */
@@ -482,6 +485,68 @@
     .glance{grid-template-columns:1fr}.glance>div+div{padding-left:0;border-left:none;border-top:1px solid var(--gl)}
     .lbar{flex-direction:column}.lbar span{width:auto!important}.lbar span+span{border-left:none;border-top:1px solid var(--ink)}
   }
+
+  /* ---------- brand v2: primer + test screen on the grid ---------- */
+  .btn.xl{font-size:18px;padding:22px 38px;border-radius:0}
+  #primer,#test{margin-left:calc(50% - 50vw + var(--sbw,0px)/2);margin-right:calc(50% - 50vw + var(--sbw,0px)/2);
+    width:calc(100vw - var(--sbw,0px));background-color:var(--bg)}
+  #primer{padding:0 0 64px}
+  #primer .pbody{padding:clamp(36px,7vh,72px) calc(100% / var(--cols) + 14px) 0}
+  #primer h2{font-size:clamp(36px,4.6vw,68px);letter-spacing:-.055em;line-height:.95;margin:14px 0 30px}
+  #primer #pList{border-top:1px solid var(--ink);max-width:880px}
+  #primer .prule{grid-template-columns:56px 1fr;padding:16px 0;border-bottom:1px solid var(--gl);font-size:16px;background:var(--bg)}
+  #primer .scale.mini,#primer .minilbl{max-width:420px}
+  #primer #primerBtn{margin-top:34px}
+  #test{padding-top:0;min-height:100vh;min-height:100svh}
+  body.testing #test{margin-bottom:-22px}
+  #test .tcells .exitbtn{font-family:var(--b-mono);font-size:11px;text-transform:uppercase;color:var(--ink);text-align:left;padding:0 12px;height:100%}
+  #test .tcells .exitbtn:hover{color:var(--danger)}
+  #test .tcells #counter{font-variant-numeric:tabular-nums}
+  #test .progress{height:4px;background:var(--track)}
+  #test .progress i{background:var(--heart)}
+  #test .teststage{padding:clamp(28px,6vh,64px) calc(100% / var(--cols)) 32px;justify-content:center}
+  #test .partlbl{padding-left:14px}
+  #test .pair{gap:0}
+  #test .stmt{background:var(--bg);border:1px solid var(--ink);position:relative;font-size:clamp(20px,1.9vw,28px);
+    line-height:1.25;letter-spacing:-.035em;padding:48px 28px 32px;min-height:clamp(180px,28vh,280px);align-items:flex-start}
+  #test .stmt+.stmt{border-left:none}
+  #test .stmt.hot{background:var(--heart-soft)}
+  #test .stmt.picked{background:var(--heart)}
+  #test .stmt-badge{display:flex;position:absolute;top:14px;left:14px;width:24px;height:24px;align-items:center;justify-content:center;
+    border-radius:50%;background:var(--ink);color:var(--accent-ink);font-family:var(--b-mono);font-size:11px;font-weight:400}
+  #test .interlude{padding:clamp(40px,8vh,90px) calc(100% / var(--cols) + 14px)}
+  #test .interlude h2{font-size:clamp(40px,5vw,76px);letter-spacing:-.055em;line-height:.95}
+  #test .interlude p{font-size:18px;max-width:52ch}
+  #test .interlude .btn{font-size:18px;padding:22px 38px;border-radius:0}
+  @media (min-width:561px){
+    /* the answer scale closes the question box as a strip under both statements */
+    #test #scale{margin:0;padding:30px 28px 8px;border:1px solid var(--ink);border-top:none;border-bottom:none;background:var(--bg)}
+    #test #scale::before{left:40px;right:40px}
+    #test .dot{width:34px;height:34px;border-width:1.5px}
+    #test .dot.big{width:48px;height:48px}
+    #test .dot:hover{background:var(--heart-soft);transform:scale(1.08)}
+    #test .dot.sel{background:var(--ink)}
+    #test .keynums,#test .scalelabels{margin-left:0;margin-right:0;padding:0 28px;border:1px solid var(--ink);border-top:none;background:var(--bg)}
+    #test .keynums{border-bottom:none;padding-top:8px;margin-top:0}
+    #test .keynums span{width:34px}#test .keynums span:first-child,#test .keynums span:last-child{width:48px}
+    #test .scalelabels{margin-top:0;padding-top:10px;padding-bottom:20px}
+  }
+  @media (max-width:900px){
+    #test .teststage{padding-left:14px;padding-right:14px}
+    #primer .pbody{padding-left:14px;padding-right:14px}
+    #test .interlude{padding-left:14px;padding-right:14px}
+  }
+  @media (max-width:560px){
+    #test .tcells #counter{grid-column:span 2}
+    #primer .cells #pCell{white-space:normal;line-height:1.25}
+    #test .mobile-proposal{display:none!important}
+    #test .stmt{font-size:19px;padding:44px 18px 20px;min-height:0}
+    #test .stmt+.stmt{border-left:1px solid var(--ink);border-top:none}
+    #test .teststage{padding-top:18px}
+  }
+
+  body.part2 #test .stmt.picked{background:var(--inst)}
+  body.part2 #test .progress i{background:var(--inst)}
 </style>
 </head>
 <body>
@@ -511,7 +576,9 @@
   </section>
 
   <!-- ============ PRIMER ============ -->
-  <section id="primer" style="display:none">
+  <section id="primer" class="gridbg" style="display:none">
+    <nav class="cells"><span>Psych Tests</span><span></span><span class="c2 m1" id="pCell"></span><span></span><span></span></nav>
+    <div class="pbody">
     <div class="eyebrow" id="pEyebrow"></div>
     <h2 id="pTitle"></h2>
     <div id="pList"></div>
@@ -526,15 +593,13 @@
       <span class="primer-choice" data-v="1"><span class="answer-badge">B</span><span class="answer-label primer-answer-label"></span></span>
       <span class="primer-choice" data-v="2"><span class="answer-badge">B</span><span class="answer-label primer-answer-label"></span></span>
     </div>
-    <button class="btn" id="primerBtn" style="margin-top:30px"></button>
+    <button class="btn xl" id="primerBtn"></button>
+    </div>
   </section>
 
   <!-- ============ TEST ============ -->
-  <section id="test">
-    <div class="topbar">
-      <span class="eyebrow" id="counter">Item 1 of 72–144</span>
-      <button class="exitbtn" id="exitBtn">Exit</button>
-    </div>
+  <section id="test" class="gridbg">
+    <nav class="cells tcells"><button class="exitbtn" id="exitBtn">Exit</button><span>Psych Tests</span><span class="c2 m1" id="counter"></span><span id="tCell"></span><span></span></nav>
     <div class="progress"><i id="progBar"></i></div>
 
     <div class="teststage" id="stage">
@@ -2052,7 +2117,7 @@ function applyLang(){
   const t=T(); document.documentElement.lang=lang;
   $("langBtn").textContent= lang==="en"?"RU":"EN";
   $("backLink").textContent=T().back;
-  $("iEyebrow").textContent=t.eyebrow;$("iTitle").innerHTML=t.title;$("iCell").textContent=t.cell;$("iCellTime").textContent=t.cellTime;$("iArtNote").textContent=t.artNote;$("iLegal").textContent=t.legal;$("iSub").textContent=t.sub;
+  $("iEyebrow").textContent=t.eyebrow;$("iTitle").innerHTML=t.title;$("iCell").textContent=t.cell;$("tCell").textContent=t.cell;$("pCell").textContent=t.cell;$("iCellTime").textContent=t.cellTime;$("iArtNote").textContent=t.artNote;$("iLegal").textContent=t.legal;$("iSub").textContent=t.sub;
   $("iS1").textContent=t.s1;$("iS2").textContent=t.s2;$("iS4").textContent=t.s4;
   $("iDomLine").innerHTML=`<span class="lbl s3">${lang==="ru"?"Три центра — три цвета в отчёте":"Three centres — three colours in your report"}</span>`+
     Object.keys(CENTERS).map(c=>`<span class="c" style="background:var(${CENTERS[c].css})">${cName(c)} · ${CENTERS[c].types.join(" ")}</span>`).join("");
