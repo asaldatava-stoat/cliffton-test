@@ -391,6 +391,62 @@
     #history .hnote{align-self:center}
     .ifoot{padding:0 14px}
   }
+
+  /* ---------- brand v2: results ---------- */
+  #results{margin:0 calc(50% - 50vw + var(--sbw,0px)/2) -90px;width:calc(100vw - var(--sbw,0px));padding-top:0}
+  #results .rhero h1{font-size:clamp(44px,6.4vw,100px);line-height:.9;letter-spacing:-.058em;margin:16px 0 22px}
+  #results .rhero .sub{font-size:clamp(16px,1.4vw,19px);line-height:1.38;max-width:42ch;margin:0}
+  .rmeta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .rmeta .codechip{background:transparent;border:1px solid var(--ink);font-family:var(--b-mono);font-size:12px;padding:7px 10px}
+  .rmeta .codechip.solid{background:var(--ink);color:var(--accent-ink)}
+  .top5list{list-style:none;margin:24px 0 0;padding:0;border-top:1px solid var(--ink);max-width:560px}
+  .top5list li{display:grid;grid-template-columns:40px 1fr auto;align-items:baseline;gap:8px;padding:9px 0;
+    border-bottom:1px solid var(--ink);font-size:clamp(19px,1.7vw,24px);letter-spacing:-.03em;line-height:1.15}
+  .top5list .n,.top5list .p{font-family:var(--b-mono);font-size:12px;letter-spacing:0}
+  .top5list li.shaky .nm{border-bottom:1px dashed currentColor}
+  #results .heroart .ennea{max-width:440px;width:100%;overflow:visible;justify-self:auto}
+  #results .rbody{background:var(--bg)}
+  /* sections: label in the first grid column, content in the other five */
+  #results .sect{position:relative;margin:0;padding:24px 14px 48px calc(100% / var(--cols) + 14px);border-top:1px solid var(--ink);
+    background:linear-gradient(var(--gl),var(--gl)) calc(100% / var(--cols)) 0 / 1px 100% no-repeat}
+  #results .rbody>.sect:first-child{border-top:none}
+  #results .sect>.eyebrow{position:absolute;left:0;top:0;width:calc(100% / var(--cols));padding:26px 14px;margin:0;border:none;
+    font-size:11px;line-height:1.45}
+  #results .sect p{max-width:70ch}
+  #results .type-card,#results .theme-card{background:var(--dbg,var(--tint));border:none;border-top:4px solid var(--dc,var(--ink));
+    padding:20px 22px 24px;margin:0}
+  #results .type-card:not(.minor),#results .verdict,#results .zonenote{max-width:min(100%,920px)}
+  /* the core type reads like a spec sheet: label in a left gutter, text beside it */
+  #results .type-card:not(.minor) .blk{position:relative;margin-top:14px;padding:12px 0 0 172px;border-top:1px solid rgba(0,0,0,.12);
+    font-size:15px;line-height:1.5}
+  #results .type-card:not(.minor) .blk>b{position:absolute;left:0;top:14px;width:150px;margin:0;line-height:1.4}
+  #results .type-card .kv{gap:0 22px}
+  #results .type-card .kv .blk{padding-left:0}
+  #results .type-card .kv .blk>b{position:static;width:auto;margin-bottom:4px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  #results .stackbar{margin:0 0 10px;gap:0;height:22px}
+  #results .arrows,#results .cols3{gap:0;margin-top:0}
+  #results .arrow{border:1px solid var(--ink)}
+  #results .arrow+.arrow{border-left:none}
+  #results .verdict{padding:30px 34px;font-size:17px;line-height:1.6}
+  #results .ractions .row{margin:0;gap:8px}
+  #results .rnote{font-size:13px;color:var(--ink2);margin:16px 0 0}
+  #results .rnote.small{font-size:12px}
+  /* long names ("SX · One-to-one (sexual)", "Relationship Building") wrap instead of running into the bar */
+  #results .rankrow{grid-template-columns:34px minmax(170px,260px) 1fr 44px 36px}
+  #results .rankrow .name{white-space:normal;line-height:1.25}
+  @media (max-width:860px){.cards2{grid-template-columns:1fr}}
+  @media (max-width:700px){
+    #results .sect{padding:18px 14px 34px;background:none}
+    #results .sect>.eyebrow{position:static;width:auto;padding:0 0 14px}
+    #results .type-card:not(.minor) .blk{padding-left:0}
+    #results .type-card:not(.minor) .blk>b{position:static;width:auto;margin-bottom:4px}
+    #results .type-card,#results .theme-card{padding:16px 16px 20px}
+    #results .verdict{padding:22px 20px;font-size:16px}
+    .top5list li{grid-template-columns:32px 1fr auto}
+    #results .rankrow{grid-template-columns:24px minmax(0,1.2fr) 1fr 40px}
+    #results .rankrow .delta{display:none}
+  }
 </style>
 </head>
 <body>
@@ -1706,7 +1762,8 @@ function enneaSVG(a){
   if(a.wing)s+=line(a.top,a.wing,"wing");
   for(let n=1;n<=9;n++){
     const [x,y]=pos(n), r=5+pct[n]/100*13, C=CENTERS[centerOf(n)];
-    s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="var(${C.css})" stroke="${n===a.top?'var(--ink)':'none'}" stroke-width="2"/>`;
+    s+=`<circle cx="${x}" cy="${y}" r="${r}" fill="${C.css==="--heart"?"var(--b-paper)":`var(${C.css})`}" stroke="var(--ink)" stroke-width="${n===a.top?2.2:1.2}"/>`;
+    if(n===a.top){const q=r+11;s+=`<path class="sc" d="M${x-q*.2} ${y-q} C${x+q*1.1} ${y-q*1.05} ${x+q*1.15} ${y+q*.6} ${x+q*.2} ${y+q*.95} C${x-q} ${y+q*1.1} ${x-q*1.2} ${y-q*.2} ${x-q*.7} ${y-q*.75} C${x-q*.4} ${y-q*1.05} ${x+q*.3} ${y-q*1.1} ${x+q*.6} ${y-q*.85}"/>`}
     const [lx,ly]=[cx+(R+24)*Math.cos((-90+n*40)*Math.PI/180),cy+(R+24)*Math.sin((-90+n*40)*Math.PI/180)];
     s+=`<text x="${lx}" y="${ly+4}" text-anchor="middle">${n}</text>`;
   }
@@ -1753,33 +1810,38 @@ function renderResults(attemptIdx){
          <div class="blk"><b>${t.beliefsHdr}</b><ul class="beliefs">${P.beliefs.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
          <div class="blk"><b>${t.loveHdr}</b>${esc(P.love)}</div>
          ${wing?`<div class="blk"><b>${t.wingHdr} · ${wingKey} · ${wing[0]}</b>${wing[1]}</div>`:`<div class="blk"><b>${t.wingHdr}</b>${t.balanced}</div>`}`;
-    return `<div class="type-card ${minor?'minor':''}" style="--dc:var(${CC.css})">
+    return `<div class="type-card ${minor?'minor':''}" style="--dc:var(${CC.css});--dbg:var(${CC.soft})">
       <span class="chip">${cName(centerOf(r.n))} · ${t.rankWord} ${i+1} · ${r.pct.toFixed(0)}% · ${t.strongPicks}: ${r.strong}</span>
       <h3>${t.yourType(r.n)} — ${X.name}</h3>
       <div class="statline">${X.tag}</div>
       ${body}
     </div>`};
 
+  const RX=lang==="ru"?{cell:"Ваш результат",next:"Дальше"}:{cell:"Your result",next:"What next"};
+  const rdate=new Date(a.finished).toLocaleDateString(t.locale);
   let html=`
-    <div class="eyebrow">${t.attempt} ${attemptIdx+1} · ${new Date(a.finished).toLocaleString(t.locale)} · ${a.adaptive ? `${a.answered} ${t.answered} · ${t.adaptiveNote(a.typePairs)}` : `${a.answered}/${NALL} ${t.answered}`}</div>
-    <div class="headline">
-      <div>
-        <h2>${t.yourType(a.top)}<br>${TL.name}</h2>
-        <p class="muted" style="margin:10px 0 0;max-width:40ch">${TL.tag}</p>
-        <div class="codechips">
-          <span class="codechip solid">${typeCode(a)}</span>
-          <span class="codechip">${instCode}</span>
-          ${wing?`<span class="codechip">${wing[0]}</span>`:""}
-          <span class="codechip">${cName(centerOf(a.top))}</span>
+    <header class="masthead hero gridbg rhero">
+      <nav class="cells"><a class="backlink" href="../">${t.back}</a><span>Psych Tests</span><span class="c2 m1">${RX.cell}</span><span>${rdate}</span><span></span></nav>
+      <div class="herogrid">
+        <div class="herotext">
+          <div class="brand">${t.attempt} ${attemptIdx+1} · ${a.adaptive ? `${a.answered} ${t.answered} · ${t.adaptiveNote(a.typePairs)}` : `${a.answered}/${NALL} ${t.answered}`}</div>
+          <h1>${t.yourType(a.top)}<br><span class="acc">${TL.name}</span></h1>
+          <p class="sub">${TL.tag}</p>
+          <div class="rmeta">
+            <span class="codechip solid">${typeCode(a)}</span><span class="codechip">${instCode}</span>
+            ${wing?`<span class="codechip">${wing[0]}</span>`:""}<span class="codechip">${cName(centerOf(a.top))}</span>
+          </div>
         </div>
+        <figure class="heroart">${enneaSVG(a)}</figure>
       </div>
-      ${enneaSVG(a)}
-    </div>
-    <div class="stackbar">${a.centers.map(c=>`<i style="width:${c.share}%;background:var(${CENTERS[c.c].css})"></i>`).join("")}</div>
-    <div class="stacklegend">${a.centers.map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c.c].css})"></span>${cName(c.c)}&nbsp;${c.share.toFixed(0)}%</span>`).join("")}</div>
+    </header>
+    <div class="rbody">
+    <div class="sect"><span class="eyebrow">${t.centersHdr}</span>
+      <div class="stackbar">${a.centers.map(c=>`<i style="width:${c.share}%;background:var(${CENTERS[c.c].css})"></i>`).join("")}</div>
+      <div class="stacklegend">${a.centers.map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c.c].css})"></span>${cName(c.c)}&nbsp;${c.share.toFixed(0)}%</span>`).join("")}</div></div>
 
     <div class="sect"><span class="eyebrow">${t.coreHdr}</span>${card(a.types[0],0,false)}</div>
-    <div class="sect"><span class="eyebrow">${t.alsoHdr}</span>${card(a.types[1],1,true)}${card(a.types[2],2,true)}</div>
+    <div class="sect"><span class="eyebrow">${t.alsoHdr}</span><div class="cards2">${card(a.types[1],1,true)}${card(a.types[2],2,true)}</div></div>
 
     <div class="sect"><span class="eyebrow">${t.arrowsHdr}</span>
       <div class="arrows">
@@ -1826,15 +1888,17 @@ function renderResults(attemptIdx){
   ];
   html+=`</div></div>
     <div class="sect"><span class="eyebrow">${V.hdr}</span><div class="verdict">${paras.map(p=>`<p>${p}</p>`).join("")}</div></div>
-    <div class="row" style="margin-top:30px">
-      <button class="btn" id="copyBtn">${t.copy}</button>
-      <button class="btn2" id="dlBtn">${t.dl}</button>
-      <button class="btn2" id="pdfBtn">${t.pdf}</button>
-      <button class="btn2" id="againBtn">${t.again}</button>
-      <button class="btn2" id="homeBtn">${t.home}</button>
-    </div>
-    <p class="muted" style="font-size:13px;max-width:60ch">${t.copyNote}</p>
-    <p class="muted" style="font-size:12px;max-width:70ch;margin-top:22px">${t.source}</p>`;
+    <div class="sect ractions"><span class="eyebrow">${RX.next}</span>
+      <div class="row">
+        <button class="btn" id="copyBtn">${t.copy}</button>
+        <button class="btn2" id="dlBtn">${t.dl}</button>
+        <button class="btn2" id="pdfBtn">${t.pdf}</button>
+        <button class="btn2" id="againBtn">${t.again}</button>
+        <button class="btn2" id="homeBtn">${t.home}</button>
+      </div>
+      <p class="rnote">${t.copyNote}</p>
+      <p class="rnote small">${t.source}</p></div>
+    </div>`;
 
   $("test").style.display="none";$("intro").style.display="none";document.body.classList.remove("testing");
   const res=$("results");res.innerHTML=html;res.style.display="block";res.dataset.attempt=attemptIdx;window.scrollTo(0,0);

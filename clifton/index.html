@@ -404,6 +404,68 @@
     #history .hnote{align-self:center}
     .ifoot{padding:0 14px}
   }
+
+  /* ---------- brand v2: results ---------- */
+  #results .top5{grid-template-columns:1fr 1fr;gap:14px;margin:0}
+  #results .rlabel{font-family:var(--b-mono);font-size:12px;text-transform:uppercase;margin-top:22px}
+  #results .rlabel+h1{margin-top:8px}
+  #results .theme-card .blk>b+br{display:none}
+  #results .theme-card .blk>b{margin-bottom:3px}
+  @media (max-width:860px){#results .top5{grid-template-columns:1fr}}
+  #results{margin:0 calc(50% - 50vw + var(--sbw,0px)/2) -90px;width:calc(100vw - var(--sbw,0px));padding-top:0}
+  #results .rhero h1{font-size:clamp(44px,6.4vw,100px);line-height:.9;letter-spacing:-.058em;margin:16px 0 22px}
+  #results .rhero .sub{font-size:clamp(16px,1.4vw,19px);line-height:1.38;max-width:42ch;margin:0}
+  .rmeta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .rmeta .codechip{background:transparent;border:1px solid var(--ink);font-family:var(--b-mono);font-size:12px;padding:7px 10px}
+  .rmeta .codechip.solid{background:var(--ink);color:var(--accent-ink)}
+  .top5list{list-style:none;margin:24px 0 0;padding:0;border-top:1px solid var(--ink);max-width:560px}
+  .top5list li{display:grid;grid-template-columns:40px 1fr auto;align-items:baseline;gap:8px;padding:9px 0;
+    border-bottom:1px solid var(--ink);font-size:clamp(19px,1.7vw,24px);letter-spacing:-.03em;line-height:1.15}
+  .top5list .n,.top5list .p{font-family:var(--b-mono);font-size:12px;letter-spacing:0}
+  .top5list li.shaky .nm{border-bottom:1px dashed currentColor}
+  #results .heroart .ennea{max-width:440px;width:100%;overflow:visible;justify-self:auto}
+  #results .rbody{background:var(--bg)}
+  /* sections: label in the first grid column, content in the other five */
+  #results .sect{position:relative;margin:0;padding:24px 14px 48px calc(100% / var(--cols) + 14px);border-top:1px solid var(--ink);
+    background:linear-gradient(var(--gl),var(--gl)) calc(100% / var(--cols)) 0 / 1px 100% no-repeat}
+  #results .rbody>.sect:first-child{border-top:none}
+  #results .sect>.eyebrow{position:absolute;left:0;top:0;width:calc(100% / var(--cols));padding:26px 14px;margin:0;border:none;
+    font-size:11px;line-height:1.45}
+  #results .sect p{max-width:70ch}
+  #results .type-card,#results .theme-card{background:var(--dbg,var(--tint));border:none;border-top:4px solid var(--dc,var(--ink));
+    padding:20px 22px 24px;margin:0}
+  #results .type-card:not(.minor),#results .verdict,#results .zonenote{max-width:min(100%,920px)}
+  /* the core type reads like a spec sheet: label in a left gutter, text beside it */
+  #results .type-card:not(.minor) .blk{position:relative;margin-top:14px;padding:12px 0 0 172px;border-top:1px solid rgba(0,0,0,.12);
+    font-size:15px;line-height:1.5}
+  #results .type-card:not(.minor) .blk>b{position:absolute;left:0;top:14px;width:150px;margin:0;line-height:1.4}
+  #results .type-card .kv{gap:0 22px}
+  #results .type-card .kv .blk{padding-left:0}
+  #results .type-card .kv .blk>b{position:static;width:auto;margin-bottom:4px}
+  .cards2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  #results .stackbar{margin:0 0 10px;gap:0;height:22px}
+  #results .arrows,#results .cols3{gap:0;margin-top:0}
+  #results .arrow{border:1px solid var(--ink)}
+  #results .arrow+.arrow{border-left:none}
+  #results .verdict{padding:30px 34px;font-size:17px;line-height:1.6}
+  #results .ractions .row{margin:0;gap:8px}
+  #results .rnote{font-size:13px;color:var(--ink2);margin:16px 0 0}
+  #results .rnote.small{font-size:12px}
+  /* long names ("SX · One-to-one (sexual)", "Relationship Building") wrap instead of running into the bar */
+  #results .rankrow{grid-template-columns:34px minmax(170px,260px) 1fr 44px 36px}
+  #results .rankrow .name{white-space:normal;line-height:1.25}
+  @media (max-width:860px){.cards2{grid-template-columns:1fr}}
+  @media (max-width:700px){
+    #results .sect{padding:18px 14px 34px;background:none}
+    #results .sect>.eyebrow{position:static;width:auto;padding:0 0 14px}
+    #results .type-card:not(.minor) .blk{padding-left:0}
+    #results .type-card:not(.minor) .blk>b{position:static;width:auto;margin-bottom:4px}
+    #results .type-card,#results .theme-card{padding:16px 16px 20px}
+    #results .verdict{padding:22px 20px;font-size:16px}
+    .top5list li{grid-template-columns:32px 1fr auto}
+    #results .rankrow{grid-template-columns:24px minmax(0,1.2fr) 1fr 40px}
+    #results .rankrow .delta{display:none}
+  }
 </style>
 </head>
 <body>
@@ -1554,10 +1616,6 @@ function renderResults(attemptIdx){
   const domOrder=Object.keys(w).sort((x,y)=>w[y]-w[x]);
   const lead=domOrder[0];
 
-  const strand=a.ranking.map((r,i)=>{
-    const D=DOMAINS[themeById(r.id).dom];
-    return `${i===10?'<i class="gap"></i>':''}<i class="${i<10?'':'dim'}" style="--sc:var(${D.css})" title="${i+1}. ${locThemeById(r.id).name}"></i>`;
-  }).join("");
 
   /* Contested zone: the top-5 cut is a 5th-vs-6th call, and talents within CONTESTED_MARGIN
      points of 5th place swap across that line on about one retake in three. Mark them instead
@@ -1570,25 +1628,47 @@ function renderResults(attemptIdx){
     return `<div class="it ${i<10?'top':''} ${contested.has(r.id)?'shaky':''}" style="--dc:var(${D.css})">
       <span class="rk">${i+1}</span><span class="nm">${t.name}</span></div>`};
 
+  const RX=lang==="ru"?{cell:"Ваш результат",lead:"Ваш ведущий домен",balance:"Баланс доменов",overview:"Все 34 таланта",next:"Дальше"}
+                      :{cell:"Your result",lead:"Your lead domain",balance:"Domain balance",overview:"All 34 at a glance",next:"What next"};
+  /* headline = the domain name, last word as the one italic accent */
+  const dnw=domName(lead).split(" ");
+  const leadH1=(dnw.length>1?dnw.slice(0,-1).join(" ")+"<br>":"")+`<span class="acc">${dnw[dnw.length-1]}</span>`;
+  const rdate=new Date(a.finished).toLocaleDateString(T().locale);
+  /* the brand's ranked strand, drawn from this attempt's real scores */
+  const strandArt=()=>`<svg class="art" viewBox="-14 0 372 236" role="img" aria-label="34 talents ranked, top five circled">
+    <line x1="0" y1="214.5" x2="356" y2="214.5" stroke="currentColor" stroke-width="1"/>${a.ranking.map((r,i)=>{
+      const h=Math.max(6,r.pct/100*190);return `<rect x="${12+i*10}" y="${(214-h).toFixed(1)}" width="6.4" height="${h.toFixed(1)}" fill="currentColor"${i<5?"":' opacity=".3"'}/>`}).join("")}
+    <g class="sc"><path d="M30 10 C66 6 74 52 72 112 C70 172 66 226 34 226 C4 226 -4 176 -2 114 C0 54 6 14 46 14"/><path d="M150 46 C122 40 102 48 84 64"/><path d="M92 54 L83 65 L97 68"/></g>
+    <text class="note" x="156" y="54">${T().artNote}</text></svg>`;
   let html=`
-    <div class="eyebrow">${T().attempt} ${attemptIdx+1} · ${new Date(a.finished).toLocaleString(T().locale)} ·
-      ${a.adaptive ? `${a.answered} ${T().answered} · ${T().adaptiveNote(a.shown)}` : `${a.answered}/${PAIRS.length} ${T().answered}`}${a.timer?"":" · "+T().practice}</div>
-    <h2 style="font-size:34px;margin:14px 0 10px">${T().leadWith(domName(lead))}</h2>
-    <p class="muted" style="max-width:58ch;margin:0">${T().domBlurb[lead]}</p>
-    <div class="strand">${strand}</div>
-    <div class="stackbar">${domOrder.map(d=>`<i style="width:${(w[d]/wTot*100).toFixed(1)}%;background:var(${DOMAINS[d].css})"></i>`).join("")}</div>
-    <div class="stacklegend">${domOrder.map(d=>`<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}&nbsp;${(w[d]/wTot*100).toFixed(0)}%</span>`).join("")}</div>
+    <header class="masthead hero gridbg rhero">
+      <nav class="cells"><a class="backlink" href="../">${T().back}</a><span>Psych Tests</span><span class="c2 m1">${RX.cell}</span><span>${rdate}</span><span></span></nav>
+      <div class="herogrid">
+        <div class="herotext">
+          <div class="brand">${T().attempt} ${attemptIdx+1} · ${a.adaptive ? `${a.answered} ${T().answered} · ${T().adaptiveNote(a.shown)}` : `${a.answered}/${PAIRS.length} ${T().answered}`}${a.timer?"":" · "+T().practice}</div>
+          <div class="rlabel">${RX.lead}</div>
+          <h1>${leadH1}</h1>
+          <p class="sub">${T().domBlurb[lead]}</p>
+          <ol class="top5list">${a.ranking.slice(0,5).map((r,i)=>`<li class="${contested.has(r.id)?'shaky':''}"><span class="n">0${i+1}</span><span class="nm">${locThemeById(r.id).name}</span><span class="p">${r.pct.toFixed(0)}%</span></li>`).join("")}</ol>
+        </div>
+        <figure class="heroart">${strandArt()}</figure>
+      </div>
+    </header>
+    <div class="rbody">
+    <div class="sect"><span class="eyebrow">${RX.balance}</span>
+      <div class="stackbar">${domOrder.map(d=>`<i style="width:${(w[d]/wTot*100).toFixed(1)}%;background:var(${DOMAINS[d].css})"></i>`).join("")}</div>
+      <div class="stacklegend">${domOrder.map(d=>`<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}&nbsp;${(w[d]/wTot*100).toFixed(0)}%</span>`).join("")}</div></div>
 
-    <div class="cols2">
-      <div><div class="eyebrow" style="margin-bottom:10px">${T().strengthen}</div>
-        <div class="numlist">${a.ranking.slice(0,10).map((r,i)=>numItem(r,i)).join("")}</div></div>
-      <div><div class="eyebrow" style="margin-bottom:10px">${T().navigate}</div>
-        <div class="numlist">${a.ranking.slice(10).map((r,i)=>numItem(r,i+10)).join("")}</div></div>
-    </div>
-
-    <div class="zonenote"><b>${T().zoneHdr}</b>${contestedNames.length>1
-      ? T().zoneNote(contestedNames.slice(0,6).join(", ")+(contestedNames.length>6?T().andMore(contestedNames.length-6):""),CONTESTED_MARGIN)
-      : T().zoneClear(gap56)}</div>
+    <div class="sect"><span class="eyebrow">${RX.overview}</span>
+      <div class="cols2">
+        <div><div class="eyebrow" style="margin-bottom:10px">${T().strengthen}</div>
+          <div class="numlist">${a.ranking.slice(0,10).map((r,i)=>numItem(r,i)).join("")}</div></div>
+        <div><div class="eyebrow" style="margin-bottom:10px">${T().navigate}</div>
+          <div class="numlist">${a.ranking.slice(10).map((r,i)=>numItem(r,i+10)).join("")}</div></div>
+      </div>
+      <div class="zonenote"><b>${T().zoneHdr}</b>${contestedNames.length>1
+        ? T().zoneNote(contestedNames.slice(0,6).join(", ")+(contestedNames.length>6?T().andMore(contestedNames.length-6):""),CONTESTED_MARGIN)
+        : T().zoneClear(gap56)}</div></div>
 
     <div class="sect"><span class="eyebrow">${T().top10Hdr}</span>
     <div class="top5">`;
@@ -1658,14 +1738,16 @@ function renderResults(attemptIdx){
   html+=`</div></div>
     <div class="sect"><span class="eyebrow">${V.hdr}</span>
       <div class="verdict">${vParas.map(p=>`<p>${p}</p>`).join("")}</div></div>
-    <div class="row" style="margin-top:30px">
-      <button class="btn" id="copyBtn">${T().copy}</button>
-      <button class="btn2" id="dlBtn">${T().dl}</button>
-      <button class="btn2" id="pdfBtn">${T().pdf}</button>
-      <button class="btn2" id="againBtn">${T().again}</button>
-      <button class="btn2" id="homeBtn">${T().home}</button>
-    </div>
-    <p class="muted" style="font-size:13px;max-width:60ch">${T().copyNote}</p>`;
+    <div class="sect ractions"><span class="eyebrow">${RX.next}</span>
+      <div class="row">
+        <button class="btn" id="copyBtn">${T().copy}</button>
+        <button class="btn2" id="dlBtn">${T().dl}</button>
+        <button class="btn2" id="pdfBtn">${T().pdf}</button>
+        <button class="btn2" id="againBtn">${T().again}</button>
+        <button class="btn2" id="homeBtn">${T().home}</button>
+      </div>
+      <p class="rnote">${T().copyNote}</p></div>
+    </div>`;
 
   $("test").style.display="none";$("intro").style.display="none";
   document.body.classList.remove("testing");
