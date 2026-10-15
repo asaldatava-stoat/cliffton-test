@@ -466,6 +466,58 @@
     #results .rankrow{grid-template-columns:24px minmax(0,1.2fr) 1fr 40px}
     #results .rankrow .delta{display:none}
   }
+
+  /* ---------- deeper reads ---------- */
+  #results .lead{font-size:16px;line-height:1.5;margin:0 0 14px;max-width:62ch}
+  .dmapwrap{display:grid;grid-template-columns:minmax(330px,480px) 1fr;gap:64px;align-items:center;margin-top:26px}
+  .dmap{position:relative;display:grid;grid-template-columns:1fr 1fr;aspect-ratio:1;border:1px solid var(--ink);margin:22px 0 22px 100px}
+  .dmap .q{position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;border:.5px solid var(--ink);overflow:hidden}
+  .dmap .q i{position:absolute;inset:0}
+  .dmap .q b,.dmap .q span{position:relative;font-size:12px;line-height:1.2}
+  .dmap .q span{font-family:var(--b-mono);font-size:11px}
+  .dmap .q.tl,.dmap .q.tr{justify-content:flex-start}
+  .dmap .ax{position:absolute;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;white-space:nowrap}
+  .dmap .ax.t{top:-18px;left:50%;transform:translateX(-50%)}.dmap .ax.b{bottom:-18px;left:50%;transform:translateX(-50%)}
+  .dmap .ax.l{left:-6px;top:50%;transform:translate(-100%,-50%) rotate(0deg)}.dmap .ax.r{right:-6px;top:50%;transform:translate(100%,-50%)}
+  .dmap .dot{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px var(--bg);z-index:2}
+  .dmap .dot em{position:absolute;left:20px;top:-14px;font-size:22px;font-style:normal;white-space:nowrap}
+  .dmap .ax.l,.dmap .ax.r{max-width:none}
+  .combo{display:grid;grid-template-columns:minmax(300px,460px) 1fr;gap:32px;align-items:start}
+  .net{width:100%;height:auto;overflow:visible}
+  .net line.same{stroke:var(--ink);stroke-width:3.2}
+  .net line.cross{stroke:var(--ink);stroke-width:1;stroke-dasharray:4 4;opacity:.55}
+  .net .nn{font-family:var(--b-mono);font-size:11px}
+  .net .nl{font-size:11.5px;font-weight:500}
+  .netlegend{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;margin-top:8px}
+  .netlegend span{display:flex;align-items:center;gap:6px}
+  .netlegend i{display:inline-block;width:22px;height:0;border-top:3px solid var(--ink)}
+  .netlegend i.lc{border-top:1px dashed var(--ink)}
+  .pcards{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink)}
+  .pcard{padding:14px 16px 16px 0;border-bottom:1px solid var(--gl)}
+  .pcard:nth-child(even){padding-left:16px;border-left:1px solid var(--gl)}
+  .pcard .ptag{display:inline-block;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;padding:3px 6px;margin-bottom:8px;border:1px solid var(--ink)}
+  .pcard.same .ptag{background:var(--ink);color:var(--accent-ink)}
+  .pcard b{display:block;font-size:17px;letter-spacing:-.02em;margin-bottom:6px}
+  .pcard p{margin:0;font-size:14px;line-height:1.45}
+  .pcard .rnote{margin-top:8px}
+  .bot5{border-top:1px solid var(--ink)}
+  .brow{display:grid;grid-template-columns:44px minmax(150px,220px) 1fr;gap:12px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--gl);font-size:14px}
+  .brow .bk{font-family:var(--b-mono);font-size:12px;color:var(--ink2)}
+  .brow .bn{font-weight:500;display:flex;gap:8px;align-items:center}
+  .brow .bn i{width:10px;height:10px;background:var(--dc);flex:none}
+  .brow .bt{color:var(--ink2);line-height:1.45}
+  .slope{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:28px;align-items:start}
+  .slope svg{width:100%;height:auto}
+  .slope .sh{font-family:var(--b-mono);font-size:10px;text-transform:uppercase}
+  .slope .sk{font-family:var(--b-mono);font-size:11px}
+  .slope .sl{font-size:12px;font-weight:500}
+  @media (max-width:900px){.dmapwrap,.combo,.slope{grid-template-columns:1fr;gap:20px}.dmap{max-width:330px;margin-left:80px}}
+  @media (max-width:700px){
+    .pcards{grid-template-columns:1fr}.pcard:nth-child(even){padding-left:0;border-left:none}
+    .brow{grid-template-columns:32px 1fr}.brow .bt{grid-column:2}
+    .dmap{margin-left:auto;margin-right:auto;max-width:260px}
+    .dmap .ax.l,.dmap .ax.r{display:none}
+  }
 </style>
 </head>
 <body>
@@ -1640,6 +1692,118 @@ function renderResults(attemptIdx){
       const h=Math.max(6,r.pct/100*190);return `<rect x="${12+i*10}" y="${(214-h).toFixed(1)}" width="6.4" height="${h.toFixed(1)}" fill="currentColor"${i<5?"":' opacity=".3"'}/>`}).join("")}
     <g class="sc"><path d="M30 10 C66 6 74 52 72 112 C70 172 66 226 34 226 C4 226 -4 176 -2 114 C0 54 6 14 46 14"/><path d="M150 46 C122 40 102 48 84 64"/><path d="M92 54 L83 65 L97 68"/></g>
     <text class="note" x="156" y="54">${T().artNote}</text></svg>`;
+  /* ================= deeper reads — computed from this attempt only ================= */
+  const XT=lang==="ru"?{
+    axes:{act:"Действие",reflect:"Осмысление",tasks:"Задачи и идеи",people:"Люди"},
+    mapNote:"Простая карта вашего баланса доменов — подсказка для чтения, а не часть модели Gallup.",
+    leanH:{people:"Вы смещены к людям: ваши таланты лучше всего работают через других.",tasks:"Вы смещены к задачам и идеям: ваши таланты лучше всего работают с проблемами, планами и информацией.",mid:"Между людьми и задачами вы в балансе."},
+    leanV:{act:"И к действию: ваш вклад — двигать дело вперёд.",reflect:"И к осмыслению: ваш вклад — сначала понять, потом двигаться.",mid:"Между действием и осмыслением — тоже баланс."},
+    you:"вы",
+    combHdr:"Как сочетается ваш топ-5",
+    combIntro:(r,b)=>`Внутри топ-5 пар, которые усиливают друг друга (один домен): ${r}; пар-мостов между доменами: ${b}.`,
+    combMany:"В основном усиление: сфокусированный, глубокий профиль. Обратная сторона — перегиб, один и тот же ход дважды.",
+    combFew:"В основном мосты: разносторонний профиль, который покрывает разные виды работы. Обратная сторона — ни один режим не подстрахован вторым талантом.",
+    combEven:"Усиление и мосты примерно поровну: есть и глубина, и диапазон.",
+    reinforce:"Усиление",bridge:"Мост",
+    reinforceTxt:"Один домен — они усиливают друг друга. Следите, чтобы не перегнуть с одним и тем же.",
+    bridgeTxt:"Разные домены — вместе они покрывают больше, чем каждый по отдельности.",
+    legendR:"один домен — усиление",legendB:"разные домены — мост",
+    bottomHdr:"Ваши нижние пять",
+    bottomIntro:"Нижние таланты — не недостатки. Это места, где усилие обходится вам дороже всего. Не чините их — выстраивайте работу вокруг.",
+    leanOn:(n,k)=>`Опирайтесь на «${n}» (№${k}) — тот же домен, и он у вас сильный.`,
+    partner:n=>`Сильного таланта в этом домене нет: объединяйтесь с тем, у кого «${n}» наверху, или заведите простую рутину.`,
+    slopeHdr:"С прошлой попытки",
+    same5:k=>`Из вашего топ-5 совпадают с прошлой попыткой: ${k} из 5.`,
+    riser:(n,d)=>`Сильнее всех поднялся в топ-10: «${n}» (+${d}).`,
+    stable:"Таланты у границы топ-5 переходят туда-обратно между попытками — это нормально и не значит, что вы изменились.",
+    before:"было",now:"сейчас"
+  }:{
+    axes:{act:"Act",reflect:"Reflect",tasks:"Tasks & ideas",people:"People"},
+    mapNote:"A simple map of your domain balance — a reading aid, not part of Gallup’s model.",
+    leanH:{people:"You lean toward people: your talents do their best work through others.",tasks:"You lean toward tasks and ideas: your talents do their best work on problems, plans and information.",mid:"Between people and tasks you’re balanced."},
+    leanV:{act:"You also lean toward action: you contribute by moving things forward.",reflect:"You also lean toward reflection: you contribute by understanding before moving.",mid:"Between acting and reflecting you’re balanced too."},
+    you:"you",
+    combHdr:"How your top five combine",
+    combIntro:(r,b)=>`Inside your top five, pairs that reinforce each other (same domain): ${r}; pairs that bridge domains: ${b}.`,
+    combMany:"Mostly reinforcing: a focused, deep profile. The flip side is overuse — the same move made twice.",
+    combFew:"Mostly bridging: a versatile profile that covers different kinds of work. The flip side is that no single mode is backed up by a second talent.",
+    combEven:"Reinforcing and bridging pairs are roughly even: you have both depth and range.",
+    reinforce:"Reinforcing",bridge:"Bridging",
+    reinforceTxt:"Same domain — they amplify each other. Watch for doing too much of one thing.",
+    bridgeTxt:"Different domains — together they cover more ground than either alone.",
+    legendR:"same domain — reinforce",legendB:"different domains — bridge",
+    bottomHdr:"Your bottom five",
+    bottomIntro:"Your lowest talents aren’t flaws. They’re where effort costs you the most. Don’t fix them — build your work around them.",
+    leanOn:(n,k)=>`Lean on ${n} (#${k}) — same domain, and strong for you.`,
+    partner:n=>`No strong talent in this domain: partner with someone who leads with ${n}, or set up a simple routine.`,
+    slopeHdr:"Since your last attempt",
+    same5:k=>`${k} of your top five are the same as last time.`,
+    riser:(n,d)=>`Biggest climb into your top ten: ${n} (+${d}).`,
+    stable:"Talents near the top-five line move back and forth between attempts — that’s normal, not a change in you.",
+    before:"before",now:"now"
+  };
+  const tname=id=>locThemeById(id).name, tdom=id=>themeById(id).dom;
+
+  /* 1. domain map: where the weight of your ranking sits on two simple axes */
+  const sh=d=>w[d]/wTot;
+  const mxv=(sh("infl")+sh("rel"))-(sh("exec")+sh("strat")), myv=(sh("exec")+sh("infl"))-(sh("strat")+sh("rel"));
+  const clamp1=v=>Math.max(-1,Math.min(1,v));
+  const dotX=50+clamp1(mxv*3)*40, dotY=50-clamp1(myv*3)*40;
+  const leanH=mxv>.04?"people":mxv<-.04?"tasks":"mid", leanV=myv>.04?"act":myv<-.04?"reflect":"mid";
+  const quad=(d,pos)=>`<div class="q ${pos}"><i style="background:var(${DOMAINS[d].css});opacity:${(.18+sh(d)*2.2).toFixed(2)}"></i><b>${domName(d)}</b><span>${Math.round(sh(d)*100)}%</span></div>`;
+  const mapHTML=`<div class="dmapwrap"><div class="dmap">
+      <span class="ax t">${XT.axes.act}</span><span class="ax b">${XT.axes.reflect}</span><span class="ax l">${XT.axes.tasks}</span><span class="ax r">${XT.axes.people}</span>
+      ${quad("exec","tl")}${quad("infl","tr")}${quad("strat","bl")}${quad("rel","br")}
+      <span class="dot" style="left:${dotX.toFixed(1)}%;top:${dotY.toFixed(1)}%"><em class="hand">${XT.you}</em></span>
+    </div><div class="dmaptext"><p>${XT.leanH[leanH]} ${XT.leanV[leanV]}</p><p class="rnote">${XT.mapNote}</p></div></div>`;
+
+  /* 2. top-five network: same-domain pairs reinforce, cross-domain pairs bridge */
+  const t5=a.ranking.slice(0,5).map((r,i)=>({id:r.id,i,dom:tdom(r.id)}));
+  const pairs=[];for(let i=0;i<5;i++)for(let j=i+1;j<5;j++)pairs.push({i,j,same:t5[i].dom===t5[j].dom});
+  const nR=pairs.filter(x=>x.same).length, nB=10-nR;
+  const P5=t5.map((n,k)=>{const ang=(-90+k*72)*Math.PI/180;return [160+105*Math.cos(ang),140+105*Math.sin(ang)]});
+  const netSVG=`<svg class="net" viewBox="-78 0 476 290" role="img" aria-label="${XT.combHdr}">
+    ${pairs.map(x=>`<line x1="${P5[x.i][0].toFixed(1)}" y1="${P5[x.i][1].toFixed(1)}" x2="${P5[x.j][0].toFixed(1)}" y2="${P5[x.j][1].toFixed(1)}" class="${x.same?'same':'cross'}"/>`).join("")}
+    ${t5.map((n,k)=>{const [x,y]=P5[k],lx=160+(105+30)*Math.cos((-90+k*72)*Math.PI/180),ly=140+(105+26)*Math.sin((-90+k*72)*Math.PI/180);
+      return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="13" fill="var(${DOMAINS[n.dom].css})" stroke="var(--ink)" stroke-width="1.4"/>
+      <text class="nn" x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle">${k+1}</text>
+      <text class="nl" x="${lx.toFixed(1)}" y="${(ly+4).toFixed(1)}" text-anchor="${lx<150?'end':lx>170?'start':'middle'}">${tname(n.id)}</text>`}).join("")}</svg>`;
+  const F2=FRAG[lang]||FRAG.en;
+  const pick=[[0,1],[0,2],[1,2]].map(([i,j])=>pairs.find(x=>x.i===i&&x.j===j));
+  const extraR=pairs.find(x=>x.same&&!pick.includes(x)); if(extraR)pick.push(extraR);
+  const pairCard=x=>{const A=t5[x.i],B=t5[x.j];return `<div class="pcard ${x.same?'same':'cross'}">
+      <span class="ptag">${x.same?XT.reinforce:XT.bridge}</span><b>${tname(A.id)} + ${tname(B.id)}</b>
+      <p>${T().v.pair(tname(A.id),tname(B.id),F2[A.id].p,F2[B.id].c)}</p><p class="rnote">${x.same?XT.reinforceTxt:XT.bridgeTxt}</p></div>`};
+  const combosHTML=`<div class="sect"><span class="eyebrow">${XT.combHdr}</span>
+    <div class="combo"><div class="netbox">${netSVG}<div class="netlegend"><span><i class="ls"></i>${XT.legendR}</span><span><i class="lc"></i>${XT.legendB}</span></div></div>
+      <div><p class="lead">${XT.combIntro(nR,nB)} ${nR>=4?XT.combMany:nR<=1?XT.combFew:XT.combEven}</p>
+      <div class="pcards">${pick.map(pairCard).join("")}</div></div></div></div>`;
+
+  /* 3. bottom five: manage, don't fix — lean on a strong talent in the same domain, or partner */
+  const top10=a.ranking.slice(0,10).map((r,i)=>({id:r.id,k:i+1}));
+  const bottomHTML=`<div class="sect"><span class="eyebrow">${XT.bottomHdr}</span><p class="lead">${XT.bottomIntro}</p>
+    <div class="bot5">${a.ranking.slice(29).map((r,i)=>{const d=tdom(r.id),help=top10.find(x=>tdom(x.id)===d);
+      return `<div class="brow" style="--dc:var(${DOMAINS[d].css})"><span class="bk">${30+i}</span><span class="bn"><i></i>${tname(r.id)}</span>
+        <span class="bt">${help?XT.leanOn(tname(help.id),help.k):XT.partner(tname(r.id))}</span></div>`}).join("")}</div></div>`;
+
+  /* 4. since last attempt: slope chart of the current top ten */
+  let slopeHTML="", same5=null, riser=null;
+  if(prev){
+    const prevTop5=new Set(prev.ranking.slice(0,5).map(r=>r.id));
+    same5=a.ranking.slice(0,5).filter(r=>prevTop5.has(r.id)).length;
+    const rows=a.ranking.slice(0,10).map((r,i)=>({id:r.id,now:i+1,before:prevRank[r.id]||34}));
+    riser=rows.reduce((m,x)=>x.before-x.now>(m?m.before-m.now:0)?x:m,null);
+    const N=15,y=k=>22+(Math.min(k,N)-1)*19,cap=k=>k>N?`${N}+`:k;
+    slopeHTML=`<div class="sect"><span class="eyebrow">${XT.slopeHdr}</span><div class="slope">
+      <svg viewBox="0 0 420 ${y(N)+18}" role="img" aria-label="${XT.slopeHdr}">
+        <text class="sh" x="60" y="10" text-anchor="middle">${XT.before}</text><text class="sh" x="230" y="10" text-anchor="middle">${XT.now}</text>
+        ${rows.map(x=>`<line x1="74" y1="${y(x.before)}" x2="216" y2="${y(x.now)}" stroke="var(${DOMAINS[tdom(x.id)].css})" stroke-width="3"/>
+          <text class="sk" x="62" y="${y(x.before)+4}" text-anchor="end">${cap(x.before)}</text>
+          <circle cx="74" cy="${y(x.before)}" r="3.5" fill="var(--ink)"/><circle cx="216" cy="${y(x.now)}" r="3.5" fill="var(--ink)"/>
+          <text class="sl" x="228" y="${y(x.now)+4}">${x.now}. ${tname(x.id)}</text>`).join("")}
+      </svg><div><p class="lead">${XT.same5(same5)}${riser?" "+XT.riser(tname(riser.id),riser.before-riser.now):""}</p><p class="rnote">${XT.stable}</p></div></div></div>`;
+  }
+
   let html=`
     <header class="masthead hero gridbg rhero">
       <nav class="cells"><a class="backlink" href="../">${T().back}</a><span>Psych Tests</span><span class="c2 m1">${RX.cell}</span><span>${rdate}</span><span></span></nav>
@@ -1657,7 +1821,7 @@ function renderResults(attemptIdx){
     <div class="rbody">
     <div class="sect"><span class="eyebrow">${RX.balance}</span>
       <div class="stackbar">${domOrder.map(d=>`<i style="width:${(w[d]/wTot*100).toFixed(1)}%;background:var(${DOMAINS[d].css})"></i>`).join("")}</div>
-      <div class="stacklegend">${domOrder.map(d=>`<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}&nbsp;${(w[d]/wTot*100).toFixed(0)}%</span>`).join("")}</div></div>
+      <div class="stacklegend">${domOrder.map(d=>`<span><span class="swatch" style="background:var(${DOMAINS[d].css})"></span>${domName(d)}&nbsp;${(w[d]/wTot*100).toFixed(0)}%</span>`).join("")}</div>${mapHTML}</div>
 
     <div class="sect"><span class="eyebrow">${RX.overview}</span>
       <div class="cols2">
@@ -1687,6 +1851,7 @@ function renderResults(attemptIdx){
   });
 
   html+=`</div></div>
+    ${combosHTML}
     <div class="sect"><span class="eyebrow">${T().byDomain}</span>
     <div class="domgrid">${Object.keys(DOMAINS).map(d=>{
       const items=a.ranking.map((r,i)=>({r,i})).filter(x=>themeById(x.r.id).dom===d);
@@ -1694,6 +1859,7 @@ function renderResults(attemptIdx){
         ${items.map(x=>`<div class="tile ${x.i<10?'hot':'cold'}" style="--dc:var(${DOMAINS[d].css});--dbg:var(${DOMAINS[d].soft})"><span class="rk">${x.i+1}</span>${locThemeById(x.r.id).name}</div>`).join("")}</div>`;
     }).join("")}</div></div>
 
+    ${bottomHTML}
     <div class="sect"><span class="eyebrow">${T().fullRanking}</span><div class="ranklist">`;
 
   a.ranking.forEach((r,i)=>{
@@ -1736,6 +1902,7 @@ function renderResults(attemptIdx){
   ];
 
   html+=`</div></div>
+    ${slopeHTML}
     <div class="sect"><span class="eyebrow">${V.hdr}</span>
       <div class="verdict">${vParas.map(p=>`<p>${p}</p>`).join("")}</div></div>
     <div class="sect ractions"><span class="eyebrow">${RX.next}</span>
@@ -1763,6 +1930,10 @@ function renderResults(attemptIdx){
     closingSummary:vParas,
     report:{
       leadDomain:DOMAINS[lead].name,
+      domainMapLean:{horizontal:leanH,vertical:leanV},
+      topFivePairs:{reinforcing:nR,bridging:nB},
+      bottomFive:a.ranking.slice(29).map(r=>themeById(r.id).name),
+      sinceLastAttempt:prev?{sameInTopFive:same5,biggestClimb:riser?{theme:themeById(riser.id).name,by:riser.before-riser.now}:null}:null,
       domainDistribution:Object.fromEntries(domOrder.map(d=>[DOMAINS[d].name,+(w[d]/wTot*100).toFixed(1)])),
       contestedZone:{marginPoints:CONTESTED_MARGIN, talents:a.ranking.filter(r=>contested.has(r.id)).map(r=>themeById(r.id).name)},
       strengthen:a.ranking.slice(0,10).map(r=>themeById(r.id).name),

@@ -447,6 +447,41 @@
     #results .rankrow{grid-template-columns:24px minmax(0,1.2fr) 1fr 40px}
     #results .rankrow .delta{display:none}
   }
+
+  /* ---------- deeper reads ---------- */
+  #results .lead{font-size:16px;line-height:1.5;margin:0 0 18px;max-width:62ch}
+  .glance{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--ink);max-width:920px}
+  .glance>div{padding:16px 22px 6px 0}
+  .glance>div+div{padding-left:22px;border-left:1px solid var(--gl)}
+  .glance p{font-size:14px;line-height:1.45;margin:12px 0 0}
+  .glbl{font-family:var(--b-mono);font-size:11px;text-transform:uppercase;margin-bottom:12px}
+  .gauge{position:relative;display:flex;height:16px;border:1px solid var(--ink)}
+  .gauge i{display:block;height:100%}
+  .gauge .z0{width:20%;background:var(--body-soft)}.gauge .z1{width:20%;background:var(--heart-soft)}.gauge .z2{width:60%;background:var(--inst)}
+  .gauge b{position:absolute;top:-6px;width:3px;height:26px;margin-left:-1.5px;background:var(--ink)}
+  .gzones{display:grid;grid-template-columns:20% 20% 60%;font-family:var(--b-mono);font-size:10px;text-transform:uppercase;color:var(--ink2);margin-top:6px}
+  .gzones span:last-child{text-align:right}
+  .wingbal{display:grid;grid-template-columns:24px 1fr 34px 1fr 24px;align-items:center;gap:6px}
+  .wingbal .wl{font-family:var(--b-mono);font-size:12px;text-align:center}
+  .wingbal .wt{height:34px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--accent-ink);font-weight:500}
+  .wingbal .wb{height:16px;background:var(--soft);display:flex}
+  .wingbal .wb.l{justify-content:flex-end}
+  .wingbal .wb i{display:block;height:100%;background:var(--ink)}
+  .glance .gzones.wz{grid-template-columns:1fr 1fr 1fr}
+  .glance .gzones.wz span:nth-child(2){text-align:center}
+  .lens{border-top:1px solid var(--ink);padding:16px 0 4px;max-width:920px}
+  .lens p{font-size:14px;line-height:1.45;margin:12px 0 0}
+  .lbar{display:flex;border:1px solid var(--ink);min-height:56px}
+  .lbar span{display:flex;flex-direction:column;justify-content:center;padding:6px 10px;min-width:0;overflow:hidden;background:var(--bg)}
+  .lbar span+span{border-left:1px solid var(--ink)}
+  .lbar span.mine{background:var(--heart)}
+  .lbar b{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .lbar em{font-style:normal;font-family:var(--b-mono);font-size:10px;color:var(--ink2);white-space:nowrap}
+  #results .arrow .apct{display:block;margin-top:10px;font-family:var(--b-mono);font-size:11px;text-transform:uppercase;color:var(--ink2)}
+  @media (max-width:700px){
+    .glance{grid-template-columns:1fr}.glance>div+div{padding-left:0;border-left:none;border-top:1px solid var(--gl)}
+    .lbar{flex-direction:column}.lbar span{width:auto!important}.lbar span+span{border-left:none;border-top:1px solid var(--ink)}
+  }
 </style>
 </head>
 <body>
@@ -1817,6 +1852,73 @@ function renderResults(attemptIdx){
       ${body}
     </div>`};
 
+  /* ================= deeper reads — computed from this attempt only ================= */
+  const XE=lang==="ru"?{
+    glanceHdr:"Ясность типа и крыло",
+    clarityLbl:"Насколько ясен ваш тип",
+    zones:["близко","умеренно","ясно"],
+    clarity:(n,m,g)=>g>=8?`Ясно: тип ${n} опережает тип ${m} на ${g} пунктов.`:g>=4?`Умеренно: тип ${n} впереди на ${g} пунктов — прочитайте и описание типа ${m}.`:`Близко: всего ${g} пунктов — типы ${n} и ${m} почти на равных. Ваш — тот, чей базовый страх задевает сильнее.`,
+    wingLbl:"Баланс крыльев",
+    wingTxt:(w,o,pw,po)=>w?`Вы опираетесь на крыло ${w} (${pw}% против ${po}% у крыла ${o}).`:`Крылья уравновешены (${pw}% и ${po}%): вы берёте от обоих соседей.`,
+    lensHdr:"Ещё две оптики",
+    lensNote:"Группировки из социальных стилей Карен Хорни и гармонических групп Ризо и Хадсона. Полосы показывают, какая доля всего вашего профиля приходится на каждую группу.",
+    hornHdr:"Социальный стиль — как вы добиваетесь нужного",
+    harmHdr:"Стиль реакции — что вы делаете, когда всё идёт не так",
+    G:{assertive:["Напористый",[3,7,8],"Вы идёте навстречу тому, чего хотите: встречаете трудности напрямую и ждёте, что мир откликнется на вашу энергию."],
+       dutiful:["Долг",[1,2,6],"Вы движетесь вместе с ожиданиями: заслуживаете своё место тем, что поступаете правильно, полезно или ответственно, — а внутренний голос ведёт счёт."],
+       withdrawn:["Отстранённый",[4,5,9],"Чтобы получить нужное, вы делаете шаг назад: уходите внутрь, чтобы переработать происходящее, и другим порой приходится идти к вам."],
+       positive:["Позитивный взгляд",[2,7,9],"Когда что-то идёт не так, вы ищете светлую сторону и держите настроение. Риск — проскочить трудную часть."],
+       competency:["Компетентность",[1,3,5],"Когда что-то идёт не так, вы откладываете чувства и решаете задачу. Риск — чувства ждут слишком долго."],
+       reactive:["Эмоциональная честность",[4,6,8],"Когда что-то идёт не так, вы реагируете сразу и хотите, чтобы другие встретили вас в этом. Риск — разгореться раньше, чем проверены факты."]},
+    youAre:(a,b)=>`Ваш тип сочетает стиль «${a}» и реакцию «${b}».`,
+    inProfile:p=>`${p}% в вашем профиле`
+  }:{
+    glanceHdr:"Type clarity & wing",
+    clarityLbl:"How clear is your type",
+    zones:["close","moderate","clear"],
+    clarity:(n,m,g)=>g>=8?`Clear: Type ${n} leads Type ${m} by ${g} points.`:g>=4?`Moderate: Type ${n} is ${g} points ahead — read Type ${m} too.`:`Close: only ${g} points — Types ${n} and ${m} are nearly tied. Yours is the one whose core fear stings more.`,
+    wingLbl:"Wing balance",
+    wingTxt:(w,o,pw,po)=>w?`You lean on your ${w} wing (${pw}% vs ${po}% for the ${o} wing).`:`Your wings are balanced (${pw}% and ${po}%): you draw on both neighbours.`,
+    lensHdr:"Two more lenses",
+    lensNote:"Groupings from Karen Horney’s social styles and the Riso–Hudson harmonic groups. Bars show how much of your whole profile falls into each group.",
+    hornHdr:"Social style — how you go after what you need",
+    harmHdr:"Coping style — what you do when it doesn’t go your way",
+    G:{assertive:["Assertive",[3,7,8],"You move toward what you want: you meet problems head-on and expect the world to respond to your energy."],
+       dutiful:["Dutiful",[1,2,6],"You move with what’s expected: you earn your place by doing what’s right, helpful or responsible — and an inner voice keeps score."],
+       withdrawn:["Withdrawn",[4,5,9],"You step back to get what you need: you turn inward to process, and others sometimes have to come to you."],
+       positive:["Positive outlook",[2,7,9],"When things go wrong, you look for the bright side and keep spirits up. The risk is skipping the hard part."],
+       competency:["Competency",[1,3,5],"When things go wrong, you set feelings aside and solve the problem. The risk is that feelings wait too long."],
+       reactive:["Emotional realness",[4,6,8],"When things go wrong, you react first and want others to meet you there. The risk is escalating before the facts are in."]},
+    youAre:(a,b)=>`Your type combines the ${a} style with ${b} coping.`,
+    inProfile:p=>`${p}% of your profile`
+  };
+  const P9={}; a.types.forEach(r=>P9[r.n]=r.pct);
+  const fx=v=>Math.round(v);
+
+  /* 1. clarity gauge (lead over the runner-up, 0–20 pts) + wing balance */
+  const gapV=+(a.types[0].pct-a.types[1].pct).toFixed(1), gapPos=Math.min(gapV,20)/20*100;
+  const wlo=a.top===1?9:a.top-1, whi=a.top===9?1:a.top+1;
+  const glanceHTML=`<div class="sect"><span class="eyebrow">${XE.glanceHdr}</span><div class="glance">
+      <div><div class="glbl">${XE.clarityLbl}</div>
+        <div class="gauge"><i class="z0"></i><i class="z1"></i><i class="z2"></i><b style="left:${gapPos.toFixed(1)}%"></b></div>
+        <div class="gzones"><span>${XE.zones[0]}</span><span>${XE.zones[1]}</span><span>${XE.zones[2]}</span></div>
+        <p>${XE.clarity(a.types[0].n,a.types[1].n,fx(gapV))}</p></div>
+      <div><div class="glbl">${XE.wingLbl}</div>
+        <div class="wingbal"><span class="wl">${wlo}</span><span class="wb l"><i style="width:${P9[wlo]}%"></i></span><span class="wt">${a.top}</span><span class="wb r"><i style="width:${P9[whi]}%"></i></span><span class="wl">${whi}</span></div>
+        <div class="gzones wz"><span>${fx(P9[wlo])}%</span><span></span><span>${fx(P9[whi])}%</span></div>
+        <p>${a.wing?XE.wingTxt(a.wing,a.wing===wlo?whi:wlo,fx(P9[a.wing]),fx(P9[a.wing===wlo?whi:wlo])):XE.wingTxt(null,null,fx(P9[wlo]),fx(P9[whi]))}</p></div>
+    </div></div>`;
+
+  /* 2. two more lenses: Horney's social styles and the harmonic groups */
+  const lens=(keys,hdr)=>{const tot=keys.reduce((s,k)=>s+XE.G[k][1].reduce((t,n)=>t+P9[n],0),0)||1;
+    const mine=keys.find(k=>XE.G[k][1].includes(a.top));
+    return {mine,html:`<div class="lens"><div class="glbl">${hdr}</div><div class="lbar">${keys.map(k=>{const v=XE.G[k][1].reduce((t,n)=>t+P9[n],0)/tot*100;
+      return `<span class="${k===mine?'mine':''}" style="width:${v.toFixed(1)}%"><b>${XE.G[k][0]}</b><em>${XE.G[k][1].join(" ")} · ${fx(v)}%</em></span>`}).join("")}</div>
+      <p><b>${XE.G[mine][0]}.</b> ${XE.G[mine][2]}</p></div>`}};
+  const hornL=lens(["assertive","dutiful","withdrawn"],XE.hornHdr), harmL=lens(["positive","competency","reactive"],XE.harmHdr);
+  const lensesHTML=`<div class="sect"><span class="eyebrow">${XE.lensHdr}</span>
+    <p class="lead">${XE.youAre(XE.G[hornL.mine][0],XE.G[harmL.mine][0])}</p>${hornL.html}${harmL.html}<p class="rnote">${XE.lensNote}</p></div>`;
+
   const RX=lang==="ru"?{cell:"Ваш результат",next:"Дальше"}:{cell:"Your result",next:"What next"};
   const rdate=new Date(a.finished).toLocaleDateString(t.locale);
   let html=`
@@ -1840,19 +1942,21 @@ function renderResults(attemptIdx){
       <div class="stackbar">${a.centers.map(c=>`<i style="width:${c.share}%;background:var(${CENTERS[c.c].css})"></i>`).join("")}</div>
       <div class="stacklegend">${a.centers.map(c=>`<span><span class="swatch" style="background:var(${CENTERS[c.c].css})"></span>${cName(c.c)}&nbsp;${c.share.toFixed(0)}%</span>`).join("")}</div></div>
 
+    ${glanceHTML}
     <div class="sect"><span class="eyebrow">${t.coreHdr}</span>${card(a.types[0],0,false)}</div>
     <div class="sect"><span class="eyebrow">${t.alsoHdr}</span><div class="cards2">${card(a.types[1],1,true)}${card(a.types[2],2,true)}</div></div>
 
     <div class="sect"><span class="eyebrow">${t.arrowsHdr}</span>
       <div class="arrows">
-        <div class="arrow st"><b>${t.stressLbl} ${STRESS[a.top]}</b><span class="big">${L(TYPE(STRESS[a.top])).name}</span>${esc(TL.stress)}.</div>
-        <div class="arrow"><b>${t.growthLbl} ${GROWTH[a.top]}</b><span class="big">${L(TYPE(GROWTH[a.top])).name}</span>${esc(TL.growth)}.</div>
+        <div class="arrow st"><b>${t.stressLbl} ${STRESS[a.top]}</b><span class="big">${L(TYPE(STRESS[a.top])).name}</span>${esc(TL.stress)}.<span class="apct">${XE.inProfile(fx(P9[STRESS[a.top]]))}</span></div>
+        <div class="arrow"><b>${t.growthLbl} ${GROWTH[a.top]}</b><span class="big">${L(TYPE(GROWTH[a.top])).name}</span>${esc(TL.growth)}.<span class="apct">${XE.inProfile(fx(P9[GROWTH[a.top]]))}</span></div>
       </div></div>
 
     <div class="sect"><span class="eyebrow">${t.tritypeHdr} · ${a.tri.map(x=>x.n).join("")}</span>
       <div class="cols3">${a.tri.map(x=>`<div class="tile" style="--dc:var(${CENTERS[x.c].css})">
         <span class="rk">${x.n}</span><span class="nm">${L(TYPE(x.n)).name}</span><span class="sm">${cName(x.c)} · ${a.types.find(r=>r.n===x.n).pct.toFixed(0)}%</span></div>`).join("")}</div></div>
 
+    ${lensesHTML}
     <div class="sect"><span class="eyebrow">${t.instinctHdr} · ${instCode}</span>
       <div class="ranklist">${a.insts.map((r,i)=>`<div class="rankrow" style="--dc:var(--inst)">
         <span class="muted">${i+1}</span><span class="name">${instShort(r.id)} · ${instName(r.id)}</span>
@@ -1912,6 +2016,8 @@ function renderResults(attemptIdx){
     path:{passion:PATH[a.top].en.passion,fixation:PATH[a.top].en.fixation,gift:PATH[a.top].en.gift,essence:PATH[a.top].en.state},
     typePairsUsed:a.typePairs ?? (a.responses||[]).slice(0,N1).filter(v=>v!==null&&v!==undefined).length, adaptive:!!a.adaptive,
     tritype:a.tri.map(x=>x.n).join(""),
+    typeClarityGap:gapV, wingBalance:{[wlo]:P9[wlo],[whi]:P9[whi]},
+    socialStyle:XE.G[hornL.mine][0], copingStyle:XE.G[harmL.mine][0],
     instinctStack:a.insts.map(i=>({instinct:i.id,pct:i.pct})),
     centers:Object.fromEntries(a.centers.map(c=>[c.c,c.share])),
     ranking:a.types.map((r,i)=>({rank:i+1,type:r.n,name:TYPE(r.n).en.name,pct:r.pct,strongPicks:r.strong})),
